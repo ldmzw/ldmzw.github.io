@@ -149,6 +149,104 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://ldmzw.github.io/2022/01/17/swagger/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="victor min">
+      <meta itemprop="description" content="风无定，人无常<br/>人生如浮萍，聚散两茫茫">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ldmzw">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/17/swagger/" class="post-title-link" itemprop="url">swagger</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-01-17 19:04:09 / 修改时间：19:55:24" itemprop="dateCreated datePublished" datetime="2022-01-17T19:04:09+08:00">2022-01-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/swagger/" itemprop="url" rel="index"><span itemprop="name">swagger</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>在日常开发中，文档是一项很重要的工作，但是很多时候，也许是由于项目时间太赶，也许是由于业务历史遗留原因，我们往往会疲于去维护文档。<code>swagger</code>可以通过在代码中增加注释，从面生成在线文档。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://swagger.io/" title="swagger 官网">swagger 官网</a></li>
+<li><a target="_blank" rel="noopener" href="https://swagger.io/tools/swagger-ui/" title="swagger-ui 官网">swagger-ui 官网</a></li>
+</ul>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p><code>swagger 3.0.0</code>已经在2020年7月发布，相对于<code>swagger 2.x.x</code>版本，<code>swagger 3.0.0</code>增加了对<code>WebFlux</code>的支持，对于使用<code>WebFlux</code>的项目来说非常友好，并且相对于<code>swagger 2.x.x</code>版本来说，配置改动也很小。</p>
+<h3 id="2-x-x版本"><a href="#2-x-x版本" class="headerlink" title="2.x.x版本"></a>2.x.x版本</h3><h4 id="引入pom依赖"><a href="#引入pom依赖" class="headerlink" title="引入pom依赖"></a>引入pom依赖</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.springfox<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springfox-swagger-ui<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.10.5<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.springfox<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springfox-swagger2<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.10.5<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="增加配置（可选）"><a href="#增加配置（可选）" class="headerlink" title="增加配置（可选）"></a>增加配置（可选）</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableSwagger2</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SwaggerConfiguration</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 增加配置，以便在生产环境关闭</span></span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;swagger.enable&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Boolean enable;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> ApiInfo <span class="title">apiInfo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ApiInfoBuilder()</span><br><span class="line">                .title(<span class="string">&quot;API接口文档&quot;</span>)</span><br><span class="line">                .description(<span class="string">&quot;接口文档&quot;</span>)</span><br><span class="line">                .version(<span class="string">&quot;1.0.0&quot;</span>)</span><br><span class="line">                .build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Docket <span class="title">createRestApi</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Docket(DocumentationType.SWAGGER_2)</span><br><span class="line">                .enable(enable)</span><br><span class="line">                .apiInfo(apiInfo())</span><br><span class="line">                .select()</span><br><span class="line">                .apis(RequestHandlerSelectors.basePackage(<span class="string">&quot;com.xxx.controller&quot;</span>)) <span class="comment">//这里写的是API接口所在的包位置</span></span><br><span class="line">                .paths(PathSelectors.any())</span><br><span class="line">                .build()</span><br><span class="line">                .globalOperationParameters(getParameterList());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> List&lt;Parameter&gt; <span class="title">getParameterList</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        List&lt;Parameter&gt; pars = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        pars.add(<span class="keyword">new</span> ParameterBuilder()</span><br><span class="line">                .name(<span class="string">&quot;Authorization&quot;</span>)</span><br><span class="line">                .description(<span class="string">&quot;令牌&quot;</span>)</span><br><span class="line">                .modelRef(<span class="keyword">new</span> ModelRef(<span class="string">&quot;string&quot;</span>))</span><br><span class="line">                .parameterType(<span class="string">&quot;header&quot;</span>)</span><br><span class="line">                .required(<span class="keyword">false</span>).build());</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> pars;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意：</p>
+<p>我们也可以不用增加上面的配置文件，采用<code>swagger</code>默认的配置。</p>
+</blockquote>
+<h4 id="访问swagger"><a href="#访问swagger" class="headerlink" title="访问swagger"></a>访问swagger</h4><p>我们可以启动项目，然后访问<code>swagger</code>地址，便可以查看到在线的<code>swagger</code>文档。<code>swagger</code>的默认访问地址为<code>sheme://host:port/swagger-ui.html</code>。示例：<a target="_blank" rel="noopener" href="http://localhost:8080/swagger-ui.html">http://localhost:8080/swagger-ui.html</a></p>
+<h2 id="3-0-0版本"><a href="#3-0-0版本" class="headerlink" title="3.0.0版本"></a>3.0.0版本</h2><p>由于<code>WebFlux</code>目前在国内的项目使用中还不是很普遍，所以很多时候大家在使用的时候还是使用的<code>swagger 2.x.x</code>版本，但是也有些项目是基于<code>WebFlux</code>来进行开发的，这时候，我们会发现<code>swagger 2.x.x</code>版本无法处理<code>Mono</code>或者是<code>Flux</code>，好在官方及时的支持了<code>WebFlux</code>。</p>
+<h3 id="引入pom依赖-1"><a href="#引入pom依赖-1" class="headerlink" title="引入pom依赖"></a>引入pom依赖</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.springfox<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springfox-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.0.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="增加配置（可选）-1"><a href="#增加配置（可选）-1" class="headerlink" title="增加配置（可选）"></a>增加配置（可选）</h3><p>同<code>swagger 2.x.x</code>一样，这里的配置都是可选的，如果我们未进行任何配置，会使用<code>swagger</code>的默认配置。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableSwagger2</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SwaggerConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 增加配置，以便在生产环境关闭</span></span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;swagger.enable&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Boolean enable;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Docket <span class="title">createRestApi</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Docket(DocumentationType.OAS_30)</span><br><span class="line">                .enable(enable)</span><br><span class="line">                .apiInfo(apiInfo())</span><br><span class="line">                .select()</span><br><span class="line">                .apis(RequestHandlerSelectors.basePackage(<span class="string">&quot;com.xxx.controller&quot;</span>)) <span class="comment">//这里写的是API接口所在的包位置</span></span><br><span class="line">                .paths(PathSelectors.any())</span><br><span class="line">                .build()</span><br><span class="line">                .globalRequestParameters(getParameterList());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> ApiInfo <span class="title">apiInfo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ApiInfoBuilder()</span><br><span class="line">                .title(<span class="string">&quot;网关路由接口文档&quot;</span>)</span><br><span class="line">                .version(<span class="string">&quot;1.2&quot;</span>)</span><br><span class="line">                .description(<span class="string">&quot;能力开放管理&quot;</span>)</span><br><span class="line">                .build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> List&lt;RequestParameter&gt; <span class="title">getParameterList</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        List&lt;RequestParameter&gt; pars = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        pars.add(<span class="keyword">new</span> RequestParameterBuilder()</span><br><span class="line">                .name(<span class="string">&quot;Authorization&quot;</span>)</span><br><span class="line">                .in(ParameterType.HEADER)</span><br><span class="line">                .description(<span class="string">&quot;令牌&quot;</span>)</span><br><span class="line">                .required(<span class="keyword">false</span>).build());</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> pars;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们看到配置上与<code>swagger 2.x.x</code>大体相同，只是有一些类进行了替换和一些参数进行了改变。</p>
+<h4 id="访问swagger-1"><a href="#访问swagger-1" class="headerlink" title="访问swagger"></a>访问swagger</h4><p>我们可以启动项目，然后访问<code>swagger</code>地址，便可以查看到在线的<code>swagger</code>文档。<code>swagger</code>的默认访问地址为<code>sheme://host:port/swagger-ui/index.html</code>。示例：<a target="_blank" rel="noopener" href="http://localhost:8080/swagger-ui/index.html">http://localhost:8080/swagger-ui/index.html</a></p>
+<blockquote>
+<p>注意：</p>
+<p>由于<code>swagger 3.0.0</code>目前使用还较少，网上很多教程都是基于之前的<code>snapshot</code>版本，所以有时候会有一些误导。下面是一些误导：</p>
+<ul>
+<li>不再使用<code>EnableSwagger2</code>注解，需要使用<code>EnableSwagger2WebFlux</code>或者<code>EnableSwagger2WebMvc</code>。其实从源码中我们可以看出，<code>swagger 3.0.0</code>依旧可以使用<code>EnableSwagger2</code>，而<code>EnableSwagger2WebFlux</code>与<code>EnableSwagger2WebMvc</code>已经被标记为<code>@Deprecated</code>。</li>
+</ul>
+</blockquote>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>在开发中，<code>swagger</code>给我们带来了很多便利。大家在日常开发中，还是应该维护好接口文档与单元测试，这样不论是新同事入手还是各种交接边调都会十分的便利，省去了很多人力成本。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://ldmzw.github.io/2022/01/12/mybatis-generator/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -322,16 +420,16 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">1</span>
+          <span class="site-state-item-count">2</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">2</span>
         <span class="site-state-item-name">分类</span>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
