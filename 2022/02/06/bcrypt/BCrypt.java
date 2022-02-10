@@ -12,7 +12,7 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-package com.cmiot.ocb.cp.gateway.test;
+package org.springframework.security.crypto.bcrypt;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
