@@ -20,31 +20,35 @@
     var CONFIG = {"hostname":"ldmzw.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="风无定，人无常人生如浮萍，聚散两茫茫">
-<meta property="og:type" content="website">
-<meta property="og:title" content="ldmzw">
-<meta property="og:url" content="http://ldmzw.github.io/index.html">
+  <meta name="description" content="概述在日常的开发中，我们会经常用到一些加密算法。我们常见的有消息摘要算法（包括MD（Message Digest）算法、SHA（Secure Hash Algorithm）算法、MAC（Message Authentication Code）算法等）、对称加密算法（包括AES算法、DES算法、3DES算法、RC算法等）、非对称加密算法（包括RSA算法、DSA算法、ECC算法等）。本文记录的BCry">
+<meta property="og:type" content="article">
+<meta property="og:title" content="bcrypt">
+<meta property="og:url" content="http://ldmzw.github.io/2022/02/06/bcrypt/index.html">
 <meta property="og:site_name" content="ldmzw">
-<meta property="og:description" content="风无定，人无常人生如浮萍，聚散两茫茫">
+<meta property="og:description" content="概述在日常的开发中，我们会经常用到一些加密算法。我们常见的有消息摘要算法（包括MD（Message Digest）算法、SHA（Secure Hash Algorithm）算法、MAC（Message Authentication Code）算法等）、对称加密算法（包括AES算法、DES算法、3DES算法、RC算法等）、非对称加密算法（包括RSA算法、DSA算法、ECC算法等）。本文记录的BCry">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-02-06T08:24:39.000Z">
+<meta property="article:modified_time" content="2022-02-10T06:41:22.528Z">
 <meta property="article:author" content="victor min">
-<meta property="article:tag" content="program, java, spring, spring boot, spring cloud">
+<meta property="article:tag" content="密码学">
+<meta property="article:tag" content="BCrypt">
+<meta property="article:tag" content="散列算法">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://ldmzw.github.io/">
+<link rel="canonical" href="http://ldmzw.github.io/2022/02/06/bcrypt/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>ldmzw</title>
+  <title>bcrypt | ldmzw</title>
   
 
 
@@ -143,9 +147,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
@@ -161,10 +166,9 @@
       <meta itemprop="name" content="ldmzw">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/02/06/bcrypt/" class="post-title-link" itemprop="url">bcrypt</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          bcrypt
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -203,7 +207,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>在日常的开发中，我们会经常用到一些加密算法。我们常见的有<code>消息摘要算法</code>（包括<code>MD（Message Digest）算法</code>、<code>SHA（Secure Hash Algorithm）算法</code>、<code>MAC（Message Authentication Code）算法</code>等）、<code>对称加密算法</code>（包括<code>AES算法</code>、<code>DES算法</code>、<code>3DES算法</code>、<code>RC算法</code>等）、<code>非对称加密算法</code>（包括<code>RSA算法</code>、<code>DSA算法</code>、<code>ECC算法</code>等）。本文记录的<code>BCrypt</code>则是属于<code>消息摘要算法</code>，是由<code>Niels Provos</code>和<code>David Mazières</code>设计的密码哈希函数，他是基于<code>Blowfish</code>密码而来的，并于1999年在USENIX上提出。</p>
+        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>在日常的开发中，我们会经常用到一些加密算法。我们常见的有<code>消息摘要算法</code>（包括<code>MD（Message Digest）算法</code>、<code>SHA（Secure Hash Algorithm）算法</code>、<code>MAC（Message Authentication Code）算法</code>等）、<code>对称加密算法</code>（包括<code>AES算法</code>、<code>DES算法</code>、<code>3DES算法</code>、<code>RC算法</code>等）、<code>非对称加密算法</code>（包括<code>RSA算法</code>、<code>DSA算法</code>、<code>ECC算法</code>等）。本文记录的<code>BCrypt</code>则是属于<code>消息摘要算法</code>，是由<code>Niels Provos</code>和<code>David Mazières</code>设计的密码哈希函数，他是基于<code>Blowfish</code>密码而来的，并于1999年在USENIX上提出。</p>
 <p>除了加盐来抵御<code>rainbow table</code>攻击之外，<code>bcrypt</code>的一个非常重要的特征就是自适应性，可以保证加密的速度在一个特定的范围内，即使计算机的运算能力非常高，可以通过增加迭代次数的方式，使得加密速度变慢，从而可以抵御暴力搜索攻击。</p>
 <p><code>bcrypt</code>函数是OpenBSD和其他系统包括一些Linux发行版（如SUSE Linux）的默认密码哈希算法。</p>
 <ul>
@@ -260,236 +264,35 @@
 <h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p><code>BCrypt</code>已经被广泛使用，相对于<code>MD5</code>，它的碰撞难度变大了。在Spring Security中，已经默认使用<code>BCryptPasswordEncoder</code>作为<code>PasswordEncoder</code>。</p>
 <p><a href="BCrypt.java" title="BCrypt.java">BCrypt.java</a></p>
 
-      
     </div>
 
     
     
     
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
+          <div class="post-tags">
+              <a href="/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/" rel="tag"># 密码学</a>
+              <a href="/tags/BCrypt/" rel="tag"># BCrypt</a>
+              <a href="/tags/%E6%95%A3%E5%88%97%E7%AE%97%E6%B3%95/" rel="tag"># 散列算法</a>
+          </div>
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://ldmzw.github.io/2022/01/15/swagger/">
+        
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="victor min">
-      <meta itemprop="description" content="风无定，人无常<br/>人生如浮萍，聚散两茫茫">
-    </span>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="ldmzw">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/15/swagger/" class="post-title-link" itemprop="url">swagger</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-01-15 19:04:09" itemprop="dateCreated datePublished" datetime="2022-01-15T19:04:09+08:00">2022-01-15</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-10 14:41:22" itemprop="dateModified" datetime="2022-02-10T14:41:22+08:00">2022-02-10</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/swagger/" itemprop="url" rel="index"><span itemprop="name">swagger</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>在日常开发中，文档是一项很重要的工作，但是很多时候，也许是由于项目时间太赶，也许是由于业务历史遗留原因，我们往往会疲于去维护文档。<code>swagger</code>可以通过在代码中增加注释，从面生成在线文档。</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://swagger.io/" title="swagger 官网">swagger 官网</a></li>
-<li><a target="_blank" rel="noopener" href="https://swagger.io/tools/swagger-ui/" title="swagger-ui 官网">swagger-ui 官网</a></li>
-</ul>
-<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p><code>swagger 3.0.0</code>已经在2020年7月发布，相对于<code>swagger 2.x.x</code>版本，<code>swagger 3.0.0</code>增加了对<code>WebFlux</code>的支持，对于使用<code>WebFlux</code>的项目来说非常友好，并且相对于<code>swagger 2.x.x</code>版本来说，配置改动也很小。</p>
-<h3 id="2-x-x版本"><a href="#2-x-x版本" class="headerlink" title="2.x.x版本"></a>2.x.x版本</h3><h4 id="引入pom依赖"><a href="#引入pom依赖" class="headerlink" title="引入pom依赖"></a>引入pom依赖</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.springfox<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springfox-swagger-ui<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.10.5<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.springfox<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springfox-swagger2<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.10.5<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="增加配置（可选）"><a href="#增加配置（可选）" class="headerlink" title="增加配置（可选）"></a>增加配置（可选）</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableSwagger2</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SwaggerConfiguration</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 增加配置，以便在生产环境关闭</span></span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;swagger.enable&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Boolean enable;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> ApiInfo <span class="title">apiInfo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ApiInfoBuilder()</span><br><span class="line">                .title(<span class="string">&quot;API接口文档&quot;</span>)</span><br><span class="line">                .description(<span class="string">&quot;接口文档&quot;</span>)</span><br><span class="line">                .version(<span class="string">&quot;1.0.0&quot;</span>)</span><br><span class="line">                .build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Docket <span class="title">createRestApi</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Docket(DocumentationType.SWAGGER_2)</span><br><span class="line">                .enable(enable)</span><br><span class="line">                .apiInfo(apiInfo())</span><br><span class="line">                .select()</span><br><span class="line">                .apis(RequestHandlerSelectors.basePackage(<span class="string">&quot;com.xxx.controller&quot;</span>)) <span class="comment">//这里写的是API接口所在的包位置</span></span><br><span class="line">                .paths(PathSelectors.any())</span><br><span class="line">                .build()</span><br><span class="line">                .globalOperationParameters(getParameterList());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> List&lt;Parameter&gt; <span class="title">getParameterList</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        List&lt;Parameter&gt; pars = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        pars.add(<span class="keyword">new</span> ParameterBuilder()</span><br><span class="line">                .name(<span class="string">&quot;Authorization&quot;</span>)</span><br><span class="line">                .description(<span class="string">&quot;令牌&quot;</span>)</span><br><span class="line">                .modelRef(<span class="keyword">new</span> ModelRef(<span class="string">&quot;string&quot;</span>))</span><br><span class="line">                .parameterType(<span class="string">&quot;header&quot;</span>)</span><br><span class="line">                .required(<span class="keyword">false</span>).build());</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> pars;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>注意：</p>
-<p>我们也可以不用增加上面的配置文件，采用<code>swagger</code>默认的配置。</p>
-</blockquote>
-<h4 id="访问swagger"><a href="#访问swagger" class="headerlink" title="访问swagger"></a>访问swagger</h4><p>我们可以启动项目，然后访问<code>swagger</code>地址，便可以查看到在线的<code>swagger</code>文档。<code>swagger</code>的默认访问地址为<code>sheme://host:port/swagger-ui.html</code>。示例：<a target="_blank" rel="noopener" href="http://localhost:8080/swagger-ui.html">http://localhost:8080/swagger-ui.html</a></p>
-<h3 id="3-0-0版本"><a href="#3-0-0版本" class="headerlink" title="3.0.0版本"></a>3.0.0版本</h3><p>由于<code>WebFlux</code>目前在国内的项目使用中还不是很普遍，所以很多时候大家在使用的时候还是使用的<code>swagger 2.x.x</code>版本，但是也有些项目是基于<code>WebFlux</code>来进行开发的，这时候，我们会发现<code>swagger 2.x.x</code>版本无法处理<code>Mono</code>或者是<code>Flux</code>，好在官方及时的支持了<code>WebFlux</code>。</p>
-<h4 id="引入pom依赖-1"><a href="#引入pom依赖-1" class="headerlink" title="引入pom依赖"></a>引入pom依赖</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.springfox<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springfox-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.0.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="增加配置（可选）-1"><a href="#增加配置（可选）-1" class="headerlink" title="增加配置（可选）"></a>增加配置（可选）</h4><p>同<code>swagger 2.x.x</code>一样，这里的配置都是可选的，如果我们未进行任何配置，会使用<code>swagger</code>的默认配置。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableSwagger2</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SwaggerConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 增加配置，以便在生产环境关闭</span></span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;swagger.enable&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Boolean enable;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Docket <span class="title">createRestApi</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Docket(DocumentationType.OAS_30)</span><br><span class="line">                .enable(enable)</span><br><span class="line">                .apiInfo(apiInfo())</span><br><span class="line">                .select()</span><br><span class="line">                .apis(RequestHandlerSelectors.basePackage(<span class="string">&quot;com.xxx.controller&quot;</span>)) <span class="comment">//这里写的是API接口所在的包位置</span></span><br><span class="line">                .paths(PathSelectors.any())</span><br><span class="line">                .build()</span><br><span class="line">                .globalRequestParameters(getParameterList());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> ApiInfo <span class="title">apiInfo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ApiInfoBuilder()</span><br><span class="line">                .title(<span class="string">&quot;API接口文档&quot;</span>)</span><br><span class="line">                .version(<span class="string">&quot;1.0.0&quot;</span>)</span><br><span class="line">                .description(<span class="string">&quot;接口文档&quot;</span>)</span><br><span class="line">                .build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> List&lt;RequestParameter&gt; <span class="title">getParameterList</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        List&lt;RequestParameter&gt; pars = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        pars.add(<span class="keyword">new</span> RequestParameterBuilder()</span><br><span class="line">                .name(<span class="string">&quot;Authorization&quot;</span>)</span><br><span class="line">                .in(ParameterType.HEADER)</span><br><span class="line">                .description(<span class="string">&quot;令牌&quot;</span>)</span><br><span class="line">                .required(<span class="keyword">false</span>).build());</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> pars;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>我们看到配置上与<code>swagger 2.x.x</code>大体相同，只是有一些类进行了替换和一些参数进行了改变。</p>
-<h4 id="访问swagger-1"><a href="#访问swagger-1" class="headerlink" title="访问swagger"></a>访问swagger</h4><p>我们可以启动项目，然后访问<code>swagger</code>地址，便可以查看到在线的<code>swagger</code>文档。<code>swagger</code>的默认访问地址为<code>sheme://host:port/swagger-ui/index.html</code>。示例：<a target="_blank" rel="noopener" href="http://localhost:8080/swagger-ui/index.html">http://localhost:8080/swagger-ui/index.html</a></p>
-<blockquote>
-<p>注意：</p>
-<p>由于<code>swagger 3.0.0</code>目前使用还较少，网上很多教程都是基于之前的<code>snapshot</code>版本，所以有时候会有一些误导。下面是一些误导：</p>
-<ul>
-<li>不再使用<code>EnableSwagger2</code>注解，需要使用<code>EnableSwagger2WebFlux</code>或者<code>EnableSwagger2WebMvc</code>。其实从源码中我们可以看出，<code>swagger 3.0.0</code>依旧可以使用<code>EnableSwagger2</code>，而<code>EnableSwagger2WebFlux</code>与<code>EnableSwagger2WebMvc</code>已经被标记为<code>@Deprecated</code>。</li>
-</ul>
-</blockquote>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>在开发中，<code>swagger</code>给我们带来了很多便利。大家在日常开发中，还是应该维护好接口文档与单元测试，这样不论是新同事入手还是各种交接边调都会十分的便利，省去了很多人力成本。</p>
-
-      
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/01/15/swagger/" rel="prev" title="swagger">
+      <i class="fa fa-chevron-left"></i> swagger
+    </a></div>
+      <div class="post-nav-item"></div>
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
       </footer>
+    
   </article>
   
   
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://ldmzw.github.io/2022/01/08/mybatis-generator/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="victor min">
-      <meta itemprop="description" content="风无定，人无常<br/>人生如浮萍，聚散两茫茫">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="ldmzw">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/08/mybatis-generator/" class="post-title-link" itemprop="url">mybatis-generator</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-01-08 17:42:55" itemprop="dateCreated datePublished" datetime="2022-01-08T17:42:55+08:00">2022-01-08</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-10 14:41:22" itemprop="dateModified" datetime="2022-02-10T14:41:22+08:00">2022-02-10</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/mybatis/" itemprop="url" rel="index"><span itemprop="name">mybatis</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>在日常开发中，<code>MyBatis</code>因其轻量化而被我们所广泛使用。但是有时候，大量的重复操作与数据库实体编写让我们感到十分的枯燥与繁琐，为了减少这些繁琐的工作，<code>MyBatis Generator</code>应运而生。</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="http://mybatis.org/generator/" title="MyBatis Generator官网">MyBatis Generator官网</a></li>
-<li><a target="_blank" rel="noopener" href="https://mybatis.org/mybatis-3/zh/index.html" title="MyBatis 官网">MyBatis 官网</a></li>
-</ul>
-<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>从<code>MyBatis Generator</code>官网上可以看到，我们有五种方式来使用<code>MyBatis Generator</code>。</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="http://mybatis.org/generator/running/runningFromCmdLine.html" title="From the Command Line">From the Command Line</a></li>
-<li><a target="_blank" rel="noopener" href="http://mybatis.org/generator/running/runningWithAnt.html" title="With Ant">With Ant</a></li>
-<li><a target="_blank" rel="noopener" href="http://mybatis.org/generator/running/runningWithMaven.html" title="With Maven">With Maven</a></li>
-<li><a target="_blank" rel="noopener" href="http://mybatis.org/generator/running/runningWithJava.html" title="With Java">With Java</a></li>
-<li><a target="_blank" rel="noopener" href="http://mybatis.org/generator/running/runningWithEclipse.html" title="In Eclipse">In Eclipse</a></li>
-</ul>
-<p>但是在日常开发中，我们用得最多的应该是<code>From the Command Line</code>和<code>With Maven</code>方式来使用<code>MyBatis Generator</code>。第一种是直接通过命令行的方式来运行，这种方式简单，不依赖项目；第二种是通过集成到<code>maven</code>项目中通过<code>maven</code>的<code>plugin</code>来实现。本文主要记录这两种方式的使用，其它的使用方式可以直接从官网上面找到示例。</p>
-<h3 id="命令行方式使用"><a href="#命令行方式使用" class="headerlink" title="命令行方式使用"></a>命令行方式使用</h3><h4 id="下载jar包"><a href="#下载jar包" class="headerlink" title="下载jar包"></a>下载jar包</h4><p>下载地址: <a target="_blank" rel="noopener" href="https://github.com/mybatis/generator/releases" title="mybatis-generator-core">mybatis-generator-core</a></p>
-<p><img src="/2022/01/08/mybatis-generator/001.png" alt="mybatis-generator-core" title="mybatis-generator-core"></p>
-<h4 id="编写配置文件"><a href="#编写配置文件" class="headerlink" title="编写配置文件"></a>编写配置文件</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">generatorConfiguration</span> <span class="meta-keyword">PUBLIC</span></span></span><br><span class="line"><span class="meta"> <span class="meta-string">&quot;-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN&quot;</span></span></span><br><span class="line"><span class="meta"> <span class="meta-string">&quot;http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">generatorConfiguration</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">context</span> <span class="attr">id</span>=<span class="string">&quot;default&quot;</span> <span class="attr">targetRuntime</span>=<span class="string">&quot;MyBatis3&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">jdbcConnection</span> <span class="attr">driverClass</span>=<span class="string">&quot;com.mysql.cj.jdbc.Driver&quot;</span></span></span><br><span class="line"><span class="tag">                        <span class="attr">connectionURL</span>=<span class="string">&quot;jdbc:mysql://127.0.0.1:13306/test?useUnicode=true<span class="symbol">&amp;amp;</span>characterEncoding=utf-8<span class="symbol">&amp;amp;</span>serverTimezone=UTC<span class="symbol">&amp;amp;</span>nullCatalogMeansCurrent=true&quot;</span></span></span><br><span class="line"><span class="tag">                        <span class="attr">userId</span>=<span class="string">&quot;root&quot;</span></span></span><br><span class="line"><span class="tag">                        <span class="attr">password</span>=<span class="string">&quot;root@123&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">javaModelGenerator</span> <span class="attr">targetPackage</span>=<span class="string">&quot;example.model&quot;</span> <span class="attr">targetProject</span>=<span class="string">&quot;src/main/java&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">sqlMapGenerator</span> <span class="attr">targetPackage</span>=<span class="string">&quot;example.mapper&quot;</span> <span class="attr">targetProject</span>=<span class="string">&quot;src/main/resources&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">javaClientGenerator</span> <span class="attr">type</span>=<span class="string">&quot;XMLMAPPER&quot;</span> <span class="attr">targetPackage</span>=<span class="string">&quot;example.mapper&quot;</span> <span class="attr">targetProject</span>=<span class="string">&quot;src/main/java&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">table</span> <span class="attr">tableName</span>=<span class="string">&quot;sys_user&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">context</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">generatorConfiguration</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="执行命令"><a href="#执行命令" class="headerlink" title="执行命令"></a>执行命令</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">java -jar mybatis-generator-core-x.x.x.jar -configfile generatorConfig.xml</span><br><span class="line">java -jar mybatis-generator-core-x.x.x.jar -configfile generatorConfig.xml -overwrite</span><br><span class="line">java -cp mybatis-generator-core-x.x.x.jar org.mybatis.generator.api.ShellRunner -configfile generatorConfig.xml</span><br><span class="line">java -cp mybatis-generator-core-x.x.x.jar org.mybatis.generator.api.ShellRunner -configfile generatorConfig.xml -overwrite</span><br><span class="line"></span><br><span class="line">java -cp mybatis-generator-core-x.x.x.jar;mysql-connector-java-x.x.x.jar org.mybatis.generator.api.ShellRunner -configfile generatorConfig.xml -overwrite</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>注意：</p>
-<p>当我们使用不同的数据库的时候，我们需要下载相应数据库的<code>driver</code>，示例中是使用的<code>mysql com.mysql.cj.jdbc.Driver</code>，所以需要下载 <code>mysql-connector-java-x.x.x.jar</code>。</p>
-</blockquote>
-<p>数据库Driver下载地址：</p>
-<ul>
-<li>Mysql：<a target="_blank" rel="noopener" href="https://downloads.mysql.com/archives/c-j/" title="官网">官网</a>、<a target="_blank" rel="noopener" href="https://mvnrepository.com/artifact/mysql/mysql-connector-java/" title="maven repository">maven repository</a></li>
-<li>Oracle：<a target="_blank" rel="noopener" href="https://www.oracle.com/cn/database/technologies/enterprise-edition/jdbc.html" title="官网">官网</a>、<a target="_blank" rel="noopener" href="https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc10/" title="maven repository">maven repository</a></li>
-<li>Postgresql：<a href="htthttps://jdbc.postgresql.org/download.htmll" title="官网">官网</a>、<a target="_blank" rel="noopener" href="https://mvnrepository.com/artifact/org.postgresql/postgresql/" title="maven repository">maven repository</a></li>
-</ul>
-<h3 id="Maven方式使用"><a href="#Maven方式使用" class="headerlink" title="Maven方式使用"></a>Maven方式使用</h3><h4 id="增加maven配置"><a href="#增加maven配置" class="headerlink" title="增加maven配置"></a>增加maven配置</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mybatis.generator<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mybatis-generator-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.4.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                <span class="comment">&lt;!-- 在控制台打印执行日志 --&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">verbose</span>&gt;</span>true<span class="tag">&lt;/<span class="name">verbose</span>&gt;</span></span><br><span class="line">                <span class="comment">&lt;!-- 重复生成时会覆盖之前的文件--&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">overwrite</span>&gt;</span>true<span class="tag">&lt;/<span class="name">overwrite</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">configurationFile</span>&gt;</span>src/main/resources/generatorConfig.xml<span class="tag">&lt;/<span class="name">configurationFile</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>mysql<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mysql-connector-java<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">version</span>&gt;</span>8.0.27<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="编写配置文件-1"><a href="#编写配置文件-1" class="headerlink" title="编写配置文件"></a>编写配置文件</h4><p>配置文件同上</p>
-<h4 id="执行命令-1"><a href="#执行命令-1" class="headerlink" title="执行命令"></a>执行命令</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mvn mybatis-generator:generate</span><br><span class="line">mvn mybatis-generator:generate -Dmybatis.generator.overwrite=true</span><br></pre></td></tr></table></figure>
-
-<h2 id="通用配置"><a href="#通用配置" class="headerlink" title="通用配置"></a>通用配置</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">generatorConfiguration</span></span></span><br><span class="line"><span class="meta">        <span class="meta-keyword">PUBLIC</span> <span class="meta-string">&quot;-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN&quot;</span></span></span><br><span class="line"><span class="meta">        <span class="meta-string">&quot;http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">generatorConfiguration</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">context</span> <span class="attr">id</span>=<span class="string">&quot;default&quot;</span> <span class="attr">targetRuntime</span>=<span class="string">&quot;MyBatis3&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;autoDelimitKeywords&quot;</span> <span class="attr">value</span>=<span class="string">&quot;true&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;beginningDelimiter&quot;</span> <span class="attr">value</span>=<span class="string">&quot;`&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;endingDelimiter&quot;</span> <span class="attr">value</span>=<span class="string">&quot;`&quot;</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugin</span> <span class="attr">type</span>=<span class="string">&quot;org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin&quot;</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">commentGenerator</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;suppressAllComments&quot;</span> <span class="attr">value</span>=<span class="string">&quot;false&quot;</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;suppressDate&quot;</span> <span class="attr">value</span>=<span class="string">&quot;true&quot;</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;addRemarkComments&quot;</span> <span class="attr">value</span>=<span class="string">&quot;true&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">commentGenerator</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">jdbcConnection</span> <span class="attr">driverClass</span>=<span class="string">&quot;com.mysql.cj.jdbc.Driver&quot;</span></span></span><br><span class="line"><span class="tag">                        <span class="attr">connectionURL</span>=<span class="string">&quot;jdbc:mysql://127.0.0.1:3306/test?useUnicode=true<span class="symbol">&amp;amp;</span>characterEncoding=utf-8<span class="symbol">&amp;amp;</span>serverTimezone=UTC<span class="symbol">&amp;amp;</span>nullCatalogMeansCurrent=true&quot;</span></span></span><br><span class="line"><span class="tag">                        <span class="attr">userId</span>=<span class="string">&quot;root&quot;</span></span></span><br><span class="line"><span class="tag">                        <span class="attr">password</span>=<span class="string">&quot;root@123&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">javaTypeResolver</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;forceBigDecimals&quot;</span> <span class="attr">value</span>=<span class="string">&quot;false&quot;</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;useJSR310Types&quot;</span> <span class="attr">value</span>=<span class="string">&quot;true&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">javaTypeResolver</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">javaModelGenerator</span> <span class="attr">targetPackage</span>=<span class="string">&quot;example.model&quot;</span></span></span><br><span class="line"><span class="tag">                            <span class="attr">targetProject</span>=<span class="string">&quot;src/main/java&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;trimStrings&quot;</span> <span class="attr">value</span>=<span class="string">&quot;true&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">javaModelGenerator</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">sqlMapGenerator</span> <span class="attr">targetPackage</span>=<span class="string">&quot;mappers&quot;</span></span></span><br><span class="line"><span class="tag">                         <span class="attr">targetProject</span>=<span class="string">&quot;src/main/resources&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;enableSubPackages&quot;</span> <span class="attr">value</span>=<span class="string">&quot;false&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">sqlMapGenerator</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">javaClientGenerator</span> <span class="attr">type</span>=<span class="string">&quot;XMLMAPPER&quot;</span></span></span><br><span class="line"><span class="tag">                             <span class="attr">targetPackage</span>=<span class="string">&quot;example.mapper&quot;</span> <span class="attr">targetProject</span>=<span class="string">&quot;src/main/java&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;enableSubPackages&quot;</span> <span class="attr">value</span>=<span class="string">&quot;false&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">javaClientGenerator</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- tableName是数据库中的表名，domainObjectName是生成的JAVA模型名，后面的参数不用改，要生成更多的表就在下面继续加table标签 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">table</span> <span class="attr">tableName</span>=<span class="string">&quot;sys_user&quot;</span> <span class="attr">domainObjectName</span>=<span class="string">&quot;User&quot;</span></span></span><br><span class="line"><span class="tag">               <span class="attr">enableCountByExample</span>=<span class="string">&quot;true&quot;</span> <span class="attr">enableUpdateByExample</span>=<span class="string">&quot;true&quot;</span></span></span><br><span class="line"><span class="tag">               <span class="attr">enableDeleteByExample</span>=<span class="string">&quot;true&quot;</span> <span class="attr">enableSelectByExample</span>=<span class="string">&quot;true&quot;</span></span></span><br><span class="line"><span class="tag">               <span class="attr">selectByExampleQueryId</span>=<span class="string">&quot;true&quot;</span> <span class="attr">enableUpdateByPrimaryKey</span>=<span class="string">&quot;true&quot;</span></span></span><br><span class="line"><span class="tag">               <span class="attr">enableDeleteByPrimaryKey</span>=<span class="string">&quot;true&quot;</span> <span class="attr">enableSelectByPrimaryKey</span>=<span class="string">&quot;true&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">columnOverride</span> <span class="attr">column</span>=<span class="string">&quot;status&quot;</span> <span class="attr">property</span>=<span class="string">&quot;status&quot;</span> <span class="attr">javaType</span>=<span class="string">&quot;java.lang.Integer&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">table</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">context</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">generatorConfiguration</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p><code>MyBatis Generator</code>还有许多其它的配置，官方文档上给我们做了详细的介绍，同时也给我们引入了大量的示例。不管任何技术，官方网站永远是我们获取资料的第一途径。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-
   
 
 
@@ -542,6 +345,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">工作原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%90%E5%AE%9E%E7%8E%B0%EF%BC%88Spring-Security-Crypto%EF%BC%89"><span class="nav-number">2.1.</span> <span class="nav-text">盐实现（Spring Security Crypto）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A0%E5%AF%86%EF%BC%88Spring-Security-Crypto%EF%BC%89"><span class="nav-number">2.2.</span> <span class="nav-text">加密（Spring Security Crypto）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%AF%86%EF%BC%88Spring-Security-Crypto%EF%BC%89"><span class="nav-number">2.3.</span> <span class="nav-text">解密（Spring Security Crypto）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hash%E5%8E%86%E5%8F%B2"><span class="nav-number">3.</span> <span class="nav-text">Hash历史</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="nav-number">4.</span> <span class="nav-text">结语</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
