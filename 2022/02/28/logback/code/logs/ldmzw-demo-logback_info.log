@@ -1,0 +1,50 @@
+2022-03-09 15:51:20.240 [main] [INFO ] com.ldmzw.demo.logback.test.MTest-13 - level is: info
+2022-03-09 15:51:20.240 [main] [INFO ] com.ldmzw.demo.logback.test.MTest-13 - level is: info
+2022-03-09 15:51:20.242 [main] [WARN ] com.ldmzw.demo.logback.test.MTest-14 - level is: warn
+2022-03-09 15:51:20.242 [main] [WARN ] com.ldmzw.demo.logback.test.MTest-14 - level is: warn
+2022-03-09 15:51:20.243 [main] [ERROR] com.ldmzw.demo.logback.test.MTest-15 - level is: error
+2022-03-09 15:51:20.243 [main] [ERROR] com.ldmzw.demo.logback.test.MTest-15 - level is: error
+2022-03-09 15:55:16.143 [main] [INFO ] com.ldmzw.demo.logback.test.MTest-13 - level is: info
+2022-03-09 15:55:16.152 [main] [WARN ] com.ldmzw.demo.logback.test.MTest-14 - level is: warn
+2022-03-09 15:55:16.154 [main] [ERROR] com.ldmzw.demo.logback.test.MTest-15 - level is: error
+2022-03-09 15:55:39.901 [main] [INFO ] com.ldmzw.demo.logback.test.MTest-13 - level is: info
+2022-03-09 15:55:39.903 [main] [WARN ] com.ldmzw.demo.logback.test.MTest-14 - level is: warn
+2022-03-09 15:55:39.904 [main] [ERROR] com.ldmzw.demo.logback.test.MTest-15 - level is: error
+2022-03-09 15:56:06.041 [main] [INFO ] com.ldmzw.demo.logback.test.MTest-13 - level is: info
+2022-03-09 15:56:06.041 [main] [INFO ] com.ldmzw.demo.logback.test.MTest-13 - level is: info
+2022-03-09 15:56:06.044 [main] [WARN ] com.ldmzw.demo.logback.test.MTest-14 - level is: warn
+2022-03-09 15:56:06.044 [main] [WARN ] com.ldmzw.demo.logback.test.MTest-14 - level is: warn
+2022-03-09 15:56:06.045 [main] [ERROR] com.ldmzw.demo.logback.test.MTest-15 - level is: error
+2022-03-09 15:56:06.045 [main] [ERROR] com.ldmzw.demo.logback.test.MTest-15 - level is: error
+2022-03-09 16:51:05.495 [main] [INFO ] com.ldmzw.demo.logback.Application-55 - Starting Application using Java 11.0.8 on victor with PID 5224 (D:\victor\git\study\hexo\source\_posts\logback\code\target\classes started by Administrator in D:\victor\git\study\hexo\source\_posts\logback\code)
+2022-03-09 16:51:05.503 [main] [INFO ] com.ldmzw.demo.logback.Application-640 - No active profile set, falling back to 1 default profile: "default"
+2022-03-09 16:51:10.997 [main] [INFO ] o.s.b.w.e.tomcat.TomcatWebServer-108 - Tomcat initialized with port(s): 8080 (http)
+2022-03-09 16:51:10.997 [main] [INFO ] o.s.b.w.e.tomcat.TomcatWebServer-108 - Tomcat initialized with port(s): 8080 (http)
+2022-03-09 16:51:11.058 [main] [INFO ] o.a.coyote.http11.Http11NioProtocol-173 - Initializing ProtocolHandler ["http-nio-8080"]
+2022-03-09 16:51:11.058 [main] [INFO ] o.a.catalina.core.StandardService-173 - Starting service [Tomcat]
+2022-03-09 16:51:11.059 [main] [INFO ] o.a.catalina.core.StandardEngine-173 - Starting Servlet engine: [Apache Tomcat/9.0.58]
+2022-03-09 16:51:11.365 [main] [INFO ] o.a.c.c.C.[Tomcat].[localhost].[/]-173 - Initializing Spring embedded WebApplicationContext
+2022-03-09 16:51:11.365 [main] [INFO ] o.s.b.w.s.c.ServletWebServerApplicationContext-290 - Root WebApplicationContext: initialization completed in 5371 ms
+2022-03-09 16:51:11.365 [main] [INFO ] o.s.b.w.s.c.ServletWebServerApplicationContext-290 - Root WebApplicationContext: initialization completed in 5371 ms
+2022-03-09 16:51:13.000 [main] [INFO ] o.a.coyote.http11.Http11NioProtocol-173 - Starting ProtocolHandler ["http-nio-8080"]
+2022-03-09 16:51:13.072 [main] [INFO ] o.s.b.w.e.tomcat.TomcatWebServer-220 - Tomcat started on port(s): 8080 (http) with context path ''
+2022-03-09 16:51:13.072 [main] [INFO ] o.s.b.w.e.tomcat.TomcatWebServer-220 - Tomcat started on port(s): 8080 (http) with context path ''
+2022-03-09 16:51:13.110 [main] [INFO ] com.ldmzw.demo.logback.Application-61 - Started Application in 10.212 seconds (JVM running for 12.007)
+2022-03-09 16:52:21.650 [http-nio-8080-exec-1] [INFO ] o.a.c.c.C.[Tomcat].[localhost].[/]-173 - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-03-09 16:52:21.651 [http-nio-8080-exec-1] [INFO ] o.s.web.servlet.DispatcherServlet-525 - Initializing Servlet 'dispatcherServlet'
+2022-03-09 16:52:21.651 [http-nio-8080-exec-1] [INFO ] o.s.web.servlet.DispatcherServlet-525 - Initializing Servlet 'dispatcherServlet'
+2022-03-09 16:52:21.658 [http-nio-8080-exec-1] [INFO ] o.s.web.servlet.DispatcherServlet-547 - Completed initialization in 5 ms
+2022-03-09 16:52:21.658 [http-nio-8080-exec-1] [INFO ] o.s.web.servlet.DispatcherServlet-547 - Completed initialization in 5 ms
+2022-03-09 16:52:22.023 [http-nio-8080-exec-1] [INFO ] c.l.d.l.controller.TestController-35 - level is: info
+2022-03-09 16:52:22.023 [http-nio-8080-exec-1] [WARN ] c.l.d.l.controller.TestController-36 - level is: warn
+2022-03-09 16:52:22.024 [http-nio-8080-exec-1] [ERROR] c.l.d.l.controller.TestController-37 - level is: error
+2022-03-09 16:52:50.113 [http-nio-8080-exec-8] [WARN ] c.l.d.l.controller.TestController-36 - level is: warn
+2022-03-09 16:52:50.114 [http-nio-8080-exec-8] [ERROR] c.l.d.l.controller.TestController-37 - level is: error
+2022-03-09 16:53:17.117 [http-nio-8080-exec-10] [INFO ] c.l.d.l.controller.TestController-27 - 修改日志等级：com.ldmzw.demo debug
+2022-03-09 16:53:28.350 [http-nio-8080-exec-2] [INFO ] c.l.d.l.controller.TestController-35 - level is: info
+2022-03-09 16:53:28.354 [http-nio-8080-exec-2] [WARN ] c.l.d.l.controller.TestController-36 - level is: warn
+2022-03-09 16:53:28.355 [http-nio-8080-exec-2] [ERROR] c.l.d.l.controller.TestController-37 - level is: error
+2022-03-09 16:53:41.284 [http-nio-8080-exec-6] [INFO ] c.l.d.l.controller.TestController-27 - 修改日志等级：com.ldmzw.demo info
+2022-03-09 16:53:44.231 [http-nio-8080-exec-8] [INFO ] c.l.d.l.controller.TestController-35 - level is: info
+2022-03-09 16:53:44.231 [http-nio-8080-exec-8] [WARN ] c.l.d.l.controller.TestController-36 - level is: warn
+2022-03-09 16:53:44.232 [http-nio-8080-exec-8] [ERROR] c.l.d.l.controller.TestController-37 - level is: error
