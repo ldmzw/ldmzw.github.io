@@ -28,7 +28,7 @@
 <meta property="og:description" content="风无定，人无常人生如浮萍，聚散两茫茫">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:author" content="victor min">
-<meta property="article:tag" content="program, java, spring, spring boot, spring cloud">
+<meta property="article:tag" content="ldmzw, program, java, spring, spring framework, spring boot, spring boot framework, spring cloud, spring cloud framework">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="http://ldmzw.github.io/">
@@ -149,7 +149,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://ldmzw.github.io/2022/02/28/logback/">
+    <link itemprop="mainEntityOfPage" href="http://ldmzw.github.io/2022/03/07/log-framework/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -163,7 +163,251 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2022/02/28/logback/" class="post-title-link" itemprop="url">日志组件Logback</a>
+            <a href="/2022/03/07/log-framework/" class="post-title-link" itemprop="url">日志组件</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-03-07 20:15:37" itemprop="dateCreated datePublished" datetime="2022-03-07T20:15:37+08:00">2022-03-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-03-16 10:49:22" itemprop="dateModified" datetime="2022-03-16T10:49:22+08:00">2022-03-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/%E6%97%A5%E5%BF%97%E7%BB%84%E4%BB%B6/" itemprop="url" rel="index"><span itemprop="name">日志组件</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>在应用中，日志是必不可少的，它能帮助我们快速的排查问题。但是在java中，我们时常会看到很多关于日志的包，比如<code>common-logging.jar</code>、<code>log4j-api.jar</code>、<code>slf4j-api.jar</code>、<code>logback-classic.jar</code>、<code>log4j-to-slf4j.jar</code>等等。一堆的jar让我们感觉云里雾里，弄不明白日志框架。本文主要是做一些梳理，从大体上讲解java的日志体系。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://logback.qos.ch/" title="logback 官网">logback 官网</a></li>
+<li><a target="_blank" rel="noopener" href="https://logging.apache.org/log4j/1.2/" title="log4j 官网">log4j 官网</a></li>
+<li><a target="_blank" rel="noopener" href="https://logging.apache.org/log4j/2.x/" title="log4j2 官网">log4j2 官网</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/package-summary.html" title="jul summary">jul summary</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.slf4j.org/" title="slf4j 官网">slf4j 官网</a></li>
+<li><a target="_blank" rel="noopener" href="https://commons.apache.org/proper/commons-logging/" title="jcl 官网">jcl 官网</a></li>
+</ul>
+<p>上面的框架我们可以分为两大类：<code>门面日志框架</code>与<code>记录日志框架</code>。通俗的讲，门面日志框架只负责一些规范与定义，并不负责具体的实现，就好比Mysql的存储引擎规范。而记录日志框架则是具体的实现，就好比实现Mysql存储引擎规范的<code>InnoDB</code>与<code>MyISAM</code>。</p>
+<p>相关链接：</p>
+<ul>
+<li><a href="/2022/02/28/log-logback/" title="日志组件Logback">日志组件Logback</a></li>
+</ul>
+<h2 id="门面日志框架"><a href="#门面日志框架" class="headerlink" title="门面日志框架"></a>门面日志框架</h2><p>在java中，门面日志框架有<code>JCL(commons logging)</code>与<code>Slf4j(simple logging facade for java)</code>。</p>
+<h3 id="JCL（Apache-Commons-Logging）"><a href="#JCL（Apache-Commons-Logging）" class="headerlink" title="JCL（Apache Commons Logging）"></a>JCL（Apache Commons Logging）</h3><p><code>JCL</code>也就是我们常说的<code>Apache Commons Logging</code>。<code>jcl</code>采用了设计模式中的<code>适配器模式</code>，它对外提供统一的接口，然后在适配类中对日志的操作委托给具体的记录日志框架，包括<code>Log4j</code>、<code>JDK1.4</code>以及任何一个实现<code>JDK1.4 logging APIs(JSR-47)</code>。</p>
+<p>在JCL中对外有两个统一的接口，分别是<code>Log</code>和<code>LogFactory</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.commons.logging.Log;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.logging.LogFactory;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CLASS</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Log log = LogFactory.getLog(CLASS.class);</span><br><span class="line">    ...</span><br><span class="line">    ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当我们调用<code>LogFactory.getLog(CLASS.class)</code>的时候，最终会通过<code>LogAdapter.createLog(name)</code>来进行<code>Log</code>创建，所有的创建逻辑我们都可以在源码<code>org.apache.commons.logging.LogAdapter</code>中找到。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">log.fatal(Object message);</span><br><span class="line">log.fatal(Object message, Throwable t);</span><br><span class="line">log.error(Object message);</span><br><span class="line">log.error(Object message, Throwable t);</span><br><span class="line">log.warn(Object message);</span><br><span class="line">log.warn(Object message, Throwable t);</span><br><span class="line">log.info(Object message);</span><br><span class="line">log.info(Object message, Throwable t);</span><br><span class="line">log.debug(Object message);</span><br><span class="line">log.debug(Object message, Throwable t);</span><br><span class="line">log.trace(Object message);</span><br><span class="line">log.trace(Object message, Throwable t);</span><br></pre></td></tr></table></figure>
+
+<p>在使用<code>jcl</code>时，我们经常会为引入的jar文件感到迷惑。</p>
+<ul>
+<li>commons-logging.jar：文件包括了<code>LogFacctory</code>的实现，<code>Log</code>的对<code>Log4j</code>、<code>Avalon logkit</code>、<code>Lumberjack</code>与<code>jul</code>的简单封装，我们可以不再引入其它依赖就能实现日志的打印，同时也包含了两个自己的日志实现<code>SimpleLog</code>与<code>NoOpLog</code>。</li>
+<li>commons-logging-api.jar：文件包括了<code>LogFacctory</code>的实现，<code>Log</code>的对<code>jul</code>的简单封装，同时也包含了两个自己的日志实现<code>SimpleLog</code>与<code>NoOpLog</code>。与<code>commons-logging.jar</code>不同的是，使用<code>commons-logging-api.jar</code>时，我们需要再引入其它实现才能打印日志，如<code>log4j</code>、<code>avalon</code>与<code>lumberjack</code>等。</li>
+<li>commons-logging-adapters：文件只包含了三方日志的适配器。</li>
+</ul>
+<h3 id="Slf4j（simple-facade-logging-for-java）"><a href="#Slf4j（simple-facade-logging-for-java）" class="headerlink" title="Slf4j（simple facade logging for java）"></a>Slf4j（simple facade logging for java）</h3><p><code>slf4j</code>是一个简单的门面日志框架，如果我们需要使用<code>slf4j</code>，我们需要引入具体的记录日志依赖，如<code>jul</code>、<code>logback</code>、<code>reload4j</code>等。我们使用<code>slf4j</code>只需要引入<code>slf4j-api.jar</code>即可。</p>
+<p>在Slf4j中对外有两个统一的接口，分别是<code>Logger</code>和<code>LoggerFactory</code>。</p>
+<p><img src="/2022/03/07/log-framework/001.png" alt="Slf4j 实现" title="Slf4j 实现"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.slf4j.Logger;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.LoggerFactory;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CLASS</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Logger log = LoggerFactory.getLog(CLASS.class);</span><br><span class="line">    ...</span><br><span class="line">    ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果我们不引入任何记录日志实现，<code>slf4j</code>将会使用<code>org.slf4j.helpers.NOPLogger</code>，当我们启动应用的时候，会出现如下日志</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SLF4J: Failed to load class &quot;org.slf4j.impl.StaticLoggerBinder&quot;.</span><br><span class="line">SLF4J: Defaulting to no-operation (NOP) logger implementation</span><br><span class="line">SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.</span><br></pre></td></tr></table></figure>
+
+<p>当然，我们可以通过引入记录日志框架来消除上面的警告，slf4j也提供了自己的实现<code>slf4j-simple.jar</code></p>
+<h3 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h3><p><code>log4j</code>在被<code>Apache Software Foundation</code>收入门下之后，由于理念不合，<code>log4j</code>的作者离开了并且随后开发了<code>slf4j</code>与<code>logback</code>。</p>
+<p><code>slf4j</code>与<code>jcl</code>最大的区别在于日志的绑定服务。</p>
+<p>jcl采用动态绑定机制：</p>
+<ol>
+<li>在进程启动时尝试获取名为”org.apache.commons.logging.Log”的配置属性（可与在commons-logging.properties文件中配置，或使用Java代码进行配置），按配置选取对应的日志输出服务</li>
+<li>如果没有获取到对应配置属性，会尝试在系统参数中寻找名为”org.apache.commons.logging.Log”的参数项</li>
+<li>如果1,2均没有获取到，会在classpath下寻找log4j的相关class，如果找到，则使用log4j作为日志输出服务</li>
+<li>如果没有找到log4j，则尝试使用java.util.logging包作为日志输出服务</li>
+<li>如果上述都失败，则使用SimpleLog作为日志输出服务，即将所有日志输出至控制台标准输出System.err</li>
+</ol>
+<p>JCL的动态绑定机制基于ClassLoader实现，缺点一是效率较低，二是容易引发混乱，在一个复杂甚至混乱的依赖环境下，确定当前正在生效的日志服务是很费力的，特别是在程序开发和设计人员并不理解JCL的机制时，三是最致命的问题：在使用了自定义ClassLoader的程序中，使用JCL会引发各类问题，例如内存泄露、与OSGI冲突等。</p>
+<p>而slf4j则简单得多，采用静态绑定机制：</p>
+<ul>
+<li>slf4j为各类日志输出服务提供了适配库，如slf4j-log4j12，slf4j-simple，slf4j-jdk14等。一个Java工程下只能引入一个slf4j适配库</li>
+<li>slf4j会加载org.slf4j.impl.StaticLoggerBinder作为输出日志的实现类。这个类在每个适配库中都存在，所以slf4j不需要像JCL一样主动去寻找日志输出实现，自然而然地就能与具体的日志输出实现绑定起来</li>
+<li>当需要更换日志输出服务时（比如从logback切换回log4j），只需要替换掉适配库即可</li>
+</ul>
+<p>所以slf4j不仅对比JCL有性能上的优势，使用slf4j的程序员也不需要去翻找配置文件或追踪启动过程就能够清除明白地了解当前使用的是什么日志输出服务。</p>
+<blockquote>
+<p>内容引用至：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/85d141365d39" title="该让log4j退休了 - 论Java日志组件的选择">该让log4j退休了 - 论Java日志组件的选择</a></p>
+</blockquote>
+<p>由于<code>jcl</code>的一些存在问题，目前门面日志框架<code>slf4j</code>已经占据了较大的份额，如果是新应用的话，建议使用<code>slf4j</code>。</p>
+<h2 id="记录日志框架"><a href="#记录日志框架" class="headerlink" title="记录日志框架"></a>记录日志框架</h2><p>java里面记录日志框架有很多，比如大家耳熟能详的<code>log4j</code>、<code>log4j2</code>、<code>logback</code>等。</p>
+<h3 id="log4j"><a href="#log4j" class="headerlink" title="log4j"></a>log4j</h3><p>由于使用<code>log4j</code>的系统太多，经过多年的发展，为了兼容java的低版本，<code>log4j</code>变得越来越难维护。因此，在2015年8月5日，log4j的管理委员会宣布不再维护<code>log4j</code>，<code>log4j</code>也因此迎来了生命的尽头，最后一个版本是<code>1.2.17</code>。管理委员会建议使用<code>log4j</code>的用户切换到<code>log4j2</code>。</p>
+<blockquote>
+<p>注意：在没有特别说明的情况下，<code>log4j</code>指的是<code>log4j 1.x</code>版本</p>
+</blockquote>
+<h3 id="log4j2"><a href="#log4j2" class="headerlink" title="log4j2"></a>log4j2</h3><p><code>log4j2</code>从名称上就能看出来是<code>log4j</code>的升级产品，相比于<code>log4j</code>，团队重新设计了<code>log4j2</code>，并且吸取了<code>logback</code>的优点。</p>
+<h3 id="logback"><a href="#logback" class="headerlink" title="logback"></a>logback</h3><p><code>logback</code>是一款优秀的日志框架，目前<code>Spring Boot</code>中默认的日志组件就是采用的<code>logback</code>。</p>
+<ul>
+<li><a href="/2022/02/28/log-logback/" title="日志组件Logback">日志组件Logback</a></li>
+</ul>
+<h3 id="对比-1"><a href="#对比-1" class="headerlink" title="对比"></a>对比</h3><h4 id="log4j与log4j2"><a href="#log4j与log4j2" class="headerlink" title="log4j与log4j2"></a>log4j与log4j2</h4><ul>
+<li>配置文件：<code>log4j</code>采用的是 <code>.properties</code> 的文件作为主配置文件，默认是<code>log4j.properties</code>。而<code>log4j2</code>则是采用了 <code>.xml</code>或者<code>.json</code>来配置，默认为<code>log4j2.xml</code>。</li>
+<li>核心jar包：<code>log4j</code>只需要引入<code>log4j.jar</code>即可，<code>log4j2</code>需要引入<code>log4j-core</code>与<code>log4j-api</code>。</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>log4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>log4j<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.logging.log4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>log4j-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.logging.log4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>log4j-api<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>log调用：<code>log4j</code>与<code>log4j2</code>的调用都十分的简单。apache为了区分两者，修改了对应的<code>package</code>。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    org.apache.log4j.Logger log4j = org.apache.log4j.LogManager.getLogger(MTest.class);</span><br><span class="line">    log4j.info(<span class="string">&quot;level is: info&quot;</span>);</span><br><span class="line"></span><br><span class="line">    org.apache.logging.log4j.Logger log4j2 = org.apache.logging.log4j.LogManager.getLogger(MTest.class);</span><br><span class="line">    log4j2.info(<span class="string">&quot;level is: info&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>配置不同：由于<code>.properties</code>文件的可读性较差，<code>log4j2</code>采用了<code>.xml</code>或者<code>.json</code>进行配置，因此两者的配置差别较大。</li>
+</ul>
+<h4 id="log4j2与logback"><a href="#log4j2与logback" class="headerlink" title="log4j2与logback"></a>log4j2与logback</h4><p>由于<code>log4j</code>已经停止维护，因此目前对比得最多的就是<code>log4j2</code>与<code>logback</code>，两个日志框架都十分的优秀，如果不是深度使用，我们也许感受不到两者的差异。总的来说，<code>log4j2</code>功能更强大，<code>logbakc</code>使用更简单。</p>
+<h2 id="日志转换"><a href="#日志转换" class="headerlink" title="日志转换"></a>日志转换</h2><p>在java开发中，一般日志是配套出现的，也既是一个日志门面与一个日志实现配套使用。由于<code>slf4j</code>未提供日志实现，因此会有很多的桥接jar来匹配具体的日志实现。</p>
+<table>
+<thead>
+<tr>
+<th align="center">日志门面</th>
+<th align="center">桥接包</th>
+<th align="center">日志实现</th>
+<th align="center">备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">slf4j</td>
+<td align="center">logback-classic.jar</td>
+<td align="center">logback</td>
+<td align="center">slf4j到logback的桥接</td>
+</tr>
+<tr>
+<td align="center">slf4j</td>
+<td align="center">slf4j-jdk14.jar</td>
+<td align="center">jul</td>
+<td align="center">slf4j到julr桥接</td>
+</tr>
+<tr>
+<td align="center">slf4j</td>
+<td align="center">slf4j-jcl.jar</td>
+<td align="center">jcl</td>
+<td align="center">slf4j到jcl的桥接</td>
+</tr>
+<tr>
+<td align="center">slf4j</td>
+<td align="center">slf4j-log4j12.jar</td>
+<td align="center">log4j</td>
+<td align="center">slf4j到log4j的桥接</td>
+</tr>
+<tr>
+<td align="center">slf4j</td>
+<td align="center">slf4j-log4j-impl.jar</td>
+<td align="center">log4j2</td>
+<td align="center">slf4j到log4j2的桥接</td>
+</tr>
+</tbody></table>
+<p><img src="/2022/03/07/log-framework/003.png" alt="Slf4j adapter" title="Slf4j adapter"></p>
+<p>日志的重定向：</p>
+<table>
+<thead>
+<tr>
+<th align="center">迁移包</th>
+<th align="center">迁移方向</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">jul-to-slf4j.jar</td>
+<td align="center">jul –&gt; slf4j</td>
+</tr>
+<tr>
+<td align="center">jcl-over-slf4j.jar</td>
+<td align="center">jcl –&gt; slf4j</td>
+</tr>
+<tr>
+<td align="center">log4j-over-slf4j.jar</td>
+<td align="center">log4j –&gt; slf4j</td>
+</tr>
+<tr>
+<td align="center">log4j-to-slf4j.jar</td>
+<td align="center">log4j2 –&gt; slf4j</td>
+</tr>
+<tr>
+<td align="center">log4j-jul.jar</td>
+<td align="center">jul –&gt; log4j2</td>
+</tr>
+<tr>
+<td align="center">log4j-jcl.jar</td>
+<td align="center">jcl –&gt; log4j2</td>
+</tr>
+<tr>
+<td align="center">log4j-1.2-api.jar</td>
+<td align="center">log4j –&gt; log4j2</td>
+</tr>
+</tbody></table>
+<p>举例说明：</p>
+<p>如果我们原来应用中是使用的<code>log4j</code>，现在我们需要转换成<code>logback</code>，那么我们首先需要引入<code>log4j-over-slf4j.jar</code>将<code>log4j</code>转换成<code>slf4j</code>，然后再引入<code>logback-classic.jar</code>将<code>slf4j</code>转换成<code>logback</code>。</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>java的日志框架随着<code>slf4j</code>的出现而结束了长期的混乱局面。然而在记录日志框架的选型上，<code>logback</code>与<code>log4j2</code>都有自己的优点。目前比较常使用的为<code>slf4j+logback</code>、<code>log4j2</code>、<code>slf4j+log4j2</code>。</p>
+<p>参考文章：</p>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/85d141365d39" title="该让log4j退休了 - 论Java日志组件">该让log4j退休了 - 论Java日志组件的选择</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://ldmzw.github.io/2022/02/28/log-logback/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="victor min">
+      <meta itemprop="description" content="风无定，人无常<br/>人生如浮萍，聚散两茫茫">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ldmzw">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/02/28/log-logback/" class="post-title-link" itemprop="url">日志组件Logback</a>
         </h2>
 
         <div class="post-meta">
@@ -180,7 +424,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-03-09 17:47:29" itemprop="dateModified" datetime="2022-03-09T17:47:29+08:00">2022-03-09</time>
+                <time title="修改时间：2022-03-11 11:25:52" itemprop="dateModified" datetime="2022-03-11T11:25:52+08:00">2022-03-11</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -188,7 +432,11 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%97%A5%E5%BF%97%E7%BB%84%E4%BB%B6/" itemprop="url" rel="index"><span itemprop="name">日志组件</span></a>
+                  <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/%E6%97%A5%E5%BF%97%E7%BB%84%E4%BB%B6/" itemprop="url" rel="index"><span itemprop="name">日志组件</span></a>
                 </span>
             </span>
 
@@ -249,7 +497,7 @@
 
 <p>我们启动应用，然后访问下面的地址，然后再查看应用的日志，发现随着日志等级的改变，只打印对应等级及以上的日志，修改日志等级成功</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">http://localhost:8080/test/log</span><br><span class="line">http://localhost:8080/test/log/change/root/info</span><br><span class="line">http://localhost:8080/test/log/change/com.ldmzw.demo/warn</span><br></pre></td></tr></table></figure>
-<p><img src="/2022/02/28/logback/001.png" alt="logback change level" title="logback change level"></p>
+<p><img src="/2022/02/28/log-logback/001.png" alt="logback change level" title="logback change level"></p>
 <h3 id="日志等级继承"><a href="#日志等级继承" class="headerlink" title="日志等级继承"></a>日志等级继承</h3><p>在<code>logback</code>中，日志等级如果我们没有配置，则默认会继承<code>parent</code>的等级，如果<code>parent</code>也没有设置等级，则会一直寻找到<code>root</code>，如果我们连<code>root</code>也未设置等级，则<code>root</code>的默认等级为<code>DEBUG</code>，可以从源码<code>ch.qos.logback.classic.LoggerContext</code>中找到。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Logback: the reliable, generic, fast and flexible logging framework.</span></span><br><span class="line"><span class="comment"> * Copyright (C) 1999-2015, QOS.ch. All rights reserved.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * This program and the accompanying materials are dual-licensed under</span></span><br><span class="line"><span class="comment"> * either the terms of the Eclipse Public License v1.0 as published by</span></span><br><span class="line"><span class="comment"> * the Eclipse Foundation</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *   or (per the licensee&#x27;s choosing)</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * under the terms of the GNU Lesser General Public License version 2.1</span></span><br><span class="line"><span class="comment"> * as published by the Free Software Foundation.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">package</span> ch.qos.logback.classic;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> ch.qos.logback.core.CoreConstants.EVALUATOR_MAP;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.Collection;</span><br><span class="line"><span class="keyword">import</span> java.util.Collections;</span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.ConcurrentHashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.ScheduledFuture;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.slf4j.ILoggerFactory;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.Marker;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> ch.qos.logback.classic.spi.LoggerComparator;</span><br><span class="line"><span class="keyword">import</span> ch.qos.logback.classic.spi.LoggerContextListener;</span><br><span class="line"><span class="keyword">import</span> ch.qos.logback.classic.spi.LoggerContextVO;</span><br><span class="line"><span class="keyword">import</span> ch.qos.logback.classic.spi.TurboFilterList;</span><br><span class="line"><span class="keyword">import</span> ch.qos.logback.classic.turbo.TurboFilter;</span><br><span class="line"><span class="keyword">import</span> ch.qos.logback.classic.util.LoggerNameUtil;</span><br><span class="line"><span class="keyword">import</span> ch.qos.logback.core.ContextBase;</span><br><span class="line"><span class="keyword">import</span> ch.qos.logback.core.boolex.EventEvaluator;</span><br><span class="line"><span class="keyword">import</span> ch.qos.logback.core.spi.FilterReply;</span><br><span class="line"><span class="keyword">import</span> ch.qos.logback.core.spi.LifeCycle;</span><br><span class="line"><span class="keyword">import</span> ch.qos.logback.core.status.StatusListener;</span><br><span class="line"><span class="keyword">import</span> ch.qos.logback.core.status.StatusManager;</span><br><span class="line"><span class="keyword">import</span> ch.qos.logback.core.status.WarnStatus;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * LoggerContext glues many of the logback-classic components together. In</span></span><br><span class="line"><span class="comment"> * principle, every logback-classic component instance is attached either</span></span><br><span class="line"><span class="comment"> * directly or indirectly to a LoggerContext instance. Just as importantly</span></span><br><span class="line"><span class="comment"> * LoggerContext implements the &#123;<span class="doctag">@link</span> ILoggerFactory&#125; acting as the</span></span><br><span class="line"><span class="comment"> * manufacturing source of &#123;<span class="doctag">@link</span> Logger&#125; instances.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Ceki Gulcu</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LoggerContext</span> <span class="keyword">extends</span> <span class="title">ContextBase</span> <span class="keyword">implements</span> <span class="title">ILoggerFactory</span>, <span class="title">LifeCycle</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** Default setting of packaging data in stack traces */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">boolean</span> DEFAULT_PACKAGING_DATA = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">final</span> Logger root;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> size;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> noAppenderWarning = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">private</span> List&lt;LoggerContextListener&gt; loggerContextListenerList = <span class="keyword">new</span> ArrayList&lt;LoggerContextListener&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Map&lt;String, Logger&gt; loggerCache;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> LoggerContextVO loggerContextRemoteView;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> TurboFilterList turboFilterList = <span class="keyword">new</span> TurboFilterList();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> packagingDataEnabled = DEFAULT_PACKAGING_DATA;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> maxCallerDataDepth = ClassicConstants.DEFAULT_MAX_CALLEDER_DATA_DEPTH;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> resetCount = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">private</span> List&lt;String&gt; frameworkPackages;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LoggerContext</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">        <span class="keyword">this</span>.loggerCache = <span class="keyword">new</span> ConcurrentHashMap&lt;String, Logger&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">this</span>.loggerContextRemoteView = <span class="keyword">new</span> LoggerContextVO(<span class="keyword">this</span>);</span><br><span class="line">        <span class="keyword">this</span>.root = <span class="keyword">new</span> Logger(Logger.ROOT_LOGGER_NAME, <span class="keyword">null</span>, <span class="keyword">this</span>);</span><br><span class="line">        <span class="keyword">this</span>.root.setLevel(Level.DEBUG);</span><br><span class="line">        loggerCache.put(Logger.ROOT_LOGGER_NAME, root);</span><br><span class="line">        initEvaluatorMap();</span><br><span class="line">        size = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">this</span>.frameworkPackages = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    。。。</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -568,7 +816,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-18 10:40:31" itemprop="dateModified" datetime="2022-02-18T10:40:31+08:00">2022-02-18</time>
+                <time title="修改时间：2022-03-09 18:02:13" itemprop="dateModified" datetime="2022-03-09T18:02:13+08:00">2022-03-09</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -576,7 +824,11 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6/" itemprop="url" rel="index"><span itemprop="name">消息中间件</span></a>
+                  <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6/" itemprop="url" rel="index"><span itemprop="name">消息中间件</span></a>
                 </span>
             </span>
 
@@ -785,7 +1037,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2022/01/15/swagger/" class="post-title-link" itemprop="url">Swagger</a>
+            <a href="/2022/01/15/swagger/" class="post-title-link" itemprop="url">接口文档Swagger</a>
         </h2>
 
         <div class="post-meta">
@@ -802,7 +1054,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-14 10:28:01" itemprop="dateModified" datetime="2022-02-14T10:28:01+08:00">2022-02-14</time>
+                <time title="修改时间：2022-03-09 17:58:40" itemprop="dateModified" datetime="2022-03-09T17:58:40+08:00">2022-03-09</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -810,7 +1062,11 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/swagger/" itemprop="url" rel="index"><span itemprop="name">swagger</span></a>
+                  <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/%E6%8E%A5%E5%8F%A3%E6%96%87%E6%A1%A3/" itemprop="url" rel="index"><span itemprop="name">接口文档</span></a>
                 </span>
             </span>
 
@@ -906,7 +1162,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-14 10:27:43" itemprop="dateModified" datetime="2022-02-14T10:27:43+08:00">2022-02-14</time>
+                <time title="修改时间：2022-03-09 17:57:03" itemprop="dateModified" datetime="2022-03-09T17:57:03+08:00">2022-03-09</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1048,16 +1304,16 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">分类</span>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
