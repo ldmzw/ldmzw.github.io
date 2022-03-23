@@ -1,0 +1,31 @@
+2022-03-23 10:30:30.016 [main] WARN  com.ldmzw.demo.log4j2.test.MTest 20 level is: warn
+2022-03-23 10:31:56.154 [main] WARN  com.ldmzw.demo.log4j2.test.MTest 30 level is: warn
+2022-03-23 10:31:58.707 [main] WARN  com.ldmzw.demo.log4j2.test.MTest 39 level is: warn
+2022-03-23 10:44:58.816 [main] WARN  com.ldmzw.demo.log4j2.test.MTest 20 level is: warn
+2022-03-23 10:46:01.671 [main] WARN  com.ldmzw.demo.log4j2.test.MTest 30 level is: warn
+2022-03-23 10:46:01.678 [main] WARN  com.ldmzw.demo.log4j2.test.MTest 39 level is: warn
+2022-03-23 10:46:39.461 [main] WARN  com.ldmzw.demo.log4j2.test.MTest 20 level is: warn
+2022-03-23 10:47:48.356 [main] WARN  com.ldmzw.demo.log4j2.test.MTest 30 level is: warn
+2022-03-23 10:47:48.358 [main] WARN  com.ldmzw.demo.log4j2.test.MTest 39 level is: warn
+2022-03-23 11:11:39.850 [http-nio-8080-exec-3] WARN  com.ldmzw.demo.log4j2.controller.TestController 42 level is: warn
+2022-03-23 11:11:57.738 [http-nio-8080-exec-7] WARN  com.ldmzw.demo.log4j2.controller.TestController 42 level is: warn
+2022-03-23 14:30:44.862 [main] WARN  com.ldmzw.demo.log4j2.test.MTest 25 level is: warn
+2022-03-23 14:30:44.867 [main] WARN  com.ldmzw.demo.log4j2.test.MTest 42 level is: warn
+2022-03-23 14:30:44.869 [main] WARN  com.ldmzw.demo.log4j2.test.MTest 51 level is: warn
+2022-03-23 14:51:56.143 [main] WARN  com.ldmzw.demo.log4j2.test.MTest 25 level is: warn
+2022-03-23 14:54:09.936 [main] WARN  com.ldmzw.demo.log4j2.test.MTest 42 level is: warn
+2022-03-23 14:54:09.941 [main] WARN  com.ldmzw.demo.log4j2.test.MTest 51 level is: warn
+2022-03-23 14:55:48.809 [main] WARN  com.ldmzw.demo.log4j2.test.MTest 26 level is: warn
+2022-03-23 14:59:12.283 [main] WARN  com.ldmzw.demo.log4j2.test.MTest 43 level is: warn
+2022-03-23 14:59:12.288 [main] WARN  com.ldmzw.demo.log4j2.test.MTest 52 level is: warn
+2022-03-23 15:00:43.029 [main] WARN  com.ldmzw.demo.log4j2.test.MTest 15 level is: warn
+2022-03-23 15:00:53.624 [main] WARN  com.ldmzw.demo.log4j2.test.MTest 25 level is: warn
+2022-03-23 15:00:53.625 [main] WARN  com.ldmzw.demo.log4j2.test.MTest 33 level is: warn
+2022-03-23 15:03:56.661 [main] WARN  com.ldmzw.demo.log4j2.test.AA 13 AA level is: warn
+2022-03-23 15:03:56.664 [main] WARN  com.ldmzw.demo.log4j2.test.MTest 18 level is: warn
+2022-03-23 15:13:40.795 [main] WARN  com.ldmzw.demo.log4j2.test.MTest 28 level is: warn
+2022-03-23 15:13:40.801 [main] WARN  com.ldmzw.demo.log4j2.test.MTest 36 level is: warn
+2022-03-23 15:32:26.505 [main] WARN  com.ldmzw.demo.log4j2.test.AA 13 AA level is: warn
+2022-03-23 15:32:41.272 [main] WARN  com.ldmzw.demo.log4j2.test.MTest 18 level is: warn
+2022-03-23 15:32:53.119 [main] WARN  com.ldmzw.demo.log4j2.test.MTest 28 level is: warn
+2022-03-23 15:32:53.123 [main] WARN  com.ldmzw.demo.log4j2.test.MTest 36 level is: warn

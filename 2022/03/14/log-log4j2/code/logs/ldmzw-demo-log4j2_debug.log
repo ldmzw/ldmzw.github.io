@@ -1,0 +1,117 @@
+2022-03-23 10:30:29.520 [main] DEBUG com.ldmzw.demo.log4j2.test.MTest level is: debug
+2022-03-23 10:30:29.804 [main] INFO  com.ldmzw.demo.log4j2.test.MTest level is: info
+2022-03-23 10:30:30.016 [main] WARN  com.ldmzw.demo.log4j2.test.MTest level is: warn
+2022-03-23 10:30:30.304 [main] ERROR com.ldmzw.demo.log4j2.test.MTest level is: error
+2022-03-23 10:31:56.154 [main] WARN  com.ldmzw.demo.log4j2.test.MTest level is: warn
+2022-03-23 10:31:56.155 [main] ERROR com.ldmzw.demo.log4j2.test.MTest level is: error
+2022-03-23 10:31:58.705 [main] DEBUG com.ldmzw.demo.log4j2.test.MTest level is: debug
+2022-03-23 10:31:58.706 [main] INFO  com.ldmzw.demo.log4j2.test.MTest level is: info
+2022-03-23 10:31:58.707 [main] WARN  com.ldmzw.demo.log4j2.test.MTest level is: warn
+2022-03-23 10:31:58.708 [main] ERROR com.ldmzw.demo.log4j2.test.MTest level is: error
+2022-03-23 10:44:58.814 [main] DEBUG com.ldmzw.demo.log4j2.test.MTest level is: debug
+2022-03-23 10:44:58.815 [main] INFO  com.ldmzw.demo.log4j2.test.MTest level is: info
+2022-03-23 10:44:58.816 [main] WARN  com.ldmzw.demo.log4j2.test.MTest level is: warn
+2022-03-23 10:44:58.817 [main] ERROR com.ldmzw.demo.log4j2.test.MTest level is: error
+2022-03-23 10:46:01.671 [main] WARN  com.ldmzw.demo.log4j2.test.MTest level is: warn
+2022-03-23 10:46:01.673 [main] ERROR com.ldmzw.demo.log4j2.test.MTest level is: error
+2022-03-23 10:46:01.675 [main] DEBUG com.ldmzw.demo.log4j2.test.MTest level is: debug
+2022-03-23 10:46:01.677 [main] INFO  com.ldmzw.demo.log4j2.test.MTest level is: info
+2022-03-23 10:46:01.678 [main] WARN  com.ldmzw.demo.log4j2.test.MTest level is: warn
+2022-03-23 10:46:01.680 [main] ERROR com.ldmzw.demo.log4j2.test.MTest level is: error
+2022-03-23 10:46:39.459 [main] DEBUG com.ldmzw.demo.log4j2.test.MTest level is: debug
+2022-03-23 10:46:39.460 [main] INFO  com.ldmzw.demo.log4j2.test.MTest level is: info
+2022-03-23 10:46:39.461 [main] WARN  com.ldmzw.demo.log4j2.test.MTest level is: warn
+2022-03-23 10:46:39.471 [main] ERROR com.ldmzw.demo.log4j2.test.MTest level is: error
+2022-03-23 10:47:48.356 [main] WARN  com.ldmzw.demo.log4j2.test.MTest level is: warn
+2022-03-23 10:47:48.357 [main] ERROR com.ldmzw.demo.log4j2.test.MTest level is: error
+2022-03-23 10:47:48.357 [main] DEBUG com.ldmzw.demo.log4j2.test.MTest level is: debug
+2022-03-23 10:47:48.358 [main] INFO  com.ldmzw.demo.log4j2.test.MTest level is: info
+2022-03-23 10:47:48.358 [main] WARN  com.ldmzw.demo.log4j2.test.MTest level is: warn
+2022-03-23 10:47:48.358 [main] ERROR com.ldmzw.demo.log4j2.test.MTest level is: error
+2022-03-23 11:10:50.280 [main] INFO  com.ldmzw.demo.log4j2.Application Starting Application using Java 11.0.8 on victor with PID 3568 (D:\victor\git\study\hexo\source\_posts\log-log4j2\code\target\classes started by Administrator in D:\victor\git\study\hexo\source\_posts\log-log4j2\code)
+2022-03-23 11:10:50.303 [main] DEBUG com.ldmzw.demo.log4j2.Application Running with Spring Boot v2.6.4, Spring v5.3.16
+2022-03-23 11:10:50.306 [main] INFO  com.ldmzw.demo.log4j2.Application No active profile set, falling back to 1 default profile: "default"
+2022-03-23 11:11:20.107 [main] INFO  com.ldmzw.demo.log4j2.Application Started Application in 31.56 seconds (JVM running for 34.504)
+2022-03-23 11:11:39.848 [http-nio-8080-exec-3] DEBUG com.ldmzw.demo.log4j2.controller.TestController level is: debug
+2022-03-23 11:11:39.849 [http-nio-8080-exec-3] INFO  com.ldmzw.demo.log4j2.controller.TestController level is: info
+2022-03-23 11:11:39.850 [http-nio-8080-exec-3] WARN  com.ldmzw.demo.log4j2.controller.TestController level is: warn
+2022-03-23 11:11:39.851 [http-nio-8080-exec-3] ERROR com.ldmzw.demo.log4j2.controller.TestController level is: error
+2022-03-23 11:11:52.891 [http-nio-8080-exec-5] INFO  com.ldmzw.demo.log4j2.controller.TestController 修改日志等级：com.ldmzw.demo.log4j2 debug
+2022-03-23 11:11:57.737 [http-nio-8080-exec-7] DEBUG com.ldmzw.demo.log4j2.controller.TestController level is: debug
+2022-03-23 11:11:57.737 [http-nio-8080-exec-7] INFO  com.ldmzw.demo.log4j2.controller.TestController level is: info
+2022-03-23 11:11:57.738 [http-nio-8080-exec-7] WARN  com.ldmzw.demo.log4j2.controller.TestController level is: warn
+2022-03-23 11:11:57.740 [http-nio-8080-exec-7] ERROR com.ldmzw.demo.log4j2.controller.TestController level is: error
+2022-03-23 14:30:44.852 [main] DEBUG com.ldmzw.demo.log4j2.test.MTest level is: debug
+2022-03-23 14:30:44.860 [main] INFO  com.ldmzw.demo.log4j2.test.MTest level is: info
+2022-03-23 14:30:44.862 [main] WARN  com.ldmzw.demo.log4j2.test.MTest level is: warn
+2022-03-23 14:30:44.863 [main] ERROR com.ldmzw.demo.log4j2.test.MTest level is: error
+2022-03-23 14:30:44.867 [main] WARN  com.ldmzw.demo.log4j2.test.MTest level is: warn
+2022-03-23 14:30:44.868 [main] ERROR com.ldmzw.demo.log4j2.test.MTest level is: error
+2022-03-23 14:30:44.868 [main] DEBUG com.ldmzw.demo.log4j2.test.MTest level is: debug
+2022-03-23 14:30:44.869 [main] INFO  com.ldmzw.demo.log4j2.test.MTest level is: info
+2022-03-23 14:30:44.869 [main] WARN  com.ldmzw.demo.log4j2.test.MTest level is: warn
+2022-03-23 14:30:44.869 [main] ERROR com.ldmzw.demo.log4j2.test.MTest level is: error
+2022-03-23 14:51:56.141 [main] DEBUG com.ldmzw.demo.log4j2.test.MTest level is: debug
+2022-03-23 14:51:56.142 [main] INFO  com.ldmzw.demo.log4j2.test.MTest level is: info
+2022-03-23 14:51:56.143 [main] WARN  com.ldmzw.demo.log4j2.test.MTest level is: warn
+2022-03-23 14:51:56.151 [main] ERROR com.ldmzw.demo.log4j2.test.MTest level is: error
+2022-03-23 14:54:09.936 [main] WARN  com.ldmzw.demo.log4j2.test.MTest level is: warn
+2022-03-23 14:54:09.938 [main] ERROR com.ldmzw.demo.log4j2.test.MTest level is: error
+2022-03-23 14:54:09.939 [main] DEBUG com.ldmzw.demo.log4j2.test.MTest level is: debug
+2022-03-23 14:54:09.940 [main] INFO  com.ldmzw.demo.log4j2.test.MTest level is: info
+2022-03-23 14:54:09.941 [main] WARN  com.ldmzw.demo.log4j2.test.MTest level is: warn
+2022-03-23 14:54:09.942 [main] ERROR com.ldmzw.demo.log4j2.test.MTest level is: error
+2022-03-23 14:55:48.806 [main] DEBUG com.ldmzw.demo.log4j2.test.MTest level is: debug
+2022-03-23 14:55:48.807 [main] INFO  com.ldmzw.demo.log4j2.test.MTest level is: info
+2022-03-23 14:55:48.809 [main] WARN  com.ldmzw.demo.log4j2.test.MTest level is: warn
+2022-03-23 14:55:48.810 [main] ERROR com.ldmzw.demo.log4j2.test.MTest level is: error
+2022-03-23 14:59:12.283 [main] WARN  com.ldmzw.demo.log4j2.test.MTest level is: warn
+2022-03-23 14:59:12.285 [main] ERROR com.ldmzw.demo.log4j2.test.MTest level is: error
+2022-03-23 14:59:12.286 [main] DEBUG com.ldmzw.demo.log4j2.test.MTest level is: debug
+2022-03-23 14:59:12.287 [main] INFO  com.ldmzw.demo.log4j2.test.MTest level is: info
+2022-03-23 14:59:12.288 [main] WARN  com.ldmzw.demo.log4j2.test.MTest level is: warn
+2022-03-23 14:59:12.289 [main] ERROR com.ldmzw.demo.log4j2.test.MTest level is: error
+2022-03-23 15:00:43.027 [main] DEBUG com.ldmzw.demo.log4j2.test.MTest level is: debug
+2022-03-23 15:00:43.028 [main] INFO  com.ldmzw.demo.log4j2.test.MTest level is: info
+2022-03-23 15:00:43.029 [main] WARN  com.ldmzw.demo.log4j2.test.MTest level is: warn
+2022-03-23 15:00:43.029 [main] ERROR com.ldmzw.demo.log4j2.test.MTest level is: error
+2022-03-23 15:00:53.624 [main] DEBUG com.ldmzw.demo.log4j2.test.MTest level is: debug
+2022-03-23 15:00:53.624 [main] INFO  com.ldmzw.demo.log4j2.test.MTest level is: info
+2022-03-23 15:00:53.624 [main] WARN  com.ldmzw.demo.log4j2.test.MTest level is: warn
+2022-03-23 15:00:53.624 [main] ERROR com.ldmzw.demo.log4j2.test.MTest level is: error
+2022-03-23 15:00:53.625 [main] DEBUG com.ldmzw.demo.log4j2.test.MTest level is: debug
+2022-03-23 15:00:53.625 [main] INFO  com.ldmzw.demo.log4j2.test.MTest level is: info
+2022-03-23 15:00:53.625 [main] WARN  com.ldmzw.demo.log4j2.test.MTest level is: warn
+2022-03-23 15:00:53.626 [main] ERROR com.ldmzw.demo.log4j2.test.MTest level is: error
+2022-03-23 15:03:56.658 [main] DEBUG com.ldmzw.demo.log4j2.test.AA AA level is: debug
+2022-03-23 15:03:56.659 [main] INFO  com.ldmzw.demo.log4j2.test.AA AA level is: info
+2022-03-23 15:03:56.661 [main] WARN  com.ldmzw.demo.log4j2.test.AA AA level is: warn
+2022-03-23 15:03:56.662 [main] ERROR com.ldmzw.demo.log4j2.test.AA AA level is: error
+2022-03-23 15:03:56.663 [main] DEBUG com.ldmzw.demo.log4j2.test.MTest level is: debug
+2022-03-23 15:03:56.664 [main] INFO  com.ldmzw.demo.log4j2.test.MTest level is: info
+2022-03-23 15:03:56.664 [main] WARN  com.ldmzw.demo.log4j2.test.MTest level is: warn
+2022-03-23 15:03:56.665 [main] ERROR com.ldmzw.demo.log4j2.test.MTest level is: error
+2022-03-23 15:13:40.792 [main] DEBUG com.ldmzw.demo.log4j2.test.MTest level is: debug
+2022-03-23 15:13:40.793 [main] INFO  com.ldmzw.demo.log4j2.test.MTest level is: info
+2022-03-23 15:13:40.795 [main] WARN  com.ldmzw.demo.log4j2.test.MTest level is: warn
+2022-03-23 15:13:40.796 [main] ERROR com.ldmzw.demo.log4j2.test.MTest level is: error
+2022-03-23 15:13:40.799 [main] DEBUG com.ldmzw.demo.log4j2.test.MTest level is: debug
+2022-03-23 15:13:40.800 [main] INFO  com.ldmzw.demo.log4j2.test.MTest level is: info
+2022-03-23 15:13:40.801 [main] WARN  com.ldmzw.demo.log4j2.test.MTest level is: warn
+2022-03-23 15:13:40.802 [main] ERROR com.ldmzw.demo.log4j2.test.MTest level is: error
+2022-03-23 15:32:26.502 [main] DEBUG com.ldmzw.demo.log4j2.test.AA AA level is: debug
+2022-03-23 15:32:26.503 [main] INFO  com.ldmzw.demo.log4j2.test.AA AA level is: info
+2022-03-23 15:32:26.505 [main] WARN  com.ldmzw.demo.log4j2.test.AA AA level is: warn
+2022-03-23 15:32:26.506 [main] ERROR com.ldmzw.demo.log4j2.test.AA AA level is: error
+2022-03-23 15:32:36.048 [main] DEBUG com.ldmzw.demo.log4j2.test.MTest level is: debug
+2022-03-23 15:32:40.518 [main] INFO  com.ldmzw.demo.log4j2.test.MTest level is: info
+2022-03-23 15:32:41.272 [main] WARN  com.ldmzw.demo.log4j2.test.MTest level is: warn
+2022-03-23 15:32:42.152 [main] ERROR com.ldmzw.demo.log4j2.test.MTest level is: error
+2022-03-23 15:32:53.116 [main] DEBUG com.ldmzw.demo.log4j2.test.MTest level is: debug
+2022-03-23 15:32:53.116 [main] INFO  com.ldmzw.demo.log4j2.test.MTest level is: info
+2022-03-23 15:32:53.119 [main] WARN  com.ldmzw.demo.log4j2.test.MTest level is: warn
+2022-03-23 15:32:53.120 [main] ERROR com.ldmzw.demo.log4j2.test.MTest level is: error
+2022-03-23 15:32:53.122 [main] DEBUG com.ldmzw.demo.log4j2.test.MTest level is: debug
+2022-03-23 15:32:53.123 [main] INFO  com.ldmzw.demo.log4j2.test.MTest level is: info
+2022-03-23 15:32:53.123 [main] WARN  com.ldmzw.demo.log4j2.test.MTest level is: warn
+2022-03-23 15:32:53.124 [main] ERROR com.ldmzw.demo.log4j2.test.MTest level is: error
