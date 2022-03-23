@@ -180,7 +180,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-03-23 15:54:49" itemprop="dateModified" datetime="2022-03-23T15:54:49+08:00">2022-03-23</time>
+                <time title="修改时间：2022-03-23 16:33:40" itemprop="dateModified" datetime="2022-03-23T16:33:40+08:00">2022-03-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -213,8 +213,8 @@
 </li>
 <li><p><a target="_blank" rel="noopener" href="https://logging.apache.org/log4j/2.x/manual/index.html" title="Log4j2 使用手册">Log4j2 使用手册</a></p>
 </li>
+<li><a href="/2022/02/28/log-framework/" title="日志组件">日志组件</a></li>
 <li><a href="/2022/03/07/log-logback/" title="日志组件Logback">日志组件Logback</a></li>
-<li><a href="/2022/03/14/log-log4j2/" title="日志组件Log4j2">日志组件Log4j2</a></li>
 </ul>
 <h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="引入依赖"><a href="#引入依赖" class="headerlink" title="引入依赖"></a>引入依赖</h3><p>为了使用<code>log4j2</code>，我们需要引入<code>log4j-core</code>与<code>log4j-api</code>，如果是maven项目使用，我们只需要引入<code>log4j-core</code>即可，maven帮助我们自动引入<code>log4j-core</code>所依赖的<code>log4j-api</code>。</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.logging.log4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>log4j-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.17.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
@@ -263,6 +263,30 @@
 
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//源码：org.apache.logging.log4j.core.Logger#setLevel</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">setLevel</span><span class="params">(<span class="keyword">final</span> Level level)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (level == getLevel()) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    Level actualLevel;</span><br><span class="line">    <span class="keyword">if</span> (level != <span class="keyword">null</span>) &#123;</span><br><span class="line">        actualLevel = level;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">final</span> Logger parent = getParent();</span><br><span class="line">        actualLevel = parent != <span class="keyword">null</span> ? parent.getLevel() : privateConfig.loggerConfigLevel;</span><br><span class="line">    &#125;</span><br><span class="line">    privateConfig = <span class="keyword">new</span> PrivateConfig(privateConfig, actualLevel);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<h2 id="自动配置"><a href="#自动配置" class="headerlink" title="自动配置"></a>自动配置</h2><p><code>log4j2</code>在他初始化时会进行自动配置，当<code>log4j2</code>启动时，它会查找所有的<code>org.apache.logging.log4j.core.config.ConfigurationFactory</code>配置，然后根据权重从高到低进行排序。<code>log4j2</code>已经为我们实现了下面四种<code>ConfigurationFactory</code>：</p>
+<ul>
+<li>org.apache.logging.log4j.core.config.properties.PropertiesConfigurationFactory：加载<code>properties</code>配置，@Order(8)</li>
+<li>org.apache.logging.log4j.core.config.yaml.YamlConfigurationFactory加载<code>yaml</code>配置，@Order(7)</li>
+<li>org.apache.logging.log4j.core.config.json.JsonConfigurationFactory：加载<code>json</code>配置，@Order(6)</li>
+<li>org.apache.logging.log4j.core.config.xml.XmlConfigurationFactory：加载<code>xml</code>配置，@Order(5)</li>
+</ul>
+<p><code>log4j2</code>在启动时会根据下面的顺序去寻找配置：</p>
+<ol>
+<li><code>log4j2</code>会检查系统是否配置<code>log4j2.configurationFile</code>，如果配置了<code>log4j2.configurationFile</code>，它会根据文件后缀选取合适的<code>ConfigurationFactory</code>来进行配置。<code>log4j2.configurationFile</code>可以是一个本地文件系统中的文件，也可以是存放在网络上的一个文件。</li>
+<li>如果没有<code>log4j2.configurationFile</code>，<code>properties ConfigurationFactory</code>会寻找classpath下的<code>log4j2-test.properties</code>。</li>
+<li>如果没有找到文件，<code>yaml ConfigurationFactory</code>会寻找classpath下的<code>log4j2-test.yaml</code>或者<code>log4j2-test.yml</code>。</li>
+<li>如果没有找到文件，<code>json ConfigurationFactory</code>会寻找classpath下的<code>log4j2-test.json</code>或者<code>log4j2-test.jsn</code>。</li>
+<li>如果没有找到文件，<code>xml ConfigurationFactory</code>会寻找classpath下的<code>log4j2-test.xml</code>。</li>
+<li>如果没有找到文件，<code>properties ConfigurationFactory</code>会寻找classpath下的<code>log4j2.properties</code>。</li>
+<li>如果没有找到文件，<code>yaml ConfigurationFactory</code>会寻找classpath下的<code>log4j2.yaml</code>或者<code>log4j2.yml</code>。</li>
+<li>如果没有找到文件，<code>json ConfigurationFactory</code>会寻找classpath下的<code>log4j2.json</code>或者<code>log4j2.jsn</code>。</li>
+<li>如果没有找到文件，<code>xml ConfigurationFactory</code>会寻找classpath下的<code>log4j2.xml</code>。</li>
+<li>如果都没有找到配置文件，<code>log4j2</code>会采用<code>org.apache.logging.log4j.core.config.DefaultConfiguration</code>进行配置。</li>
+</ol>
+<p>关于自动配置，我们可以从官网中获取更多信息：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://logging.apache.org/log4j/2.x/manual/configuration.html" title="log4j2 自动配置">log4j2 自动配置</a></li>
+</ul>
 <h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p><code>log4j2</code>相比于<code>logback</code>提供了更多的功能，同时很多地方给我们留了切入点，让我们可以自由的进行扩展，但是也因此增加了使用难度。</p>
 <p>遗留问题：</p>
 <ul>
