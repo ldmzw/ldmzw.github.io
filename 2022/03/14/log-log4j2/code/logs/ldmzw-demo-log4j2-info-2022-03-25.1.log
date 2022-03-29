@@ -1,0 +1,199 @@
+2022-03-25 15:03:34.527 [main] INFO  com.ldmzw.demo.log4j2.Application 55 Starting Application using Java 11.0.8 on victor with PID 8288 (D:\victor\git\study\hexo\source\_posts\log-log4j2\code\target\classes started by Administrator in D:\victor\git\study\hexo\source\_posts\log-log4j2\code)
+2022-03-25 15:03:34.589 [main] INFO  com.ldmzw.demo.log4j2.Application 640 No active profile set, falling back to 1 default profile: "default"
+2022-03-25 15:03:37.760 [main] INFO  org.springframework.boot.web.embedded.tomcat.TomcatWebServer 108 Tomcat initialized with port(s): 8080 (http)
+2022-03-25 15:03:37.822 [main] INFO  org.apache.coyote.http11.Http11NioProtocol 173 Initializing ProtocolHandler ["http-nio-8080"]
+2022-03-25 15:03:37.822 [main] INFO  org.apache.catalina.core.StandardService 173 Starting service [Tomcat]
+2022-03-25 15:03:37.822 [main] INFO  org.apache.catalina.core.StandardEngine 173 Starting Servlet engine: [Apache Tomcat/9.0.58]
+2022-03-25 15:03:38.119 [main] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] 173 Initializing Spring embedded WebApplicationContext
+2022-03-25 15:03:38.119 [main] INFO  org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext 290 Root WebApplicationContext: initialization completed in 3374 ms
+2022-03-25 15:03:39.055 [main] INFO  org.apache.coyote.http11.Http11NioProtocol 173 Starting ProtocolHandler ["http-nio-8080"]
+2022-03-25 15:03:39.117 [main] INFO  org.springframework.boot.web.embedded.tomcat.TomcatWebServer 220 Tomcat started on port(s): 8080 (http) with context path ''
+2022-03-25 15:03:39.133 [main] INFO  com.ldmzw.demo.log4j2.Application 61 Started Application in 6.082 seconds (JVM running for 17.161)
+2022-03-25 15:03:54.270 [http-nio-8080-exec-1] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] 173 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-03-25 15:03:54.271 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet 525 Initializing Servlet 'dispatcherServlet'
+2022-03-25 15:03:54.273 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet 547 Completed initialization in 1 ms
+2022-03-25 15:03:54.374 [http-nio-8080-exec-1] INFO  com.ldmzw.demo.log4j2.controller.TestController 49 level is: info
+2022-03-25 15:03:54.374 [http-nio-8080-exec-1] WARN  com.ldmzw.demo.log4j2.controller.TestController 50 level is: warn
+2022-03-25 15:03:54.377 [http-nio-8080-exec-1] ERROR com.ldmzw.demo.log4j2.controller.TestController 51 level is: error
+2022-03-25 15:04:08.834 [http-nio-8080-exec-3] INFO  com.ldmzw.demo.log4j2.controller.TestController 41 修改日志等级：com.ldmzw.demo.log4j2 info
+2022-03-25 15:04:15.124 [http-nio-8080-exec-4] INFO  com.ldmzw.demo.log4j2.controller.TestController 49 level is: info
+2022-03-25 15:04:15.124 [http-nio-8080-exec-4] WARN  com.ldmzw.demo.log4j2.controller.TestController 50 level is: warn
+2022-03-25 15:04:15.124 [http-nio-8080-exec-4] ERROR com.ldmzw.demo.log4j2.controller.TestController 51 level is: error
+2022-03-25 15:08:12.048 [http-nio-8080-exec-6] INFO  com.ldmzw.demo.log4j2.controller.TestController 41 修改日志等级：com.ldmzw.demo.log4j2 info
+2022-03-25 15:08:29.478 [http-nio-8080-exec-10] INFO  com.ldmzw.demo.log4j2.controller.TestController 41 修改日志等级：com.ldmzw.demo.log4j2 trace
+2022-03-25 15:08:32.167 [http-nio-8080-exec-8] INFO  com.ldmzw.demo.log4j2.controller.TestController 49 level is: info
+2022-03-25 15:08:32.167 [http-nio-8080-exec-8] WARN  com.ldmzw.demo.log4j2.controller.TestController 50 level is: warn
+2022-03-25 15:08:32.167 [http-nio-8080-exec-8] ERROR com.ldmzw.demo.log4j2.controller.TestController 51 level is: error
+2022-03-25 15:14:19.820 [http-nio-8080-exec-2] INFO  com.ldmzw.demo.log4j2.controller.TestController 41 修改日志等级：com.ldmzw.demo.log4j2 trace
+2022-03-25 15:26:03.124 [main] INFO  com.ldmzw.demo.log4j2.Application 55 Starting Application using Java 11.0.8 on victor with PID 4648 (D:\victor\git\study\hexo\source\_posts\log-log4j2\code\target\classes started by Administrator in D:\victor\git\study\hexo\source\_posts\log-log4j2\code)
+2022-03-25 15:26:03.171 [main] INFO  com.ldmzw.demo.log4j2.Application 640 No active profile set, falling back to 1 default profile: "default"
+2022-03-25 15:26:05.940 [main] INFO  org.springframework.boot.web.embedded.tomcat.TomcatWebServer 108 Tomcat initialized with port(s): 8080 (http)
+2022-03-25 15:26:05.971 [main] INFO  org.apache.coyote.http11.Http11NioProtocol 173 Initializing ProtocolHandler ["http-nio-8080"]
+2022-03-25 15:26:05.971 [main] INFO  org.apache.catalina.core.StandardService 173 Starting service [Tomcat]
+2022-03-25 15:26:05.971 [main] INFO  org.apache.catalina.core.StandardEngine 173 Starting Servlet engine: [Apache Tomcat/9.0.58]
+2022-03-25 15:26:06.111 [main] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] 173 Initializing Spring embedded WebApplicationContext
+2022-03-25 15:26:06.111 [main] INFO  org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext 290 Root WebApplicationContext: initialization completed in 2758 ms
+2022-03-25 15:26:06.922 [main] INFO  org.apache.coyote.http11.Http11NioProtocol 173 Starting ProtocolHandler ["http-nio-8080"]
+2022-03-25 15:26:06.969 [main] INFO  org.springframework.boot.web.embedded.tomcat.TomcatWebServer 220 Tomcat started on port(s): 8080 (http) with context path ''
+2022-03-25 15:26:06.985 [main] INFO  com.ldmzw.demo.log4j2.Application 61 Started Application in 7.824 seconds (JVM running for 10.457)
+2022-03-25 15:26:20.898 [http-nio-8080-exec-1] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] 173 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-03-25 15:26:20.899 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet 525 Initializing Servlet 'dispatcherServlet'
+2022-03-25 15:26:20.903 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet 547 Completed initialization in 4 ms
+2022-03-25 15:26:20.952 [http-nio-8080-exec-1] INFO  com.ldmzw.demo.log4j2.controller.TestController 68 level is: info
+2022-03-25 15:26:20.952 [http-nio-8080-exec-1] WARN  com.ldmzw.demo.log4j2.controller.TestController 69 level is: warn
+2022-03-25 15:26:20.954 [http-nio-8080-exec-1] ERROR com.ldmzw.demo.log4j2.controller.TestController 70 level is: error
+2022-03-25 15:26:28.111 [http-nio-8080-exec-2] INFO  com.ldmzw.demo.log4j2.controller.TestController 31 修改日志等级：com.ldmzw.demo.log4j2 info
+2022-03-25 15:26:32.249 [http-nio-8080-exec-3] INFO  com.ldmzw.demo.log4j2.controller.TestController 68 level is: info
+2022-03-25 15:26:32.250 [http-nio-8080-exec-3] WARN  com.ldmzw.demo.log4j2.controller.TestController 69 level is: warn
+2022-03-25 15:26:32.254 [http-nio-8080-exec-3] ERROR com.ldmzw.demo.log4j2.controller.TestController 70 level is: error
+2022-03-25 15:26:41.184 [http-nio-8080-exec-4] INFO  com.ldmzw.demo.log4j2.controller.TestController 31 修改日志等级：com.ldmzw.demo.log4j2.controller.TestController info
+2022-03-25 15:26:46.939 [http-nio-8080-exec-6] INFO  com.ldmzw.demo.log4j2.controller.TestController 68 level is: info
+2022-03-25 15:26:46.943 [http-nio-8080-exec-6] WARN  com.ldmzw.demo.log4j2.controller.TestController 69 level is: warn
+2022-03-25 15:26:46.944 [http-nio-8080-exec-6] ERROR com.ldmzw.demo.log4j2.controller.TestController 70 level is: error
+2022-03-25 15:27:04.544 [main] INFO  com.ldmzw.demo.log4j2.Application 55 Starting Application using Java 11.0.8 on victor with PID 3104 (D:\victor\git\study\hexo\source\_posts\log-log4j2\code\target\classes started by Administrator in D:\victor\git\study\hexo\source\_posts\log-log4j2\code)
+2022-03-25 15:27:04.576 [main] INFO  com.ldmzw.demo.log4j2.Application 640 No active profile set, falling back to 1 default profile: "default"
+2022-03-25 15:27:06.339 [main] INFO  org.springframework.boot.web.embedded.tomcat.TomcatWebServer 108 Tomcat initialized with port(s): 8080 (http)
+2022-03-25 15:27:06.382 [main] INFO  org.apache.coyote.http11.Http11NioProtocol 173 Initializing ProtocolHandler ["http-nio-8080"]
+2022-03-25 15:27:06.384 [main] INFO  org.apache.catalina.core.StandardService 173 Starting service [Tomcat]
+2022-03-25 15:27:06.385 [main] INFO  org.apache.catalina.core.StandardEngine 173 Starting Servlet engine: [Apache Tomcat/9.0.58]
+2022-03-25 15:27:06.524 [main] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] 173 Initializing Spring embedded WebApplicationContext
+2022-03-25 15:27:06.539 [main] INFO  org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext 290 Root WebApplicationContext: initialization completed in 1839 ms
+2022-03-25 15:27:07.143 [main] INFO  org.apache.coyote.http11.Http11NioProtocol 173 Starting ProtocolHandler ["http-nio-8080"]
+2022-03-25 15:27:07.193 [main] INFO  org.springframework.boot.web.embedded.tomcat.TomcatWebServer 220 Tomcat started on port(s): 8080 (http) with context path ''
+2022-03-25 15:27:07.198 [main] INFO  com.ldmzw.demo.log4j2.Application 61 Started Application in 3.338 seconds (JVM running for 5.745)
+2022-03-25 15:27:13.776 [http-nio-8080-exec-4] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] 173 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-03-25 15:27:13.776 [http-nio-8080-exec-4] INFO  org.springframework.web.servlet.DispatcherServlet 525 Initializing Servlet 'dispatcherServlet'
+2022-03-25 15:27:13.778 [http-nio-8080-exec-4] INFO  org.springframework.web.servlet.DispatcherServlet 547 Completed initialization in 1 ms
+2022-03-25 15:27:13.819 [http-nio-8080-exec-4] INFO  com.ldmzw.demo.log4j2.controller.TestController 68 level is: info
+2022-03-25 15:27:13.819 [http-nio-8080-exec-4] WARN  com.ldmzw.demo.log4j2.controller.TestController 69 level is: warn
+2022-03-25 15:27:13.820 [http-nio-8080-exec-4] ERROR com.ldmzw.demo.log4j2.controller.TestController 70 level is: error
+2022-03-25 15:27:16.878 [http-nio-8080-exec-3] INFO  com.ldmzw.demo.log4j2.controller.TestController 31 修改日志等级：com.ldmzw.demo.log4j2 info
+2022-03-25 15:27:19.742 [http-nio-8080-exec-5] INFO  com.ldmzw.demo.log4j2.controller.TestController 68 level is: info
+2022-03-25 15:27:19.742 [http-nio-8080-exec-5] WARN  com.ldmzw.demo.log4j2.controller.TestController 69 level is: warn
+2022-03-25 15:27:19.742 [http-nio-8080-exec-5] ERROR com.ldmzw.demo.log4j2.controller.TestController 70 level is: error
+2022-03-25 15:27:25.582 [http-nio-8080-exec-8] INFO  com.ldmzw.demo.log4j2.controller.TestController 31 修改日志等级：com.ldmzw.demo.log4j2 debug
+2022-03-25 15:27:28.692 [http-nio-8080-exec-6] INFO  com.ldmzw.demo.log4j2.controller.TestController 68 level is: info
+2022-03-25 15:27:28.693 [http-nio-8080-exec-6] WARN  com.ldmzw.demo.log4j2.controller.TestController 69 level is: warn
+2022-03-25 15:27:28.693 [http-nio-8080-exec-6] ERROR com.ldmzw.demo.log4j2.controller.TestController 70 level is: error
+2022-03-25 15:27:57.856 [http-nio-8080-exec-9] INFO  com.ldmzw.demo.log4j2.controller.TestController 31 修改日志等级：com.ldmzw.demo.log4j2.controller debug
+2022-03-25 15:28:02.083 [http-nio-8080-exec-7] INFO  com.ldmzw.demo.log4j2.controller.TestController 68 level is: info
+2022-03-25 15:28:02.084 [http-nio-8080-exec-7] WARN  com.ldmzw.demo.log4j2.controller.TestController 69 level is: warn
+2022-03-25 15:28:02.084 [http-nio-8080-exec-7] ERROR com.ldmzw.demo.log4j2.controller.TestController 70 level is: error
+2022-03-25 15:28:07.459 [http-nio-8080-exec-10] INFO  com.ldmzw.demo.log4j2.controller.TestController 31 修改日志等级：com.ldmzw.demo.log4j2.controller info
+2022-03-25 15:28:11.527 [http-nio-8080-exec-2] INFO  com.ldmzw.demo.log4j2.controller.TestController 68 level is: info
+2022-03-25 15:28:11.527 [http-nio-8080-exec-2] WARN  com.ldmzw.demo.log4j2.controller.TestController 69 level is: warn
+2022-03-25 15:28:11.528 [http-nio-8080-exec-2] ERROR com.ldmzw.demo.log4j2.controller.TestController 70 level is: error
+2022-03-25 15:28:26.124 [http-nio-8080-exec-4] INFO  com.ldmzw.demo.log4j2.controller.TestController 31 修改日志等级：com.ldmzw.demo.log4j2.controller trace
+2022-03-25 15:28:30.120 [http-nio-8080-exec-3] INFO  com.ldmzw.demo.log4j2.controller.TestController 68 level is: info
+2022-03-25 15:28:30.121 [http-nio-8080-exec-3] WARN  com.ldmzw.demo.log4j2.controller.TestController 69 level is: warn
+2022-03-25 15:28:30.121 [http-nio-8080-exec-3] ERROR com.ldmzw.demo.log4j2.controller.TestController 70 level is: error
+2022-03-25 15:28:38.386 [http-nio-8080-exec-5] INFO  com.ldmzw.demo.log4j2.controller.TestController 31 修改日志等级：com.ldmzw trace
+2022-03-25 15:28:41.496 [http-nio-8080-exec-8] INFO  com.ldmzw.demo.log4j2.controller.TestController 68 level is: info
+2022-03-25 15:28:41.496 [http-nio-8080-exec-8] WARN  com.ldmzw.demo.log4j2.controller.TestController 69 level is: warn
+2022-03-25 15:28:41.496 [http-nio-8080-exec-8] ERROR com.ldmzw.demo.log4j2.controller.TestController 70 level is: error
+2022-03-25 15:28:58.682 [http-nio-8080-exec-6] INFO  com.ldmzw.demo.log4j2.controller.TestController 68 level is: info
+2022-03-25 15:28:58.682 [http-nio-8080-exec-6] WARN  com.ldmzw.demo.log4j2.controller.TestController 69 level is: warn
+2022-03-25 15:28:58.682 [http-nio-8080-exec-6] ERROR com.ldmzw.demo.log4j2.controller.TestController 70 level is: error
+2022-03-25 15:29:27.401 [http-nio-8080-exec-7] INFO  com.ldmzw.demo.log4j2.controller.TestController 31 修改日志等级：com.ldmzw INFo
+2022-03-25 15:29:32.680 [http-nio-8080-exec-10] INFO  com.ldmzw.demo.log4j2.controller.TestController 68 level is: info
+2022-03-25 15:29:32.680 [http-nio-8080-exec-10] WARN  com.ldmzw.demo.log4j2.controller.TestController 69 level is: warn
+2022-03-25 15:29:32.680 [http-nio-8080-exec-10] ERROR com.ldmzw.demo.log4j2.controller.TestController 70 level is: error
+2022-03-25 15:30:53.885 [http-nio-8080-exec-2] INFO  com.ldmzw.demo.log4j2.controller.TestController 31 修改日志等级：com.ldmzw INFo
+2022-03-25 15:31:20.453 [main] INFO  com.ldmzw.demo.log4j2.Application 55 Starting Application using Java 11.0.8 on victor with PID 7940 (D:\victor\git\study\hexo\source\_posts\log-log4j2\code\target\classes started by Administrator in D:\victor\git\study\hexo\source\_posts\log-log4j2\code)
+2022-03-25 15:31:20.484 [main] INFO  com.ldmzw.demo.log4j2.Application 640 No active profile set, falling back to 1 default profile: "default"
+2022-03-25 15:31:22.605 [main] INFO  org.springframework.boot.web.embedded.tomcat.TomcatWebServer 108 Tomcat initialized with port(s): 8080 (http)
+2022-03-25 15:31:22.652 [main] INFO  org.apache.coyote.http11.Http11NioProtocol 173 Initializing ProtocolHandler ["http-nio-8080"]
+2022-03-25 15:31:22.652 [main] INFO  org.apache.catalina.core.StandardService 173 Starting service [Tomcat]
+2022-03-25 15:31:22.652 [main] INFO  org.apache.catalina.core.StandardEngine 173 Starting Servlet engine: [Apache Tomcat/9.0.58]
+2022-03-25 15:31:22.777 [main] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] 173 Initializing Spring embedded WebApplicationContext
+2022-03-25 15:31:22.777 [main] INFO  org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext 290 Root WebApplicationContext: initialization completed in 2152 ms
+2022-03-25 15:31:23.432 [main] INFO  org.apache.coyote.http11.Http11NioProtocol 173 Starting ProtocolHandler ["http-nio-8080"]
+2022-03-25 15:31:23.479 [main] INFO  org.springframework.boot.web.embedded.tomcat.TomcatWebServer 220 Tomcat started on port(s): 8080 (http) with context path ''
+2022-03-25 15:31:23.494 [main] INFO  com.ldmzw.demo.log4j2.Application 61 Started Application in 3.76 seconds (JVM running for 5.958)
+2022-03-25 15:31:27.883 [http-nio-8080-exec-1] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] 173 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-03-25 15:31:27.884 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet 525 Initializing Servlet 'dispatcherServlet'
+2022-03-25 15:31:27.885 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet 547 Completed initialization in 1 ms
+2022-03-25 15:31:27.925 [http-nio-8080-exec-1] INFO  com.ldmzw.demo.log4j2.controller.TestController 68 level is: info
+2022-03-25 15:31:27.925 [http-nio-8080-exec-1] WARN  com.ldmzw.demo.log4j2.controller.TestController 69 level is: warn
+2022-03-25 15:31:27.927 [http-nio-8080-exec-1] ERROR com.ldmzw.demo.log4j2.controller.TestController 70 level is: error
+2022-03-25 15:31:45.839 [http-nio-8080-exec-2] INFO  com.ldmzw.demo.log4j2.controller.TestController 31 修改日志等级：com.ldmzw.demo.log4j2.controller INFo
+2022-03-25 15:31:49.941 [http-nio-8080-exec-3] INFO  com.ldmzw.demo.log4j2.controller.TestController 68 level is: info
+2022-03-25 15:31:49.942 [http-nio-8080-exec-3] WARN  com.ldmzw.demo.log4j2.controller.TestController 69 level is: warn
+2022-03-25 15:31:49.942 [http-nio-8080-exec-3] ERROR com.ldmzw.demo.log4j2.controller.TestController 70 level is: error
+2022-03-25 15:32:49.692 [http-nio-8080-exec-4] INFO  com.ldmzw.demo.log4j2.controller.TestController 31 修改日志等级：com.ldmzw.demo.log4j2.controller trace
+2022-03-25 15:32:53.613 [http-nio-8080-exec-7] INFO  com.ldmzw.demo.log4j2.controller.TestController 68 level is: info
+2022-03-25 15:32:53.613 [http-nio-8080-exec-7] WARN  com.ldmzw.demo.log4j2.controller.TestController 69 level is: warn
+2022-03-25 15:32:53.613 [http-nio-8080-exec-7] ERROR com.ldmzw.demo.log4j2.controller.TestController 70 level is: error
+2022-03-25 15:33:12.934 [http-nio-8080-exec-6] INFO  com.ldmzw.demo.log4j2.controller.TestController 31 修改日志等级：com.ldmzw debug
+2022-03-25 15:33:15.958 [http-nio-8080-exec-8] INFO  com.ldmzw.demo.log4j2.controller.TestController 68 level is: info
+2022-03-25 15:33:15.959 [http-nio-8080-exec-8] WARN  com.ldmzw.demo.log4j2.controller.TestController 69 level is: warn
+2022-03-25 15:33:15.959 [http-nio-8080-exec-8] ERROR com.ldmzw.demo.log4j2.controller.TestController 70 level is: error
+2022-03-25 15:33:33.631 [http-nio-8080-exec-9] INFO  com.ldmzw.demo.log4j2.controller.TestController 31 修改日志等级：com.ldmzw debug
+2022-03-25 15:33:36.097 [http-nio-8080-exec-10] INFO  com.ldmzw.demo.log4j2.controller.TestController 68 level is: info
+2022-03-25 15:33:36.097 [http-nio-8080-exec-10] WARN  com.ldmzw.demo.log4j2.controller.TestController 69 level is: warn
+2022-03-25 15:33:36.097 [http-nio-8080-exec-10] ERROR com.ldmzw.demo.log4j2.controller.TestController 70 level is: error
+2022-03-25 15:33:49.519 [http-nio-8080-exec-1] INFO  com.ldmzw.demo.log4j2.controller.TestController 31 修改日志等级：com.ldmzw.demo.log4j2 debug
+2022-03-25 15:33:54.944 [http-nio-8080-exec-3] INFO  com.ldmzw.demo.log4j2.controller.TestController 68 level is: info
+2022-03-25 15:33:54.959 [http-nio-8080-exec-3] WARN  com.ldmzw.demo.log4j2.controller.TestController 69 level is: warn
+2022-03-25 15:33:54.959 [http-nio-8080-exec-3] ERROR com.ldmzw.demo.log4j2.controller.TestController 70 level is: error
+2022-03-25 15:34:06.250 [http-nio-8080-exec-5] INFO  com.ldmzw.demo.log4j2.controller.TestController 68 level is: info
+2022-03-25 15:34:06.266 [http-nio-8080-exec-5] WARN  com.ldmzw.demo.log4j2.controller.TestController 69 level is: warn
+2022-03-25 15:34:06.266 [http-nio-8080-exec-5] ERROR com.ldmzw.demo.log4j2.controller.TestController 70 level is: error
+2022-03-25 15:34:17.759 [http-nio-8080-exec-4] INFO  com.ldmzw.demo.log4j2.controller.TestController 31 修改日志等级：com.ldmzw.demo.log4j2 debug
+2022-03-25 15:34:28.027 [http-nio-8080-exec-7] INFO  com.ldmzw.demo.log4j2.controller.TestController 68 level is: info
+2022-03-25 15:34:28.027 [http-nio-8080-exec-7] WARN  com.ldmzw.demo.log4j2.controller.TestController 69 level is: warn
+2022-03-25 15:34:28.043 [http-nio-8080-exec-7] ERROR com.ldmzw.demo.log4j2.controller.TestController 70 level is: error
+2022-03-25 15:34:47.095 [main] INFO  com.ldmzw.demo.log4j2.Application 55 Starting Application using Java 11.0.8 on victor with PID 6872 (D:\victor\git\study\hexo\source\_posts\log-log4j2\code\target\classes started by Administrator in D:\victor\git\study\hexo\source\_posts\log-log4j2\code)
+2022-03-25 15:34:47.110 [main] INFO  com.ldmzw.demo.log4j2.Application 640 No active profile set, falling back to 1 default profile: "default"
+2022-03-25 15:34:48.998 [main] INFO  org.springframework.boot.web.embedded.tomcat.TomcatWebServer 108 Tomcat initialized with port(s): 8080 (http)
+2022-03-25 15:34:49.045 [main] INFO  org.apache.coyote.http11.Http11NioProtocol 173 Initializing ProtocolHandler ["http-nio-8080"]
+2022-03-25 15:34:49.045 [main] INFO  org.apache.catalina.core.StandardService 173 Starting service [Tomcat]
+2022-03-25 15:34:49.045 [main] INFO  org.apache.catalina.core.StandardEngine 173 Starting Servlet engine: [Apache Tomcat/9.0.58]
+2022-03-25 15:34:49.247 [main] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] 173 Initializing Spring embedded WebApplicationContext
+2022-03-25 15:34:49.247 [main] INFO  org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext 290 Root WebApplicationContext: initialization completed in 2028 ms
+2022-03-25 15:34:49.871 [main] INFO  org.apache.coyote.http11.Http11NioProtocol 173 Starting ProtocolHandler ["http-nio-8080"]
+2022-03-25 15:34:49.918 [main] INFO  org.springframework.boot.web.embedded.tomcat.TomcatWebServer 220 Tomcat started on port(s): 8080 (http) with context path ''
+2022-03-25 15:34:49.949 [main] INFO  com.ldmzw.demo.log4j2.Application 61 Started Application in 3.889 seconds (JVM running for 6.754)
+2022-03-25 15:35:00.086 [http-nio-8080-exec-1] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] 173 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-03-25 15:35:00.086 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet 525 Initializing Servlet 'dispatcherServlet'
+2022-03-25 15:35:00.088 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet 547 Completed initialization in 1 ms
+2022-03-25 15:35:00.132 [http-nio-8080-exec-1] INFO  com.ldmzw.demo.log4j2.controller.TestController 68 level is: info
+2022-03-25 15:35:00.132 [http-nio-8080-exec-1] WARN  com.ldmzw.demo.log4j2.controller.TestController 69 level is: warn
+2022-03-25 15:35:00.134 [http-nio-8080-exec-1] ERROR com.ldmzw.demo.log4j2.controller.TestController 70 level is: error
+2022-03-25 15:37:03.409 [http-nio-8080-exec-3] INFO  com.ldmzw.demo.log4j2.controller.TestController 31 修改日志等级：com.ldmzw.demo.log4j2 debug
+2022-03-25 15:37:08.689 [http-nio-8080-exec-4] INFO  com.ldmzw.demo.log4j2.controller.TestController 68 level is: info
+2022-03-25 15:37:08.691 [http-nio-8080-exec-4] WARN  com.ldmzw.demo.log4j2.controller.TestController 69 level is: warn
+2022-03-25 15:37:08.691 [http-nio-8080-exec-4] ERROR com.ldmzw.demo.log4j2.controller.TestController 70 level is: error
+2022-03-25 15:39:08.676 [http-nio-8080-exec-5] INFO  com.ldmzw.demo.log4j2.controller.TestController 31 修改日志等级：com.ldmzw.demo.log4j2.controller trace
+2022-03-25 15:39:20.509 [http-nio-8080-exec-7] INFO  com.ldmzw.demo.log4j2.controller.TestController 68 level is: info
+2022-03-25 15:39:20.510 [http-nio-8080-exec-7] WARN  com.ldmzw.demo.log4j2.controller.TestController 69 level is: warn
+2022-03-25 15:39:20.510 [http-nio-8080-exec-7] ERROR com.ldmzw.demo.log4j2.controller.TestController 70 level is: error
+2022-03-25 15:40:13.723 [http-nio-8080-exec-8] INFO  com.ldmzw.demo.log4j2.controller.TestController 68 level is: info
+2022-03-25 15:40:13.723 [http-nio-8080-exec-8] WARN  com.ldmzw.demo.log4j2.controller.TestController 69 level is: warn
+2022-03-25 15:40:13.723 [http-nio-8080-exec-8] ERROR com.ldmzw.demo.log4j2.controller.TestController 70 level is: error
+2022-03-25 15:40:33.749 [http-nio-8080-exec-10] INFO  com.ldmzw.demo.log4j2.controller.TestController 31 修改日志等级：com.ldmzw.demo.log4j2 debug
+2022-03-25 15:40:39.204 [http-nio-8080-exec-1] INFO  com.ldmzw.demo.log4j2.controller.TestController 68 level is: info
+2022-03-25 15:40:39.205 [http-nio-8080-exec-1] WARN  com.ldmzw.demo.log4j2.controller.TestController 69 level is: warn
+2022-03-25 15:40:39.205 [http-nio-8080-exec-1] ERROR com.ldmzw.demo.log4j2.controller.TestController 70 level is: error
+2022-03-25 17:03:14.420 [main] INFO  com.ldmzw.demo.log4j2.test.MTest 48 level is: info
+2022-03-25 17:03:14.420 [main] WARN  com.ldmzw.demo.log4j2.test.MTest 49 level is: warn
+2022-03-25 17:03:14.420 [main] ERROR com.ldmzw.demo.log4j2.test.MTest 50 level is: error
+2022-03-25 17:03:14.436 [main] WARN  com.ldmzw.demo.log4j2.test.MTest 62 level is: warn
+2022-03-25 17:03:14.436 [main] ERROR com.ldmzw.demo.log4j2.test.MTest 63 level is: error
+2022-03-25 17:03:37.534 [main] INFO  com.ldmzw.demo.log4j2.test.MTest 48 level is: info
+2022-03-25 17:03:37.534 [main] WARN  com.ldmzw.demo.log4j2.test.MTest 49 level is: warn
+2022-03-25 17:03:37.534 [main] ERROR com.ldmzw.demo.log4j2.test.MTest 50 level is: error
+2022-03-25 17:03:37.550 [main] INFO  com.ldmzw.demo.log4j2.test.MTest 61 level is: info
+2022-03-25 17:03:37.550 [main] WARN  com.ldmzw.demo.log4j2.test.MTest 62 level is: warn
+2022-03-25 17:03:37.550 [main] ERROR com.ldmzw.demo.log4j2.test.MTest 63 level is: error
+2022-03-25 17:07:22.508 [main] INFO  com.ldmzw.demo.log4j2.test.MTest 48 level is: info
+2022-03-25 17:07:22.508 [main] WARN  com.ldmzw.demo.log4j2.test.MTest 49 level is: warn
+2022-03-25 17:07:22.508 [main] ERROR com.ldmzw.demo.log4j2.test.MTest 50 level is: error
+2022-03-25 17:07:22.524 [main] WARN  com.ldmzw.demo.log4j2.test.MTest 62 level is: warn
+2022-03-25 17:07:22.524 [main] ERROR com.ldmzw.demo.log4j2.test.MTest 63 level is: error
+2022-03-25 17:09:02.222 [main] INFO  com.ldmzw.demo.log4j2.test.MTest 48 level is: info
+2022-03-25 17:09:02.222 [main] WARN  com.ldmzw.demo.log4j2.test.MTest 49 level is: warn
+2022-03-25 17:09:02.222 [main] ERROR com.ldmzw.demo.log4j2.test.MTest 50 level is: error
+2022-03-25 17:09:02.237 [main] INFO  com.ldmzw.demo.log4j2.test.MTest 61 level is: info
+2022-03-25 17:09:02.237 [main] WARN  com.ldmzw.demo.log4j2.test.MTest 62 level is: warn
+2022-03-25 17:09:02.237 [main] ERROR com.ldmzw.demo.log4j2.test.MTest 63 level is: error

@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"ldmzw.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="概述日志对于一个系统来说十分的重要，在前面的几篇文章中，我们介绍了java语言的日志框架关系以及logback与log4j2两个优秀的框架。虽然日志十分重要，但这也是一把双刃剑，如果使用不当，大量的日志输出将导致我们的磁盘使用率以及IO迅速提升，从而可能导致系统崩溃。所以日志等级的配置在实际使用中十分的重要，在开发环境，我们可以打印debug等级日志方便我们排查问题，但是在生产上，我们很多时候都会">
+<meta property="og:type" content="article">
+<meta property="og:title" content="日志组件运态日志">
+<meta property="og:url" content="http://ldmzw.github.io/2022/03/21/log-framework1/index.html">
+<meta property="og:site_name" content="ldmzw">
+<meta property="og:description" content="概述日志对于一个系统来说十分的重要，在前面的几篇文章中，我们介绍了java语言的日志框架关系以及logback与log4j2两个优秀的框架。虽然日志十分重要，但这也是一把双刃剑，如果使用不当，大量的日志输出将导致我们的磁盘使用率以及IO迅速提升，从而可能导致系统崩溃。所以日志等级的配置在实际使用中十分的重要，在开发环境，我们可以打印debug等级日志方便我们排查问题，但是在生产上，我们很多时候都会">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-03-21T12:45:34.000Z">
+<meta property="article:modified_time" content="2022-03-29T03:23:16.934Z">
+<meta property="article:author" content="victor min">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="日志组件">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://ldmzw.github.io/2022/03/21/log-framework1/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>日志组件运态日志 | ldmzw</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">ldmzw</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">趣谈闲记</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://ldmzw.github.io/2022/03/21/log-framework1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="victor min">
+      <meta itemprop="description" content="风无定，人无常<br/>人生如浮萍，聚散两茫茫">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ldmzw">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          日志组件运态日志
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-03-21 20:45:34" itemprop="dateCreated datePublished" datetime="2022-03-21T20:45:34+08:00">2022-03-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-03-29 11:23:16" itemprop="dateModified" datetime="2022-03-29T11:23:16+08:00">2022-03-29</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/%E6%97%A5%E5%BF%97%E7%BB%84%E4%BB%B6/" itemprop="url" rel="index"><span itemprop="name">日志组件</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>日志对于一个系统来说十分的重要，在前面的几篇文章中，我们介绍了java语言的日志框架关系以及<code>logback</code>与<code>log4j2</code>两个优秀的框架。虽然日志十分重要，但这也是一把双刃剑，如果使用不当，大量的日志输出将导致我们的磁盘使用率以及IO迅速提升，从而可能导致系统崩溃。所以日志等级的配置在实际使用中十分的重要，在开发环境，我们可以打印<code>debug</code>等级日志方便我们排查问题，但是在生产上，我们很多时候都会配置<code>info</code>甚至更高的等级，这样可以节省部分磁盘或者IO。但是当我们生产上出现问题时，我们需要快速的切换日志等级来排查问题，这时候我们希望不是通过停止服务然后修改配置文件再重启服务这样的操作来实现，我们能在不重启服务的情况下来动态的修改日志等级吗？答案是肯定的。这篇文章我们主要介绍一下各个日志框架的使用，重点梳理一下在不重启应用的情况下如何来实现日志等级的动态改变。</p>
+<p>系列相关文章：</p>
+<ul>
+<li><a href="/2022/02/28/log-framework/" title="日志组件">日志组件</a></li>
+<li><a href="/2022/03/07/log-logback/" title="日志组件Logback">日志组件Logback</a></li>
+<li><a href="/2022/03/14/log-log4j2/" title="日志组件Log4j2">日志组件Log4j2</a></li>
+<li><a href="/2022/03/21/log-framework1/" title="日志组件运态日志">日志组件运态日志</a></li>
+</ul>
+<h2 id="日志框架使用"><a href="#日志框架使用" class="headerlink" title="日志框架使用"></a>日志框架使用</h2><h3 id="JUL-java-util-logging"><a href="#JUL-java-util-logging" class="headerlink" title="JUL(java util logging)"></a>JUL(java util logging)</h3><h4 id="引入依赖"><a href="#引入依赖" class="headerlink" title="引入依赖"></a>引入依赖</h4><p><code>jul</code>由jdk提供，不需要额外引入其它依赖就能使用。</p>
+<h4 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h4><p><code>jul</code>日志比较简单，我们可以在<code>java.util.logging.Level</code>查看全部支持的等级。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    java.util.logging.Logger log = java.util.logging.Logger.getLogger(MTest.class.getName());</span><br><span class="line">    log.info(<span class="string">&quot;level is: info&quot;</span>);</span><br><span class="line">    log.log(java.util.logging.Level.ALL, <span class="string">&quot;level is: all&quot;</span>);</span><br><span class="line">    log.log(java.util.logging.Level.FINE, <span class="string">&quot;level is: FINE&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Log4j"><a href="#Log4j" class="headerlink" title="Log4j"></a>Log4j</h3><h4 id="引入依赖-1"><a href="#引入依赖-1" class="headerlink" title="引入依赖"></a>引入依赖</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>log4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>log4j<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2.12<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="使用-1"><a href="#使用-1" class="headerlink" title="使用"></a>使用</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    org.apache.log4j.Logger log4j = org.apache.log4j.LogManager.getLogger(MTest.class);</span><br><span class="line">    log4j.info(<span class="string">&quot;level is: info&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Log4j2"><a href="#Log4j2" class="headerlink" title="Log4j2"></a>Log4j2</h3><h4 id="引入依赖-2"><a href="#引入依赖-2" class="headerlink" title="引入依赖"></a>引入依赖</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.logging.log4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>log4j-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.logging.log4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>log4j-api<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="使用-2"><a href="#使用-2" class="headerlink" title="使用"></a>使用</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    org.apache.logging.log4j.Logger log4j2 = org.apache.logging.log4j.LogManager.getLogger(MTest.class);</span><br><span class="line">    log4j2.info(<span class="string">&quot;level is: info&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Logback"><a href="#Logback" class="headerlink" title="Logback"></a>Logback</h3><h4 id="引入依赖-3"><a href="#引入依赖-3" class="headerlink" title="引入依赖"></a>引入依赖</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>ch.qos.logback<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>logback-classic<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>ch.qos.logback<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>logback-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.slf4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>slf4j-api<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="使用-3"><a href="#使用-3" class="headerlink" title="使用"></a>使用</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MTest.class);</span><br><span class="line">    log.trace(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;trace&quot;</span>);</span><br><span class="line">    log.debug(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;debug&quot;</span>);</span><br><span class="line">    log.info(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;info&quot;</span>);</span><br><span class="line">    log.warn(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;warn&quot;</span>);</span><br><span class="line">    log.error(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;error&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="日志等级动态切换"><a href="#日志等级动态切换" class="headerlink" title="日志等级动态切换"></a>日志等级动态切换</h2><h3 id="Log4j2-1"><a href="#Log4j2-1" class="headerlink" title="Log4j2"></a>Log4j2</h3><p>在<code>log4j2</code>中，<code>Logger</code>与<code>LoggerConfig</code>是两个不同的概念，不同的几个<code>Logger</code>可能使用的是同一个<code>LoggerConfig</code>。我们在<code>log4j2.xml</code>中配置的信息会解析成<code>LoggerConfig</code>。比如我们配置了<code>com.ldmzw.demo.log4j2</code>这个<code>LoggerConfig</code>为<code>debug</code>，那么初始化时，<code>com.ldmzw.demo.log4j2</code>包以及包下所有类中<code>Logger</code>都会引用<code>com.ldmzw.demo.log4j2</code>这个<code>LoggerConfig</code>，并且它们的等级都会从<code>LoggerConfig</code>中获取并设置为<code>LoggerConfig</code>的等级<code>debug</code>。因此，我们要想在运行时改变日志的等，那么就有两种方式：</p>
+<ul>
+<li>改变<code>Logger</code>的等级</li>
+<li>改变<code>LoggerConfig</code>的等级</li>
+</ul>
+<p>前置条件：</p>
+<ul>
+<li>Mtest：com.ldmzw.demo.log4j2.test.MTest</li>
+<li>log4j2.xml</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">Configuration</span> <span class="attr">status</span>=<span class="string">&quot;WARN&quot;</span> <span class="attr">monitorInterval</span>=<span class="string">&quot;30&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    。。。省略。。。</span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">Loggers</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">Logger</span> <span class="attr">name</span>=<span class="string">&quot;com.ldmzw.demo.log4j2&quot;</span> <span class="attr">level</span>=<span class="string">&quot;trace&quot;</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">Root</span> <span class="attr">level</span>=<span class="string">&quot;info&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">AppenderRef</span> <span class="attr">ref</span>=<span class="string">&quot;CONSOLE&quot;</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">AppenderRef</span> <span class="attr">ref</span>=<span class="string">&quot;DEBUG_FILE&quot;</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">AppenderRef</span> <span class="attr">ref</span>=<span class="string">&quot;INFO_FILE&quot;</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">AppenderRef</span> <span class="attr">ref</span>=<span class="string">&quot;WARN_FILE&quot;</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">AppenderRef</span> <span class="attr">ref</span>=<span class="string">&quot;ERROR_FILE&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">Root</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">Loggers</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="改变Logger等级"><a href="#改变Logger等级" class="headerlink" title="改变Logger等级"></a>改变Logger等级</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// com.ldmzw.demo.log4j2.test.MTest</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(MTest.class);</span><br><span class="line">    log.trace(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;trace&quot;</span>);</span><br><span class="line">    log.debug(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;debug&quot;</span>);</span><br><span class="line">    log.info(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;info&quot;</span>);</span><br><span class="line">    log.warn(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;warn&quot;</span>);</span><br><span class="line">    log.error(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;error&quot;</span>);</span><br><span class="line"></span><br><span class="line">    org.apache.logging.log4j.core.LoggerContext context = (org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(<span class="keyword">false</span>);</span><br><span class="line">    <span class="comment">// 注意：这里获取`Logger`的时候需要传入日志的名称，与创建日志的名称一致</span></span><br><span class="line">    org.apache.logging.log4j.core.Logger logger = (org.apache.logging.log4j.core.Logger) context.getLogger(<span class="string">&quot;com.ldmzw.demo.log4j2.test.MTest&quot;</span>);</span><br><span class="line">    <span class="comment">// 修改等级</span></span><br><span class="line">    logger.setLevel(Level.WARN);</span><br><span class="line"></span><br><span class="line">    log.trace(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;trace&quot;</span>);</span><br><span class="line">    log.debug(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;debug&quot;</span>);</span><br><span class="line">    log.info(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;info&quot;</span>);</span><br><span class="line">    log.warn(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;warn&quot;</span>);</span><br><span class="line">    log.error(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;error&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 修改等级</span></span><br><span class="line">    logger.setLevel(Level.DEBUG);</span><br><span class="line"></span><br><span class="line">    log.trace(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;trace&quot;</span>);</span><br><span class="line">    log.debug(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;debug&quot;</span>);</span><br><span class="line">    log.info(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;info&quot;</span>);</span><br><span class="line">    log.warn(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;warn&quot;</span>);</span><br><span class="line">    log.error(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;error&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意：</p>
+<ul>
+<li>获取<code>Logger</code>的时候要与创建<code>Logger</code>的时候使用的是同一个名称，并且只会修改该<code>Logger</code>的等级，不会影响其它的<code>Logger</code>的等级</li>
+<li>如果传入的名称没有匹配到相应<code>Logger</code>，框架会创建一个名称为传入名称的<code>Logger</code></li>
+</ul>
+</blockquote>
+<p>关键源代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// org.apache.logging.log4j.core.LoggerContext</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> Logger <span class="title">getLogger</span><span class="params">(<span class="keyword">final</span> String name)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> getLogger(name, <span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> Logger <span class="title">getLogger</span><span class="params">(<span class="keyword">final</span> String name, <span class="keyword">final</span> MessageFactory messageFactory)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Note: This is the only method where we add entries to the &#x27;loggerRegistry&#x27; ivar.</span></span><br><span class="line">    Logger logger = loggerRegistry.getLogger(name, messageFactory);</span><br><span class="line">    <span class="keyword">if</span> (logger != <span class="keyword">null</span>) &#123;</span><br><span class="line">        AbstractLogger.checkMessageFactory(logger, messageFactory);</span><br><span class="line">        <span class="keyword">return</span> logger;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    logger = newInstance(<span class="keyword">this</span>, name, messageFactory);</span><br><span class="line">    loggerRegistry.putIfAbsent(name, messageFactory, logger);</span><br><span class="line">    <span class="keyword">return</span> loggerRegistry.getLogger(name, messageFactory);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="改变LoggerConfig等级"><a href="#改变LoggerConfig等级" class="headerlink" title="改变LoggerConfig等级"></a>改变LoggerConfig等级</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// com.ldmzw.demo.log4j2.test.MTest</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    log.trace(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;trace&quot;</span>);</span><br><span class="line">    log.debug(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;debug&quot;</span>);</span><br><span class="line">    log.info(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;info&quot;</span>);</span><br><span class="line">    log.warn(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;warn&quot;</span>);</span><br><span class="line">    log.error(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;error&quot;</span>);</span><br><span class="line"></span><br><span class="line">    org.apache.logging.log4j.core.LoggerContext context = (org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(<span class="keyword">false</span>);</span><br><span class="line">    org.apache.logging.log4j.core.config.LoggerConfig loggerConfig = context.getConfiguration().getLoggerConfig(<span class="string">&quot;com.ldmzw.demo.log4j2&quot;</span>);</span><br><span class="line">    <span class="comment">// 修改等级</span></span><br><span class="line">    loggerConfig.setLevel(Level.WARN);</span><br><span class="line">    <span class="comment">// 更新日志</span></span><br><span class="line">    context.updateLoggers();</span><br><span class="line"></span><br><span class="line">    log.trace(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;trace&quot;</span>);</span><br><span class="line">    log.debug(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;debug&quot;</span>);</span><br><span class="line">    log.info(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;info&quot;</span>);</span><br><span class="line">    log.warn(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;warn&quot;</span>);</span><br><span class="line">    log.error(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;error&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意：</p>
+<ul>
+<li><code>context.getConfiguration().getLoggerConfig(&quot;com.ldmzw.demo.log4j2&quot;)</code>中传入的名称是<code>LoggerConfig</code>的名称，与<code>log4j2.xml</code>中配置的需要匹配</li>
+<li>如果传入的名称没有匹配到相应<code>LoggerConfig</code>，则会尝试去获取上一级的<code>LoggerConfig</code>，如果最后都没获取到，则会使用<code>root</code>。比如传入的是<code>com.ldmzw.demo.log4j2.test</code>，则最后获取到的是<code>com.ldmzw.demo.log4j2</code>，如果传入的是<code>com.ldmzw.demo</code>，由于我们<code>log4j2.xml</code>中只有<code>com.ldmzw.demo.log4j2</code>与<code>root</code>，所以会一直向上找到<code>root</code></li>
+<li>当我们修改了<code>LoggerConfig</code>的等级后，我们一定要调用<code>context.updateLoggers()</code>来更新所有引用了该<code>LoggerConfig</code>的<code>Logger</code>的等级，否则，<code>Logger</code>的等级也不会生效</li>
+<li>在我们的用例中，由于创建的<code>Logger</code>为<code>com.ldmzw.demo.log4j2.test.MTest</code>，所以引用的<code>LoggerConfig</code>为<code>com.ldmzw.demo.log4j2</code>，如果我们修改<code>context.getConfiguration().getLoggerConfig(&quot;com.ldmzw.demo.log4j2&quot;)</code>为<code>context.getConfiguration().getLoggerConfig(&quot;com.ldmzw.demo&quot;)</code>，那么上面的用例在等级修改后依旧会打印<code>trace</code>、<code>debug</code>、<code>info</code>的日志。因为修改为<code>context.getConfiguration().getLoggerConfig(&quot;com.ldmzw.demo&quot;)</code>后，获取到的是<code>root LoggerConfig</code>，所以<code>com.ldmzw.demo.log4j2.test.MTest</code>该<code>Logger</code>并不会受影响</li>
+</ul>
+</blockquote>
+<p>关键源代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// org.apache.logging.log4j.core.config.AbstractConfiguration</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> LoggerConfig <span class="title">getLoggerConfig</span><span class="params">(<span class="keyword">final</span> String loggerName)</span> </span>&#123;</span><br><span class="line">    LoggerConfig loggerConfig = loggerConfigs.get(loggerName);</span><br><span class="line">    <span class="keyword">if</span> (loggerConfig != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> loggerConfig;</span><br><span class="line">    &#125;</span><br><span class="line">    String substr = loggerName;</span><br><span class="line">    <span class="keyword">while</span> ((substr = NameUtil.getSubName(substr)) != <span class="keyword">null</span>) &#123;</span><br><span class="line">        loggerConfig = loggerConfigs.get(substr);</span><br><span class="line">        <span class="keyword">if</span> (loggerConfig != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> loggerConfig;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> root;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Logback-1"><a href="#Logback-1" class="headerlink" title="Logback"></a>Logback</h3><p>相比与<code>log4j2</code>的<code>Logger</code>与<code>LoggerConfig</code>，<code>logback</code>则简单许多，它并没有那么多复杂的概念，只有<code>Logger</code>的概念。所以我们修改等级也只能去修改<code>Logger</code>的等级，但是在<code>logback</code>中，<code>Logger</code>是有继承的概念。而<code>log4j2</code>中的<code>Logger</code>是完全独立的，没有继承的说法，<code>log4j2</code>的继承是通过<code>LoggerConfig</code>去实现的。</p>
+<p>前置条件：</p>
+<ul>
+<li>Mtest：com.ldmzw.demo.logback.test.MTest</li>
+<li>logback.xml</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span> <span class="attr">scan</span>=<span class="string">&quot;true&quot;</span> <span class="attr">scanPeriod</span>=<span class="string">&quot;10 seconds&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    。。。省略。。。</span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">logger</span> <span class="attr">name</span>=<span class="string">&quot;root&quot;</span> <span class="attr">level</span>=<span class="string">&quot;INFO&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">appender-ref</span> <span class="attr">ref</span>=<span class="string">&quot;CONSOLE&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">appender-ref</span> <span class="attr">ref</span>=<span class="string">&quot;DEBUG_FILE&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">appender-ref</span> <span class="attr">ref</span>=<span class="string">&quot;INFO_FILE&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">appender-ref</span> <span class="attr">ref</span>=<span class="string">&quot;WARN_FILE&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">appender-ref</span> <span class="attr">ref</span>=<span class="string">&quot;ERROR_FILE&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">logger</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">logger</span> <span class="attr">name</span>=<span class="string">&quot;com.ldmzw.demo.logback&quot;</span> <span class="attr">level</span>=<span class="string">&quot;TRACE&quot;</span>/&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="切换等级"><a href="#切换等级" class="headerlink" title="切换等级"></a>切换等级</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// com.ldmzw.demo.logback.test.MTest</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MTest.class);</span><br><span class="line">    log.trace(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;trace&quot;</span>);</span><br><span class="line">    log.debug(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;debug&quot;</span>);</span><br><span class="line">    log.info(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;info&quot;</span>);</span><br><span class="line">    log.warn(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;warn&quot;</span>);</span><br><span class="line">    log.error(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;error&quot;</span>);</span><br><span class="line"></span><br><span class="line">    LoggerContext loggerContext = (ch.qos.logback.classic.LoggerContext) LoggerFactory.getILoggerFactory();</span><br><span class="line">    Logger logger = loggerContext.getLogger(MTest.class);</span><br><span class="line">    <span class="comment">// 修改等级</span></span><br><span class="line">    logger.setLevel(ch.qos.logback.classic.Level.toLevel(<span class="string">&quot;warn&quot;</span>));</span><br><span class="line"></span><br><span class="line">    log.trace(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;trace&quot;</span>);</span><br><span class="line">    log.debug(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;debug&quot;</span>);</span><br><span class="line">    log.info(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;info&quot;</span>);</span><br><span class="line">    log.warn(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;warn&quot;</span>);</span><br><span class="line">    log.error(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;error&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意：</p>
+<ul>
+<li>虽然<code>logback</code>中没有<code>logger</code>与<code>loggerConfig</code>的区别，但是<code>logback</code>的<code>logger</code>中有<code>level</code>与<code>effectiveLevelInt</code>两个属性，<code>level</code>可以为<code>null</code>，当我们没有显示指定<code>level</code>时，它的指就为<code>null</code>，而<code>effectiveLevelInt</code>的值不会为空，当<code>level</code>为空时，<code>effectiveLevelInt</code>会取<code>parent</code>的<code>effectiveLevelInt</code>作为当前<code>logger</code>的<code>effectiveLevelInt</code></li>
+<li>设置<code>logger</code>的<code>level</code>有两种方式，一种是在<code>logback.xml</code>中配置，如<code>&lt;logger name=&quot;com.ldmzw.demo.logback&quot; level=&quot;TRACE&quot;/&gt;</code>，第二种是通过代码调用，如<code>logger.setLevel(ch.qos.logback.classic.Level.toLevel(&quot;warn&quot;))</code></li>
+<li>当我们显示的去调用<code>logger.setLevel(ch.qos.logback.classic.Level.toLevel(&quot;warn&quot;))</code>时，会触发递归去修改其<code>子logger</code>的<code>effectiveLevelInt</code>，并不会修改其<code>子logger</code>的<code>level</code>属性，并且当其<code>子logger</code>的<code>level</code>属性不为空时，递归调用则会结束</li>
+</ul>
+</blockquote>
+<p>举例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// com.ldmzw.demo.logback.test.MTest</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MTest.class);</span><br><span class="line">    log.trace(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;trace&quot;</span>);</span><br><span class="line">    log.debug(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;debug&quot;</span>);</span><br><span class="line">    log.info(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;info&quot;</span>);</span><br><span class="line">    log.warn(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;warn&quot;</span>);</span><br><span class="line">    log.error(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;error&quot;</span>);</span><br><span class="line"></span><br><span class="line">    LoggerContext loggerContext = (ch.qos.logback.classic.LoggerContext) LoggerFactory.getILoggerFactory();</span><br><span class="line">    Logger logger = loggerContext.getLogger(<span class="string">&quot;com.ldmzw.demo.logback&quot;</span>);</span><br><span class="line">    <span class="comment">// 修改等级</span></span><br><span class="line">    logger.setLevel(ch.qos.logback.classic.Level.toLevel(<span class="string">&quot;warn&quot;</span>));</span><br><span class="line"></span><br><span class="line">    log.trace(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;trace&quot;</span>);</span><br><span class="line">    log.debug(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;debug&quot;</span>);</span><br><span class="line">    log.info(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;info&quot;</span>);</span><br><span class="line">    log.warn(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;warn&quot;</span>);</span><br><span class="line">    log.error(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;error&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当我们进行上面调用时，会输出结果如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">2022-03-2 20:55:48.330 [main] [TRACE] [  com.ldmzw.demo.logback.test.MTest.test(MTest.java:16)] level is: trace</span><br><span class="line">2022-03-2 20:55:48.330 [main] [DEBUG] [  com.ldmzw.demo.logback.test.MTest.test(MTest.java:17)] level is: debug</span><br><span class="line">2022-03-2 20:55:48.330 [main] [INFO ] [  com.ldmzw.demo.logback.test.MTest.test(MTest.java:18)] level is: info</span><br><span class="line">2022-03-2 20:55:48.330 [main] [WARN ] [  com.ldmzw.demo.logback.test.MTest.test(MTest.java:19)] level is: warn</span><br><span class="line">2022-03-2 20:55:48.330 [main] [ERROR] [  com.ldmzw.demo.logback.test.MTest.test(MTest.java:20)] level is: error</span><br><span class="line">2022-03-2 20:55:48.330 [main] [WARN ] [  com.ldmzw.demo.logback.test.MTest.test(MTest.java:35)] level is: warn</span><br><span class="line">2022-03-2 20:55:48.330 [main] [ERROR] [  com.ldmzw.demo.logback.test.MTest.test(MTest.java:36)] level is: error</span><br></pre></td></tr></table></figure>
+
+<p>但是当我们测试下面代码时，会发现我们后一次的修改并未改变日志等级，不是我们所期望的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// com.ldmzw.demo.logback.test.MTest</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MTest.class);</span><br><span class="line">    log.trace(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;trace&quot;</span>);</span><br><span class="line">    log.debug(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;debug&quot;</span>);</span><br><span class="line">    log.info(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;info&quot;</span>);</span><br><span class="line">    log.warn(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;warn&quot;</span>);</span><br><span class="line">    log.error(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;error&quot;</span>);</span><br><span class="line"></span><br><span class="line">    LoggerContext loggerContext = (ch.qos.logback.classic.LoggerContext) LoggerFactory.getILoggerFactory();</span><br><span class="line">    Logger logger1 = loggerContext.getLogger(<span class="string">&quot;com.ldmzw.demo.logback.test&quot;</span>);</span><br><span class="line">    <span class="comment">// 修改等级</span></span><br><span class="line">    logger1.setLevel(ch.qos.logback.classic.Level.toLevel(<span class="string">&quot;warn&quot;</span>));</span><br><span class="line"></span><br><span class="line">    log.trace(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;trace&quot;</span>);</span><br><span class="line">    log.debug(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;debug&quot;</span>);</span><br><span class="line">    log.info(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;info&quot;</span>);</span><br><span class="line">    log.warn(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;warn&quot;</span>);</span><br><span class="line">    log.error(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;error&quot;</span>);</span><br><span class="line"></span><br><span class="line">    Logger logger2 = loggerContext.getLogger(<span class="string">&quot;com.ldmzw.demo.logback&quot;</span>);</span><br><span class="line">    <span class="comment">// 修改等级</span></span><br><span class="line">    logger2.setLevel(ch.qos.logback.classic.Level.toLevel(<span class="string">&quot;info&quot;</span>));</span><br><span class="line"></span><br><span class="line">    log.trace(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;trace&quot;</span>);</span><br><span class="line">    log.debug(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;debug&quot;</span>);</span><br><span class="line">    log.info(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;info&quot;</span>);</span><br><span class="line">    log.warn(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;warn&quot;</span>);</span><br><span class="line">    log.error(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;error&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">2022-03-21 20:59:43.822 [main] [TRACE] [  com.ldmzw.demo.logback.test.MTest.test(MTest.java:16)] level is: trace</span><br><span class="line">2022-03-21 20:59:43.822 [main] [DEBUG] [  com.ldmzw.demo.logback.test.MTest.test(MTest.java:17)] level is: debug</span><br><span class="line">2022-03-21 20:59:43.822 [main] [INFO ] [  com.ldmzw.demo.logback.test.MTest.test(MTest.java:18)] level is: info</span><br><span class="line">2022-03-21 20:59:43.822 [main] [WARN ] [  com.ldmzw.demo.logback.test.MTest.test(MTest.java:19)] level is: warn</span><br><span class="line">2022-03-21 20:59:43.822 [main] [ERROR] [  com.ldmzw.demo.logback.test.MTest.test(MTest.java:20)] level is: error</span><br><span class="line">2022-03-21 20:59:43.822 [main] [WARN ] [  com.ldmzw.demo.logback.test.MTest.test(MTest.java:35)] level is: warn</span><br><span class="line">2022-03-21 20:59:43.822 [main] [ERROR] [  com.ldmzw.demo.logback.test.MTest.test(MTest.java:36)] level is: error</span><br><span class="line">2022-03-21 20:59:43.822 [main] [WARN ] [  com.ldmzw.demo.logback.test.MTest.test(MTest.java:43)] level is: warn</span><br><span class="line">2022-03-21 20:59:43.822 [main] [ERROR] [  com.ldmzw.demo.logback.test.MTest.test(MTest.java:44)] level is: error</span><br></pre></td></tr></table></figure>
+
+<p>我们看到，当我们调用<code>logger2.setLevel(ch.qos.logback.classic.Level.toLevel(&quot;info&quot;))</code>去修改日志等级为<code>info</code>后，我们预期后面的日志会输出<code>info</code>级别的日志，但是发现输出的依旧<code>warn</code>级别。引起这个的原因正如前面所说，是因为我们显示设置了<code>com.ldmzw.demo.logback.test</code>的日志等级，这时我们会发现<code>com.ldmzw.demo.logback.test.MTest</code>的<code>parent</code>已经由最初的<code>com.ldmzw.demo.logback</code>变成了<code>com.ldmzw.demo.logback.test</code>，并且<code>com.ldmzw.demo.logback.test</code>的<code>parent</code>为<code>com.ldmzw.demo.logback</code>。这时当我们再去修改<code>com.ldmzw.demo.logback</code>的等级，依旧会递归修改其<code>child com.ldmzw.demo.logback.test</code>的等级，但是此时发现<code>com.ldmzw.demo.logback.test</code>的<code>level</code>属性不再为空，所以返回递归。</p>
+<p>源码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// ch.qos.logback.classic.Logger</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">setLevel</span><span class="params">(Level newLevel)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (level == newLevel) &#123;</span><br><span class="line">        <span class="comment">// nothing to do;</span></span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (newLevel == <span class="keyword">null</span> &amp;&amp; isRootLogger()) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">&quot;The level of the root logger cannot be set to null&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    level = newLevel;</span><br><span class="line">    <span class="keyword">if</span> (newLevel == <span class="keyword">null</span>) &#123;</span><br><span class="line">        effectiveLevelInt = parent.effectiveLevelInt;</span><br><span class="line">        newLevel = parent.getEffectiveLevel();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        effectiveLevelInt = newLevel.levelInt;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (childrenList != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">int</span> len = childrenList.size();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; i++) &#123;</span><br><span class="line">            Logger child = (Logger) childrenList.get(i);</span><br><span class="line">            <span class="comment">// tell child to handle parent levelInt change</span></span><br><span class="line">            child.handleParentLevelChange(effectiveLevelInt);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// inform listeners</span></span><br><span class="line">    loggerContext.fireOnLevelChange(<span class="keyword">this</span>, newLevel);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * This method is invoked by parent logger to let this logger know that the</span></span><br><span class="line"><span class="comment"> * prent&#x27;s levelInt changed.</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> newParentLevelInt</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">handleParentLevelChange</span><span class="params">(<span class="keyword">int</span> newParentLevelInt)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// changes in the parent levelInt affect children only if their levelInt is</span></span><br><span class="line">    <span class="comment">// null</span></span><br><span class="line">    <span class="keyword">if</span> (level == <span class="keyword">null</span>) &#123;</span><br><span class="line">        effectiveLevelInt = newParentLevelInt;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// propagate the parent levelInt change to this logger&#x27;s children</span></span><br><span class="line">        <span class="keyword">if</span> (childrenList != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">int</span> len = childrenList.size();</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; i++) &#123;</span><br><span class="line">                Logger child = (Logger) childrenList.get(i);</span><br><span class="line">                child.handleParentLevelChange(newParentLevelInt);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="在Spring-Boot中的动态切换"><a href="#在Spring-Boot中的动态切换" class="headerlink" title="在Spring Boot中的动态切换"></a>在Spring Boot中的动态切换</h2><p>我们知道，在<code>spring boot</code>中，默认的门面日志框架是<code>Slf4j</code>，默认的记录日志框架采用的是<code>logback</code>，但官方团队也做了<code>log4j2</code>的<code>starter</code>，所以在<code>spring boot</code>中切换日志框架十分的方便。</p>
+<p>在<code>spring boot</code>中，官方团队已经给我们封装了动态切换日志等级的方法，调用<code>org.springframework.boot.logging.LoggingSystem#setLogLevel(String loggerName, org.springframework.boot.logging.LogLevel level)</code></p>
+<p>核心方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ldmzw.demo.log4j2.controller;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.logging.LogLevel;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.logging.LoggingSystem;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.PathVariable;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RestController;</span><br><span class="line"></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/test&quot;)</span></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> LoggingSystem loggingSystem;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/log/change/&#123;name&#125;/&#123;level&#125;&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">changeLevel</span><span class="params">(<span class="meta">@PathVariable(&quot;name&quot;)</span> String name, <span class="meta">@PathVariable(&quot;level&quot;)</span> String level)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        loggingSystem.setLogLevel(name, LogLevel.valueOf(level.toUpperCase()));</span><br><span class="line"></span><br><span class="line">        log.info(<span class="string">&quot;修改日志等级：&#123;&#125; &#123;&#125;&quot;</span>, name, level);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;ok&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Slf4j-Log4j2"><a href="#Slf4j-Log4j2" class="headerlink" title="Slf4j+Log4j2"></a>Slf4j+Log4j2</h3><h4 id="引入依赖-4"><a href="#引入依赖-4" class="headerlink" title="引入依赖"></a>引入依赖</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-logging<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-log4j2<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="等级切换"><a href="#等级切换" class="headerlink" title="等级切换"></a>等级切换</h4><p>在<code>spring boot</code>中，我们仍然可以选择<code>log4j2</code>前面介绍的两种方式来进行日志等级的动态切换，也可以选择<code>org.springframework.boot.logging.LoggingSystem#setLogLevel(String loggerName, org.springframework.boot.logging.LogLevel level)</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ldmzw.demo.log4j2.controller;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"><span class="keyword">import</span> org.apache.logging.log4j.Level;</span><br><span class="line"><span class="keyword">import</span> org.apache.logging.log4j.LogManager;</span><br><span class="line"><span class="keyword">import</span> org.apache.logging.log4j.core.Logger;</span><br><span class="line"><span class="keyword">import</span> org.apache.logging.log4j.core.LoggerContext;</span><br><span class="line"><span class="keyword">import</span> org.apache.logging.log4j.core.config.LoggerConfig;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.logging.LogLevel;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.logging.LoggingSystem;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.PathVariable;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RestController;</span><br><span class="line"></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/test&quot;)</span></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> LoggingSystem loggingSystem;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/log/change/&#123;name&#125;/&#123;level&#125;&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">changeLevel</span><span class="params">(<span class="meta">@PathVariable(&quot;name&quot;)</span> String name, <span class="meta">@PathVariable(&quot;level&quot;)</span> String level)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        loggingSystem.setLogLevel(name, LogLevel.valueOf(level.toUpperCase()));</span><br><span class="line"></span><br><span class="line">        log.info(<span class="string">&quot;修改日志等级：&#123;&#125; &#123;&#125;&quot;</span>, name, level);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;ok&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/log&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">log</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        log.trace(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;trace&quot;</span>);</span><br><span class="line">        log.debug(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;debug&quot;</span>);</span><br><span class="line">        log.info(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;info&quot;</span>);</span><br><span class="line">        log.warn(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;warn&quot;</span>);</span><br><span class="line">        log.error(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;error&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;ok - &quot;</span> + log.getName();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意：</p>
+<p>当我们调用<code>loggingSystem.setLogLevel(name, LogLevel.valueOf(level.toUpperCase()))</code>时，如果我们传入的<code>name</code>没有找到相应的<code>loggerConfig</code>时，<code>spring boot</code>会为我们创建一个<code>org.springframework.boot.logging.log4j2.Log4J2LoggingSystem$LevelSetLoggerConfig</code>，并且增加到<code>configuration</code>中去。更新的时候对应<code>logger</code>会引用新增加入的<code>loggerConfig</code>，这一点与自己使用<code>slf4j</code>更新时存在区别。</p>
+</blockquote>
+<p>关键源码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">   <span class="comment">// org.springframework.boot.logging.log4j2.Log4J2LoggingSystem</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">setLogLevel</span><span class="params">(String loggerName, Level level)</span> </span>&#123;</span><br><span class="line">	LoggerConfig logger = getLogger(loggerName);</span><br><span class="line">	<span class="keyword">if</span> (level == <span class="keyword">null</span>) &#123;</span><br><span class="line">		clearLogLevel(loggerName, logger);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> &#123;</span><br><span class="line">		setLogLevel(loggerName, logger, level);</span><br><span class="line">	&#125;</span><br><span class="line">	getLoggerContext().updateLoggers();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">clearLogLevel</span><span class="params">(String loggerName, LoggerConfig logger)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (logger <span class="keyword">instanceof</span> LevelSetLoggerConfig) &#123;</span><br><span class="line">		getLoggerContext().getConfiguration().removeLogger(loggerName);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> &#123;</span><br><span class="line">		logger.setLevel(<span class="keyword">null</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">setLogLevel</span><span class="params">(String loggerName, LoggerConfig logger, Level level)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (logger == <span class="keyword">null</span>) &#123;</span><br><span class="line">		getLoggerContext().getConfiguration().addLogger(loggerName,</span><br><span class="line">				<span class="keyword">new</span> LevelSetLoggerConfig(loggerName, level, <span class="keyword">true</span>));</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> &#123;</span><br><span class="line">		logger.setLevel(level);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Slf4j-Logback"><a href="#Slf4j-Logback" class="headerlink" title="Slf4j+Logback"></a>Slf4j+Logback</h3><h4 id="等级切换-1"><a href="#等级切换-1" class="headerlink" title="等级切换"></a>等级切换</h4><p>由于<code>logback</code>本身就实现了<code>slf4j</code>，并且在<code>logback</code>中没有<code>loggerConfig</code>的概念，所以在<code>spring boot</code>中进行动态切换时使用区别不大。值得注意一点的是，和<code>logback</code>切换一样，当<code>child logger</code>如果<code>level</code>属性不为空，当<code>parent logger</code>等级修改时递归调用并不会影响到<code>child logger</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ldmzw.demo.logback.controller;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> ch.qos.logback.classic.Logger;</span><br><span class="line"><span class="keyword">import</span> ch.qos.logback.classic.LoggerContext;</span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.LoggerFactory;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.logging.LogLevel;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.logging.LoggingSystem;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.PathVariable;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RestController;</span><br><span class="line"></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/test&quot;)</span></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> LoggingSystem loggingSystem;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/log/change/&#123;name&#125;/&#123;level&#125;&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">changeLevel</span><span class="params">(<span class="meta">@PathVariable(&quot;name&quot;)</span> String name, <span class="meta">@PathVariable(&quot;level&quot;)</span> String level)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    loggingSystem.setLogLevel(name, LogLevel.valueOf(level.toUpperCase()));</span><br><span class="line"></span><br><span class="line">        log.info(<span class="string">&quot;修改日志等级：&#123;&#125; &#123;&#125;&quot;</span>, name, level);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;ok&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">change1</span><span class="params">(String name, String level)</span> </span>&#123;</span><br><span class="line">        LoggerContext loggerContext = (ch.qos.logback.classic.LoggerContext) LoggerFactory.getILoggerFactory();</span><br><span class="line">        Logger logger = loggerContext.getLogger(name);</span><br><span class="line">        <span class="keyword">if</span> (logger == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">// 更改全局日志级别；否则按传递的包名或类名修改日志级别。</span></span><br><span class="line">            logger = loggerContext.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);</span><br><span class="line">        &#125;</span><br><span class="line">        logger.setLevel(ch.qos.logback.classic.Level.toLevel(level));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/log&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">log</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        log.trace(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;trace&quot;</span>);</span><br><span class="line">        log.debug(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;debug&quot;</span>);</span><br><span class="line">        log.info(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;info&quot;</span>);</span><br><span class="line">        log.warn(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;warn&quot;</span>);</span><br><span class="line">        log.error(<span class="string">&quot;level is: &#123;&#125;&quot;</span>, <span class="string">&quot;error&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;ok - &quot;</span> + log.getName();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>关键源码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">   <span class="comment">// org.springframework.boot.logging.logback.LogbackLoggingSystem</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setLogLevel</span><span class="params">(String loggerName, LogLevel level)</span> </span>&#123;</span><br><span class="line">	ch.qos.logback.classic.Logger logger = getLogger(loggerName);</span><br><span class="line">	<span class="keyword">if</span> (logger != <span class="keyword">null</span>) &#123;</span><br><span class="line">		logger.setLevel(LEVELS.convertSystemToNative(level));</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> ch.qos.logback.classic.<span class="function">Logger <span class="title">getLogger</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">	LoggerContext factory = getLoggerContext();</span><br><span class="line">	<span class="keyword">return</span> factory.getLogger(getLoggerName(name));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> LoggerContext <span class="title">getLoggerContext</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	ILoggerFactory factory = StaticLoggerBinder.getSingleton().getLoggerFactory();</span><br><span class="line">	Assert.isInstanceOf(LoggerContext.class, factory,</span><br><span class="line">			() -&gt; String.format(</span><br><span class="line">					<span class="string">&quot;LoggerFactory is not a Logback LoggerContext but Logback is on &quot;</span></span><br><span class="line">							+ <span class="string">&quot;the classpath. Either remove Logback or the competing &quot;</span></span><br><span class="line">							+ <span class="string">&quot;implementation (%s loaded from %s). If you are using &quot;</span></span><br><span class="line">							+ <span class="string">&quot;WebLogic you will need to add &#x27;org.slf4j&#x27; to &quot;</span></span><br><span class="line">							+ <span class="string">&quot;prefer-application-packages in WEB-INF/weblogic.xml&quot;</span>,</span><br><span class="line">					factory.getClass(), getLocation(factory)));</span><br><span class="line">	<span class="keyword">return</span> (LoggerContext) factory;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文只介绍了目前比较主流的记录日志框架<code>logback</code>与<code>log4j2</code>，其它的框架大家可以去研究一下。在<code>spring boot</code>中，不论是<code>logback</code>还是<code>log4j2</code>，spring团队都为我们做了适配，因此我们在<code>spring boot</code>应用中去动态切换，基本不需要修改代码。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/java/" rel="tag"># java</a>
+              <a href="/tags/%E6%97%A5%E5%BF%97%E7%BB%84%E4%BB%B6/" rel="tag"># 日志组件</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/03/14/log-log4j2/" rel="prev" title="日志组件Log4j2">
+      <i class="fa fa-chevron-left"></i> 日志组件Log4j2
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A5%E5%BF%97%E6%A1%86%E6%9E%B6%E4%BD%BF%E7%94%A8"><span class="nav-number">2.</span> <span class="nav-text">日志框架使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#JUL-java-util-logging"><span class="nav-number">2.1.</span> <span class="nav-text">JUL(java util logging)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%95%E5%85%A5%E4%BE%9D%E8%B5%96"><span class="nav-number">2.1.1.</span> <span class="nav-text">引入依赖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8"><span class="nav-number">2.1.2.</span> <span class="nav-text">使用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Log4j"><span class="nav-number">2.2.</span> <span class="nav-text">Log4j</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%95%E5%85%A5%E4%BE%9D%E8%B5%96-1"><span class="nav-number">2.2.1.</span> <span class="nav-text">引入依赖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-1"><span class="nav-number">2.2.2.</span> <span class="nav-text">使用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Log4j2"><span class="nav-number">2.3.</span> <span class="nav-text">Log4j2</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%95%E5%85%A5%E4%BE%9D%E8%B5%96-2"><span class="nav-number">2.3.1.</span> <span class="nav-text">引入依赖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-2"><span class="nav-number">2.3.2.</span> <span class="nav-text">使用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Logback"><span class="nav-number">2.4.</span> <span class="nav-text">Logback</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%95%E5%85%A5%E4%BE%9D%E8%B5%96-3"><span class="nav-number">2.4.1.</span> <span class="nav-text">引入依赖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-3"><span class="nav-number">2.4.2.</span> <span class="nav-text">使用</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A5%E5%BF%97%E7%AD%89%E7%BA%A7%E5%8A%A8%E6%80%81%E5%88%87%E6%8D%A2"><span class="nav-number">3.</span> <span class="nav-text">日志等级动态切换</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Log4j2-1"><span class="nav-number">3.1.</span> <span class="nav-text">Log4j2</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%94%B9%E5%8F%98Logger%E7%AD%89%E7%BA%A7"><span class="nav-number">3.1.1.</span> <span class="nav-text">改变Logger等级</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%94%B9%E5%8F%98LoggerConfig%E7%AD%89%E7%BA%A7"><span class="nav-number">3.1.2.</span> <span class="nav-text">改变LoggerConfig等级</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Logback-1"><span class="nav-number">3.2.</span> <span class="nav-text">Logback</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%87%E6%8D%A2%E7%AD%89%E7%BA%A7"><span class="nav-number">3.2.1.</span> <span class="nav-text">切换等级</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8Spring-Boot%E4%B8%AD%E7%9A%84%E5%8A%A8%E6%80%81%E5%88%87%E6%8D%A2"><span class="nav-number">4.</span> <span class="nav-text">在Spring Boot中的动态切换</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Slf4j-Log4j2"><span class="nav-number">4.1.</span> <span class="nav-text">Slf4j+Log4j2</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%95%E5%85%A5%E4%BE%9D%E8%B5%96-4"><span class="nav-number">4.1.1.</span> <span class="nav-text">引入依赖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AD%89%E7%BA%A7%E5%88%87%E6%8D%A2"><span class="nav-number">4.1.2.</span> <span class="nav-text">等级切换</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Slf4j-Logback"><span class="nav-number">4.2.</span> <span class="nav-text">Slf4j+Logback</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AD%89%E7%BA%A7%E5%88%87%E6%8D%A2-1"><span class="nav-number">4.2.1.</span> <span class="nav-text">等级切换</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="nav-number">5.</span> <span class="nav-text">结语</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">victor min</p>
+  <div class="site-description" itemprop="description">风无定，人无常<br/>人生如浮萍，聚散两茫茫</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">victor min</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

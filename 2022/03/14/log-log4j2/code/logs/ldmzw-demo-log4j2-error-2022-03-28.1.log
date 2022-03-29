@@ -1,0 +1,8 @@
+2022-03-28 16:05:54.013 [http-nio-8080-exec-1] ERROR com.ldmzw.demo.log4j2.controller.TestController 70 level is: error
+2022-03-28 16:07:03.109 [http-nio-8080-exec-2] ERROR com.ldmzw.demo.log4j2.controller.TestController 70 level is: error
+2022-03-28 16:08:45.537 [http-nio-8080-exec-4] ERROR com.ldmzw.demo.log4j2.controller.TestController 70 level is: error
+2022-03-28 16:10:07.932 [http-nio-8080-exec-7] ERROR com.ldmzw.demo.log4j2.controller.TestController 70 level is: error
+2022-03-28 16:10:49.268 [http-nio-8080-exec-1] ERROR com.ldmzw.demo.log4j2.controller.TestController 70 level is: error
+2022-03-28 16:14:22.333 [http-nio-8080-exec-10] ERROR com.ldmzw.demo.log4j2.controller.TestController 70 level is: error
+2022-03-28 16:19:42.592 [http-nio-8080-exec-3] ERROR com.ldmzw.demo.log4j2.controller.TestController 70 level is: error
+2022-03-28 16:20:06.705 [http-nio-8080-exec-7] ERROR com.ldmzw.demo.log4j2.controller.TestController 70 level is: error
