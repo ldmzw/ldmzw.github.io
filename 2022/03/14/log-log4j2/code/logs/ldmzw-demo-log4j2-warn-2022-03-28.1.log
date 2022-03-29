@@ -1,8 +1,0 @@
-2022-03-28 16:05:54.010 [http-nio-8080-exec-1] WARN  com.ldmzw.demo.log4j2.controller.TestController 69 level is: warn
-2022-03-28 16:07:03.109 [http-nio-8080-exec-2] WARN  com.ldmzw.demo.log4j2.controller.TestController 69 level is: warn
-2022-03-28 16:08:45.521 [http-nio-8080-exec-4] WARN  com.ldmzw.demo.log4j2.controller.TestController 69 level is: warn
-2022-03-28 16:10:07.928 [http-nio-8080-exec-7] WARN  com.ldmzw.demo.log4j2.controller.TestController 69 level is: warn
-2022-03-28 16:10:49.266 [http-nio-8080-exec-1] WARN  com.ldmzw.demo.log4j2.controller.TestController 69 level is: warn
-2022-03-28 16:14:22.333 [http-nio-8080-exec-10] WARN  com.ldmzw.demo.log4j2.controller.TestController 69 level is: warn
-2022-03-28 16:19:42.591 [http-nio-8080-exec-3] WARN  com.ldmzw.demo.log4j2.controller.TestController 69 level is: warn
-2022-03-28 16:20:06.705 [http-nio-8080-exec-7] WARN  com.ldmzw.demo.log4j2.controller.TestController 69 level is: warn

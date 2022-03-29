@@ -1,3 +1,0 @@
-2022-03-14 11:34:56.282 [main] [INFO ] com.ldmzw.demo.logback.test.MTest-26 - level is: info
-2022-03-14 11:34:56.284 [main] [WARN ] com.ldmzw.demo.logback.test.MTest-27 - level is: warn
-2022-03-14 11:34:56.285 [main] [ERROR] com.ldmzw.demo.logback.test.MTest-28 - level is: error
