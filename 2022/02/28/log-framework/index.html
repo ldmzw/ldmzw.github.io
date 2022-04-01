@@ -138,11 +138,6 @@
     <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
 
   </li>
-        <li class="menu-item menu-item-about">
-
-    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
-
-  </li>
         <li class="menu-item menu-item-tags">
 
     <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
@@ -156,6 +151,11 @@
         <li class="menu-item menu-item-archives">
 
     <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
 
   </li>
   </ul>
@@ -274,7 +274,7 @@
 <h2 id="门面日志框架"><a href="#门面日志框架" class="headerlink" title="门面日志框架"></a>门面日志框架</h2><p>在java中，门面日志框架有<code>JCL(commons logging)</code>与<code>Slf4j(simple logging facade for java)</code>。</p>
 <h3 id="JCL（Apache-Commons-Logging）"><a href="#JCL（Apache-Commons-Logging）" class="headerlink" title="JCL（Apache Commons Logging）"></a>JCL（Apache Commons Logging）</h3><p><code>JCL</code>也就是我们常说的<code>Apache Commons Logging</code>。<code>jcl</code>采用了设计模式中的<code>适配器模式</code>，它对外提供统一的接口，然后在适配类中对日志的操作委托给具体的记录日志框架，包括<code>Log4j</code>、<code>JDK1.4</code>以及任何一个实现<code>JDK1.4 logging APIs(JSR-47)</code>。</p>
 <p>在JCL中对外有两个统一的接口，分别是<code>Log</code>和<code>LogFactory</code>。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.commons.logging.Log;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.logging.LogFactory;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CLASS</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Log log = LogFactory.getLog(CLASS.class);</span><br><span class="line">    ...</span><br><span class="line">    ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.commons.logging.Log;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.logging.LogFactory;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CLASS</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">Log</span> <span class="variable">log</span> <span class="operator">=</span> LogFactory.getLog(CLASS.class);</span><br><span class="line">    ...</span><br><span class="line">    ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>当我们调用<code>LogFactory.getLog(CLASS.class)</code>的时候，最终会通过<code>LogAdapter.createLog(name)</code>来进行<code>Log</code>创建，所有的创建逻辑我们都可以在源码<code>org.apache.commons.logging.LogAdapter</code>中找到。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">log.fatal(Object message);</span><br><span class="line">log.fatal(Object message, Throwable t);</span><br><span class="line">log.error(Object message);</span><br><span class="line">log.error(Object message, Throwable t);</span><br><span class="line">log.warn(Object message);</span><br><span class="line">log.warn(Object message, Throwable t);</span><br><span class="line">log.info(Object message);</span><br><span class="line">log.info(Object message, Throwable t);</span><br><span class="line">log.debug(Object message);</span><br><span class="line">log.debug(Object message, Throwable t);</span><br><span class="line">log.trace(Object message);</span><br><span class="line">log.trace(Object message, Throwable t);</span><br></pre></td></tr></table></figure>
@@ -288,10 +288,10 @@
 <h3 id="Slf4j（simple-facade-logging-for-java）"><a href="#Slf4j（simple-facade-logging-for-java）" class="headerlink" title="Slf4j（simple facade logging for java）"></a>Slf4j（simple facade logging for java）</h3><p><code>slf4j</code>是一个简单的门面日志框架，如果我们需要使用<code>slf4j</code>，我们需要引入具体的记录日志依赖，如<code>jul</code>、<code>logback</code>、<code>reload4j</code>等。我们使用<code>slf4j</code>只需要引入<code>slf4j-api.jar</code>即可。</p>
 <p>在Slf4j中对外有两个统一的接口，分别是<code>Logger</code>和<code>LoggerFactory</code>。</p>
 <p><img src="/2022/02/28/log-framework/001.png" alt="Slf4j 实现" title="Slf4j 实现"></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.slf4j.Logger;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.LoggerFactory;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CLASS</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Logger log = LoggerFactory.getLog(CLASS.class);</span><br><span class="line">    ...</span><br><span class="line">    ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.slf4j.Logger;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.LoggerFactory;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CLASS</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">Logger</span> <span class="variable">log</span> <span class="operator">=</span> LoggerFactory.getLog(CLASS.class);</span><br><span class="line">    ...</span><br><span class="line">    ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>如果我们不引入任何记录日志实现，<code>slf4j</code>将会使用<code>org.slf4j.helpers.NOPLogger</code>，当我们启动应用的时候，会出现如下日志</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SLF4J: Failed to load class &quot;org.slf4j.impl.StaticLoggerBinder&quot;.</span><br><span class="line">SLF4J: Defaulting to no-operation (NOP) logger implementation</span><br><span class="line">SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.</span><br></pre></td></tr></table></figure>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SLF4J: Failed to load class &quot;org.slf4j.impl.StaticLoggerBinder&quot;.</span><br><span class="line">SLF4J: Defaulting to no-operation (NOP) logger implementation</span><br><span class="line">SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.</span><br></pre></td></tr></table></figure>
 
 <p>当然，我们可以通过引入记录日志框架来消除上面的警告，slf4j也提供了自己的实现<code>slf4j-simple.jar</code></p>
 <h3 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h3><p><code>log4j</code>在被<code>Apache Software Foundation</code>收入门下之后，由于理念不合，<code>log4j</code>的作者离开了并且随后开发了<code>slf4j</code>与<code>logback</code>。</p>
@@ -334,7 +334,7 @@
 <ul>
 <li>log调用：<code>log4j</code>与<code>log4j2</code>的调用都十分的简单。apache为了区分两者，修改了对应的<code>package</code>。</li>
 </ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    org.apache.log4j.Logger log4j = org.apache.log4j.LogManager.getLogger(MTest.class);</span><br><span class="line">    log4j.info(<span class="string">&quot;level is: info&quot;</span>);</span><br><span class="line"></span><br><span class="line">    org.apache.logging.log4j.Logger log4j2 = org.apache.logging.log4j.LogManager.getLogger(MTest.class);</span><br><span class="line">    log4j2.info(<span class="string">&quot;level is: info&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">test</span><span class="params">()</span> &#123;</span><br><span class="line">    org.apache.log4j.<span class="type">Logger</span> <span class="variable">log4j</span> <span class="operator">=</span> org.apache.log4j.LogManager.getLogger(MTest.class);</span><br><span class="line">    log4j.info(<span class="string">&quot;level is: info&quot;</span>);</span><br><span class="line"></span><br><span class="line">    org.apache.logging.log4j.<span class="type">Logger</span> <span class="variable">log4j2</span> <span class="operator">=</span> org.apache.logging.log4j.LogManager.getLogger(MTest.class);</span><br><span class="line">    log4j2.info(<span class="string">&quot;level is: info&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <ul>
 <li>配置不同：由于<code>.properties</code>文件的可读性较差，<code>log4j2</code>采用了<code>.xml</code>或者<code>.json</code>进行配置，因此两者的配置差别较大。</li>
@@ -540,12 +540,16 @@
         </a>
       </div>
       <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
         <span class="site-state-item-count">6</span>
-        <span class="site-state-item-name">分类</span>
+        <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
         <span class="site-state-item-count">20</span>
-        <span class="site-state-item-name">标签</span>
+        <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
 </div>
