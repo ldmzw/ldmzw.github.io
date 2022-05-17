@@ -1,0 +1,60 @@
+2022-05-12 11:36:18.680 [main] [INFO ] com.ldmzw.demo.logback.test.MTest-18 - level is: info
+2022-05-12 11:36:18.707 [main] [WARN ] com.ldmzw.demo.logback.test.MTest-19 - level is: warn
+2022-05-12 11:36:18.719 [main] [ERROR] com.ldmzw.demo.logback.test.MTest-20 - level is: error
+2022-05-12 11:36:18.732 [main] [WARN ] com.ldmzw.demo.logback.test.MTest-35 - level is: warn
+2022-05-12 11:36:18.735 [main] [ERROR] com.ldmzw.demo.logback.test.MTest-36 - level is: error
+2022-05-12 11:36:18.738 [main] [WARN ] com.ldmzw.demo.logback.test.MTest-43 - level is: warn
+2022-05-12 11:36:18.739 [main] [ERROR] com.ldmzw.demo.logback.test.MTest-44 - level is: error
+2022-05-12 11:38:02.942 [main] [INFO ] com.ldmzw.demo.logback.test.MTest-18 - level is: info
+2022-05-12 11:38:02.944 [main] [WARN ] com.ldmzw.demo.logback.test.MTest-19 - level is: warn
+2022-05-12 11:38:02.945 [main] [ERROR] com.ldmzw.demo.logback.test.MTest-20 - level is: error
+2022-05-12 11:38:02.946 [main] [WARN ] com.ldmzw.demo.logback.test.MTest-35 - level is: warn
+2022-05-12 11:38:02.947 [main] [ERROR] com.ldmzw.demo.logback.test.MTest-36 - level is: error
+2022-05-12 11:38:02.948 [main] [WARN ] com.ldmzw.demo.logback.test.MTest-43 - level is: warn
+2022-05-12 11:38:02.949 [main] [ERROR] com.ldmzw.demo.logback.test.MTest-44 - level is: error
+2022-05-12 14:19:48.528 [main] [INFO ] com.ldmzw.demo.logback.test.MTest-18 - level is: info
+2022-05-12 14:19:48.530 [main] [WARN ] com.ldmzw.demo.logback.test.MTest-19 - level is: warn
+2022-05-12 14:19:48.533 [main] [ERROR] com.ldmzw.demo.logback.test.MTest-20 - level is: error
+2022-05-12 14:19:48.534 [main] [WARN ] com.ldmzw.demo.logback.test.MTest-35 - level is: warn
+2022-05-12 14:19:48.535 [main] [ERROR] com.ldmzw.demo.logback.test.MTest-36 - level is: error
+2022-05-12 14:19:48.537 [main] [WARN ] com.ldmzw.demo.logback.test.MTest-43 - level is: warn
+2022-05-12 14:19:48.538 [main] [ERROR] com.ldmzw.demo.logback.test.MTest-44 - level is: error
+2022-05-12 14:53:16.958 [main] [INFO ] com.ldmzw.demo.logback.test.MTest-83 - level is: info
+2022-05-12 14:53:16.960 [main] [WARN ] com.ldmzw.demo.logback.test.MTest-84 - level is: warn
+2022-05-12 14:53:16.962 [main] [ERROR] com.ldmzw.demo.logback.test.MTest-85 - level is: error
+2022-05-12 14:56:39.349 [main] [INFO ] com.ldmzw.demo.logback.test.MTest-83 - level is: info
+2022-05-12 14:56:39.351 [main] [WARN ] com.ldmzw.demo.logback.test.MTest-84 - level is: warn
+2022-05-12 14:56:39.353 [main] [ERROR] com.ldmzw.demo.logback.test.MTest-85 - level is: error
+2022-05-12 14:56:56.497 [main] [INFO ] com.ldmzw.demo.logback.test.MTest-83 - level is: info
+2022-05-12 14:56:56.500 [main] [WARN ] com.ldmzw.demo.logback.test.MTest-84 - level is: warn
+2022-05-12 14:56:56.501 [main] [ERROR] com.ldmzw.demo.logback.test.MTest-85 - level is: error
+2022-05-12 15:01:38.441 [main] [INFO ] com.ldmzw.demo.logback.test.MTest-85 - level is: info
+2022-05-12 15:01:38.442 [main] [WARN ] com.ldmzw.demo.logback.test.MTest-86 - level is: warn
+2022-05-12 15:01:38.443 [main] [ERROR] com.ldmzw.demo.logback.test.MTest-87 - level is: error
+2022-05-12 15:03:03.205 [main] [INFO ] com.ldmzw.demo.logback.test.MTest-88 - level is: info
+2022-05-12 15:03:03.207 [main] [WARN ] com.ldmzw.demo.logback.test.MTest-89 - level is: warn
+2022-05-12 15:03:03.208 [main] [ERROR] com.ldmzw.demo.logback.test.MTest-90 - level is: error
+2022-05-12 15:03:26.523 [main] [INFO ] com.ldmzw.demo.logback.test.MTest-88 - level is: info
+2022-05-12 15:03:26.525 [main] [WARN ] com.ldmzw.demo.logback.test.MTest-89 - level is: warn
+2022-05-12 15:03:26.526 [main] [ERROR] com.ldmzw.demo.logback.test.MTest-90 - level is: error
+2022-05-12 15:04:03.615 [main] [INFO ] com.ldmzw.demo.logback.test.MTest-91 - level is: info
+2022-05-12 15:04:03.616 [main] [WARN ] com.ldmzw.demo.logback.test.MTest-92 - level is: warn
+2022-05-12 15:04:03.617 [main] [ERROR] com.ldmzw.demo.logback.test.MTest-93 - level is: error
+2022-05-12 15:14:59.315 [main] [INFO ] com.ldmzw.demo.logback.test.MTest-91 - level is: info
+2022-05-12 15:14:59.317 [main] [WARN ] com.ldmzw.demo.logback.test.MTest-92 - level is: warn
+2022-05-12 15:14:59.319 [main] [ERROR] com.ldmzw.demo.logback.test.MTest-93 - level is: error
+2022-05-12 15:15:32.053 [main] [INFO ] com.ldmzw.demo.logback.test.MTest-91 - level is: info
+2022-05-12 15:15:32.055 [main] [WARN ] com.ldmzw.demo.logback.test.MTest-92 - level is: warn
+2022-05-12 15:15:32.056 [main] [ERROR] com.ldmzw.demo.logback.test.MTest-93 - level is: error
+2022-05-12 15:16:12.399 [main] [INFO ] com.ldmzw.demo.logback.test.MTest-92 - level is: info
+2022-05-12 15:16:12.400 [main] [WARN ] com.ldmzw.demo.logback.test.MTest-93 - level is: warn
+2022-05-12 15:16:12.401 [main] [ERROR] com.ldmzw.demo.logback.test.MTest-94 - level is: error
+2022-05-12 16:00:36.794 [main] [INFO ] com.ldmzw.demo.logback.test.MTest-88 - level is: info
+2022-05-12 16:00:36.796 [main] [WARN ] com.ldmzw.demo.logback.test.MTest-89 - level is: warn
+2022-05-12 16:00:36.796 [main] [ERROR] com.ldmzw.demo.logback.test.MTest-90 - level is: error
+2022-05-12 16:01:03.934 [main] [INFO ] com.ldmzw.demo.logback.test.MTest-88 - level is: info
+2022-05-12 16:01:03.935 [main] [WARN ] com.ldmzw.demo.logback.test.MTest-89 - level is: warn
+2022-05-12 16:01:03.936 [main] [ERROR] com.ldmzw.demo.logback.test.MTest-90 - level is: error
+2022-05-12 16:01:50.189 [main] [INFO ] com.ldmzw.demo.logback.test.MTest-90 - level is: info
+2022-05-12 16:01:50.190 [main] [WARN ] com.ldmzw.demo.logback.test.MTest-91 - level is: warn
+2022-05-12 16:01:50.191 [main] [ERROR] com.ldmzw.demo.logback.test.MTest-92 - level is: error

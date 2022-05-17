@@ -205,6 +205,386 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://ldmzw.github.io/2022/02/28/log-framework/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="victor min">
+      <meta itemprop="description" content="风无定，人无常<br/>人生如浮萍，聚散两茫茫">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ldmzw">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/02/28/log-framework/" class="post-title-link" itemprop="url">日志组件</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-02-28 20:13:14" itemprop="dateCreated datePublished" datetime="2022-02-28T20:13:14+08:00">2022-02-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-04-01 09:40:13" itemprop="dateModified" datetime="2022-04-01T09:40:13+08:00">2022-04-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/%E6%97%A5%E5%BF%97%E7%BB%84%E4%BB%B6/" itemprop="url" rel="index"><span itemprop="name">日志组件</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>在应用中，日志是必不可少的，它能帮助我们快速的排查问题。但是在java中，我们时常会看到很多关于日志的包，比如<code>common-logging.jar</code>、<code>log4j-api.jar</code>、<code>slf4j-api.jar</code>、<code>logback-classic.jar</code>、<code>log4j-to-slf4j.jar</code>等等。一堆的jar让我们感觉云里雾里，弄不明白日志框架。本文主要是做一些梳理，从大体上讲解java的日志体系。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://logback.qos.ch/" title="logback 官网">logback 官网</a></li>
+<li><a target="_blank" rel="noopener" href="https://logging.apache.org/log4j/1.2/" title="log4j 官网">log4j 官网</a></li>
+<li><a target="_blank" rel="noopener" href="https://logging.apache.org/log4j/2.x/" title="log4j2 官网">log4j2 官网</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/package-summary.html" title="jul summary">jul summary</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.slf4j.org/" title="slf4j 官网">slf4j 官网</a></li>
+<li><a target="_blank" rel="noopener" href="https://commons.apache.org/proper/commons-logging/" title="jcl 官网">jcl 官网</a></li>
+</ul>
+<p>上面的框架我们可以分为两大类：<code>门面日志框架</code>与<code>记录日志框架</code>。通俗的讲，门面日志框架只负责一些规范与定义，并不负责具体的实现，就好比Mysql的存储引擎规范。而记录日志框架则是具体的实现，就好比实现Mysql存储引擎规范的<code>InnoDB</code>与<code>MyISAM</code>。</p>
+<p>系列相关文章：</p>
+<ul>
+<li><a href="/2022/02/28/log-framework/" title="日志组件">日志组件</a></li>
+<li><a href="/2022/03/07/log-logback/" title="日志组件Logback">日志组件Logback</a></li>
+<li><a href="/2022/03/14/log-log4j2/" title="日志组件Log4j2">日志组件Log4j2</a></li>
+<li><a href="/2022/03/21/log-framework1/" title="日志组件动态日志">日志组件动态日志</a></li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/02/28/log-framework/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://ldmzw.github.io/2022/02/06/bcrypt/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="victor min">
+      <meta itemprop="description" content="风无定，人无常<br/>人生如浮萍，聚散两茫茫">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ldmzw">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/02/06/bcrypt/" class="post-title-link" itemprop="url">密码学BCrypt</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-02-06 16:24:39" itemprop="dateCreated datePublished" datetime="2022-02-06T16:24:39+08:00">2022-02-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-04-01 09:41:12" itemprop="dateModified" datetime="2022-04-01T09:41:12+08:00">2022-04-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/" itemprop="url" rel="index"><span itemprop="name">密码学</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>在日常的开发中，我们会经常用到一些加密算法。我们常见的有<code>消息摘要算法</code>（包括<code>MD（Message Digest）算法</code>、<code>SHA（Secure Hash Algorithm）算法</code>、<code>MAC（Message Authentication Code）算法</code>等）、<code>对称加密算法</code>（包括<code>AES算法</code>、<code>DES算法</code>、<code>3DES算法</code>、<code>RC算法</code>等）、<code>非对称加密算法</code>（包括<code>RSA算法</code>、<code>DSA算法</code>、<code>ECC算法</code>等）。本文记录的<code>BCrypt</code>则是属于<code>消息摘要算法</code>，是由<code>Niels Provos</code>和<code>David Mazières</code>设计的密码哈希函数，他是基于<code>Blowfish</code>密码而来的，并于1999年在USENIX上提出。</p>
+<p>除了加盐来抵御<code>rainbow table</code>攻击之外，<code>bcrypt</code>的一个非常重要的特征就是自适应性，可以保证加密的速度在一个特定的范围内，即使计算机的运算能力非常高，可以通过增加迭代次数的方式，使得加密速度变慢，从而可以抵御暴力搜索攻击。</p>
+<p><code>bcrypt</code>函数是OpenBSD和其他系统包括一些Linux发行版（如SUSE Linux）的默认密码哈希算法。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://man.openbsd.org/bcrypt" title="OpenBSD BCrypt">OpenBSD BCrypt</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.mindrot.org/projects/jBCrypt/" title="jBCrypt">jBCrypt</a></li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/02/06/bcrypt/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://ldmzw.github.io/2022/01/22/rabbitmq/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="victor min">
+      <meta itemprop="description" content="风无定，人无常<br/>人生如浮萍，聚散两茫茫">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ldmzw">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/22/rabbitmq/" class="post-title-link" itemprop="url">消息队列RabbitMQ</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-01-22 14:39:23" itemprop="dateCreated datePublished" datetime="2022-01-22T14:39:23+08:00">2022-01-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-04-01 09:39:38" itemprop="dateModified" datetime="2022-04-01T09:39:38+08:00">2022-04-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6/" itemprop="url" rel="index"><span itemprop="name">消息中间件</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>在日常开发中，我们或多或少都会接触和使用消息队列。我们常见的消息队列有<code>RabbitMQ</code>、<code>RocketMQ</code>、<code>ActiveMQ</code>、<code>Kafka</code>、<code>ZeroMQ</code>、<code>MetaMQ</code>等，部分数据库也可实现消息队列的功能，如<code>Redis</code>。</p>
+<p>消息队列是分布式应用间交换信息的重要组件，消息队列可驻留在内存或磁盘上, 队列可以存储消息直到它们被应用程序读走。通过消息队列，应用程序可以在不知道彼此位置的情况下独立处理消息，或者在处理消息前不需要等待接收此消息。所以消息队列可以解决应用解耦、异步消息、流量削锋等问题，是实现高性能、高可用、可伸缩和最终一致性架构中不可以或缺的一环。</p>
+<p>大家使用得比较多的可能应该是<code>RabbitMQ</code>与<code>Kafka</code>。本文主要记录一些<code>RabbitMQ</code>的使用。引用官网的一句话：</p>
+<blockquote>
+<p>RabbitMQ is the most widely deployed open source message broker</p>
+</blockquote>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.rabbitmq.com/" title="RabbitMQ 官网">RabbitMQ 官网</a></li>
+</ul>
+<p><code>RabbitMQ</code>作为一款优秀的消息中间件，它具有如下特性：</p>
+<ul>
+<li>Asynchronous Messaging：支持多种消息协议，消息队列，丰富的文档知识，灵活的队列路由与多种消息分发策略</li>
+<li>Developer Experience：支持多种语言客户端，包括Java，.NET，PHP，Python，JavaScript，Ruby，Go等</li>
+<li>Distributed Deployment：支持集群部署</li>
+<li>Enterprise &amp; Cloud Ready：可插件式的认证与授权管理，支持TLS与LDAP，可以非常简单、轻量化的部署到私有云或者公有云上</li>
+<li>Tools &amp; Plugins：插件机制，有丰富的工具与插件，同时可以支持我们自己编写自己的插件</li>
+<li>Management &amp; Monitoring：丰富的管理界面与监控，支持接口、命令行、界面</li>
+</ul>
+<p>我们可以从官网链接获取更详细的文档： <em><a target="_blank" rel="noopener" href="https://www.rabbitmq.com/#features" title="RabbitMQ 特征">RabbitMQ 特征</a></em></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/01/22/rabbitmq/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://ldmzw.github.io/2022/01/15/swagger/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="victor min">
+      <meta itemprop="description" content="风无定，人无常<br/>人生如浮萍，聚散两茫茫">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ldmzw">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/15/swagger/" class="post-title-link" itemprop="url">接口文档Swagger</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-01-15 19:04:09" itemprop="dateCreated datePublished" datetime="2022-01-15T19:04:09+08:00">2022-01-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-04-01 09:38:53" itemprop="dateModified" datetime="2022-04-01T09:38:53+08:00">2022-04-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/%E6%8E%A5%E5%8F%A3%E6%96%87%E6%A1%A3/" itemprop="url" rel="index"><span itemprop="name">接口文档</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>在日常开发中，文档是一项很重要的工作，但是很多时候，也许是由于项目时间太赶，也许是由于业务历史遗留原因，我们往往会疲于去维护文档。<code>swagger</code>可以通过在代码中增加注释，从面生成在线文档。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://swagger.io/" title="swagger 官网">swagger 官网</a></li>
+<li><a target="_blank" rel="noopener" href="https://swagger.io/tools/swagger-ui/" title="swagger-ui 官网">swagger-ui 官网</a></li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/01/15/swagger/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://ldmzw.github.io/2022/01/08/mybatis-generator/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -357,7 +737,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-count">15</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -370,7 +750,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -499,7 +879,6 @@
   
 
   
-
 
 </body>
 </html>

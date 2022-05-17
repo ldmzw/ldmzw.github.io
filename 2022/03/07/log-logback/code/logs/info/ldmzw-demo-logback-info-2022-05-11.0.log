@@ -1,0 +1,7 @@
+2022-05-11 10:06:16.097 [main] [INFO ] com.ldmzw.demo.logback.test.MTest-18 - level is: info
+2022-05-11 10:06:16.099 [main] [WARN ] com.ldmzw.demo.logback.test.MTest-19 - level is: warn
+2022-05-11 10:06:16.100 [main] [ERROR] com.ldmzw.demo.logback.test.MTest-20 - level is: error
+2022-05-11 10:06:16.102 [main] [WARN ] com.ldmzw.demo.logback.test.MTest-35 - level is: warn
+2022-05-11 10:06:16.103 [main] [ERROR] com.ldmzw.demo.logback.test.MTest-36 - level is: error
+2022-05-11 10:06:16.105 [main] [WARN ] com.ldmzw.demo.logback.test.MTest-43 - level is: warn
+2022-05-11 10:06:16.106 [main] [ERROR] com.ldmzw.demo.logback.test.MTest-44 - level is: error

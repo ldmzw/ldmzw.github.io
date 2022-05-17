@@ -1,0 +1,808 @@
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652234776077" level="TRACE" thread="main">
+  <log4j:message>level is: trace</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test1" file="MTest.java" line="16"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652234776096" level="DEBUG" thread="main">
+  <log4j:message>level is: debug</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test1" file="MTest.java" line="17"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652234776097" level="INFO" thread="main">
+  <log4j:message>level is: info</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test1" file="MTest.java" line="18"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652234776099" level="WARN" thread="main">
+  <log4j:message>level is: warn</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test1" file="MTest.java" line="19"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652234776100" level="ERROR" thread="main">
+  <log4j:message>level is: error</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test1" file="MTest.java" line="20"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652234776102" level="WARN" thread="main">
+  <log4j:message>level is: warn</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test1" file="MTest.java" line="35"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652234776103" level="ERROR" thread="main">
+  <log4j:message>level is: error</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test1" file="MTest.java" line="36"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652234776105" level="WARN" thread="main">
+  <log4j:message>level is: warn</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test1" file="MTest.java" line="43"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652234776106" level="ERROR" thread="main">
+  <log4j:message>level is: error</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test1" file="MTest.java" line="44"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652326578650" level="TRACE" thread="main">
+  <log4j:message>level is: trace</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test1" file="MTest.java" line="16"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652326578679" level="DEBUG" thread="main">
+  <log4j:message>level is: debug</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test1" file="MTest.java" line="17"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652326578680" level="INFO" thread="main">
+  <log4j:message>level is: info</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test1" file="MTest.java" line="18"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652326578707" level="WARN" thread="main">
+  <log4j:message>level is: warn</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test1" file="MTest.java" line="19"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652326578719" level="ERROR" thread="main">
+  <log4j:message>level is: error</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test1" file="MTest.java" line="20"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652326578732" level="WARN" thread="main">
+  <log4j:message>level is: warn</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test1" file="MTest.java" line="35"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652326578735" level="ERROR" thread="main">
+  <log4j:message>level is: error</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test1" file="MTest.java" line="36"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652326578738" level="WARN" thread="main">
+  <log4j:message>level is: warn</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test1" file="MTest.java" line="43"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652326578739" level="ERROR" thread="main">
+  <log4j:message>level is: error</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test1" file="MTest.java" line="44"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652326682931" level="TRACE" thread="main">
+  <log4j:message>level is: trace</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test1" file="MTest.java" line="16"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652326682940" level="DEBUG" thread="main">
+  <log4j:message>level is: debug</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test1" file="MTest.java" line="17"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652326682942" level="INFO" thread="main">
+  <log4j:message>level is: info</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test1" file="MTest.java" line="18"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652326682944" level="WARN" thread="main">
+  <log4j:message>level is: warn</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test1" file="MTest.java" line="19"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652326682945" level="ERROR" thread="main">
+  <log4j:message>level is: error</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test1" file="MTest.java" line="20"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652326682946" level="WARN" thread="main">
+  <log4j:message>level is: warn</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test1" file="MTest.java" line="35"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652326682947" level="ERROR" thread="main">
+  <log4j:message>level is: error</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test1" file="MTest.java" line="36"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652326682948" level="WARN" thread="main">
+  <log4j:message>level is: warn</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test1" file="MTest.java" line="43"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652326682949" level="ERROR" thread="main">
+  <log4j:message>level is: error</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test1" file="MTest.java" line="44"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652336388517" level="TRACE" thread="main">
+  <log4j:message>level is: trace</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test1" file="MTest.java" line="16"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652336388527" level="DEBUG" thread="main">
+  <log4j:message>level is: debug</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test1" file="MTest.java" line="17"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652336388528" level="INFO" thread="main">
+  <log4j:message>level is: info</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test1" file="MTest.java" line="18"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652336388530" level="WARN" thread="main">
+  <log4j:message>level is: warn</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test1" file="MTest.java" line="19"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652336388533" level="ERROR" thread="main">
+  <log4j:message>level is: error</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test1" file="MTest.java" line="20"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652336388534" level="WARN" thread="main">
+  <log4j:message>level is: warn</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test1" file="MTest.java" line="35"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652336388535" level="ERROR" thread="main">
+  <log4j:message>level is: error</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test1" file="MTest.java" line="36"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652336388537" level="WARN" thread="main">
+  <log4j:message>level is: warn</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test1" file="MTest.java" line="43"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652336388538" level="ERROR" thread="main">
+  <log4j:message>level is: error</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test1" file="MTest.java" line="44"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652338396950" level="TRACE" thread="main">
+  <log4j:message>level is: trace</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="81"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652338396957" level="DEBUG" thread="main">
+  <log4j:message>level is: debug</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="82"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652338396958" level="INFO" thread="main">
+  <log4j:message>level is: info</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="83"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652338396960" level="WARN" thread="main">
+  <log4j:message>level is: warn</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="84"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652338396962" level="ERROR" thread="main">
+  <log4j:message>level is: error</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="85"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652338599338" level="TRACE" thread="main">
+  <log4j:message>level is: trace</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="81"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652338599347" level="DEBUG" thread="main">
+  <log4j:message>level is: debug</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="82"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652338599349" level="INFO" thread="main">
+  <log4j:message>level is: info</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="83"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652338599351" level="WARN" thread="main">
+  <log4j:message>level is: warn</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="84"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652338599353" level="ERROR" thread="main">
+  <log4j:message>level is: error</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="85"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652338616488" level="TRACE" thread="main">
+  <log4j:message>level is: trace</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="81"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652338616496" level="DEBUG" thread="main">
+  <log4j:message>level is: debug</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="82"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652338616497" level="INFO" thread="main">
+  <log4j:message>level is: info</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="83"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652338616500" level="WARN" thread="main">
+  <log4j:message>level is: warn</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="84"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652338616501" level="ERROR" thread="main">
+  <log4j:message>level is: error</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="85"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652338898432" level="TRACE" thread="main">
+  <log4j:message>level is: trace</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="83"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652338898440" level="DEBUG" thread="main">
+  <log4j:message>level is: debug</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="84"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652338898441" level="INFO" thread="main">
+  <log4j:message>level is: info</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="85"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652338898442" level="WARN" thread="main">
+  <log4j:message>level is: warn</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="86"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652338898443" level="ERROR" thread="main">
+  <log4j:message>level is: error</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="87"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652338983198" level="TRACE" thread="main">
+  <log4j:message>level is: trace</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="86"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652338983205" level="DEBUG" thread="main">
+  <log4j:message>level is: debug</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="87"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652338983205" level="INFO" thread="main">
+  <log4j:message>level is: info</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="88"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652338983207" level="WARN" thread="main">
+  <log4j:message>level is: warn</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="89"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652338983208" level="ERROR" thread="main">
+  <log4j:message>level is: error</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="90"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652339006473" level="TRACE" thread="main">
+  <log4j:message>level is: trace</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="86"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652339006480" level="DEBUG" thread="main">
+  <log4j:message>level is: debug</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="87"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652339006523" level="INFO" thread="main">
+  <log4j:message>level is: info</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="88"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652339006525" level="WARN" thread="main">
+  <log4j:message>level is: warn</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="89"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652339006526" level="ERROR" thread="main">
+  <log4j:message>level is: error</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="90"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652339043604" level="TRACE" thread="main">
+  <log4j:message>level is: trace</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="89"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652339043614" level="DEBUG" thread="main">
+  <log4j:message>level is: debug</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="90"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652339043615" level="INFO" thread="main">
+  <log4j:message>level is: info</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="91"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652339043616" level="WARN" thread="main">
+  <log4j:message>level is: warn</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="92"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652339043617" level="ERROR" thread="main">
+  <log4j:message>level is: error</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="93"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652339699307" level="TRACE" thread="main">
+  <log4j:message>level is: trace</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="89"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652339699314" level="DEBUG" thread="main">
+  <log4j:message>level is: debug</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="90"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652339699315" level="INFO" thread="main">
+  <log4j:message>level is: info</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="91"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652339699317" level="WARN" thread="main">
+  <log4j:message>level is: warn</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="92"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652339699319" level="ERROR" thread="main">
+  <log4j:message>level is: error</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="93"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652339732044" level="TRACE" thread="main">
+  <log4j:message>level is: trace</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="89"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652339732052" level="DEBUG" thread="main">
+  <log4j:message>level is: debug</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="90"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652339732053" level="INFO" thread="main">
+  <log4j:message>level is: info</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="91"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652339732055" level="WARN" thread="main">
+  <log4j:message>level is: warn</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="92"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652339732056" level="ERROR" thread="main">
+  <log4j:message>level is: error</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="93"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652339772391" level="TRACE" thread="main">
+  <log4j:message>level is: trace</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="90"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652339772397" level="DEBUG" thread="main">
+  <log4j:message>level is: debug</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="91"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652339772399" level="INFO" thread="main">
+  <log4j:message>level is: info</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="92"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652339772400" level="WARN" thread="main">
+  <log4j:message>level is: warn</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="93"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652339772401" level="ERROR" thread="main">
+  <log4j:message>level is: error</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="94"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652342436787" level="TRACE" thread="main">
+  <log4j:message>level is: trace</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="86"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652342436793" level="DEBUG" thread="main">
+  <log4j:message>level is: debug</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="87"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652342436794" level="INFO" thread="main">
+  <log4j:message>level is: info</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="88"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652342436796" level="WARN" thread="main">
+  <log4j:message>level is: warn</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="89"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652342436796" level="ERROR" thread="main">
+  <log4j:message>level is: error</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="90"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652342463925" level="TRACE" thread="main">
+  <log4j:message>level is: trace</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="86"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652342463933" level="DEBUG" thread="main">
+  <log4j:message>level is: debug</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="87"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652342463934" level="INFO" thread="main">
+  <log4j:message>level is: info</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="88"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652342463935" level="WARN" thread="main">
+  <log4j:message>level is: warn</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="89"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652342463936" level="ERROR" thread="main">
+  <log4j:message>level is: error</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="90"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652342510180" level="TRACE" thread="main">
+  <log4j:message>level is: trace</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="88"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652342510188" level="DEBUG" thread="main">
+  <log4j:message>level is: debug</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="89"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652342510189" level="INFO" thread="main">
+  <log4j:message>level is: info</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="90"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652342510190" level="WARN" thread="main">
+  <log4j:message>level is: warn</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="91"/>
+
+</log4j:event>
+
+<log4j:event logger="com.ldmzw.demo.logback.test.MTest"
+             timestamp="1652342510191" level="ERROR" thread="main">
+  <log4j:message>level is: error</log4j:message>
+  <log4j:locationInfo class="com.ldmzw.demo.logback.test.MTest"
+                      method="test5" file="MTest.java" line="92"/>
+
+</log4j:event>
+

@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"ldmzw.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"gitalk":{"order":-2}}},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="概述在前面的文章中，我们已经介绍了logback的Logger与Appender组件。本篇文章主要介绍Layout组件。  Logback 官网 Logback 使用手册 Logback Layout使用手册  系列相关文章：  日志组件 日志组件Logback 日志组件动态日志 日志组件Logback之Logger 日志组件Logback之Appender 日志组件Logback之Layout">
+<meta property="og:type" content="article">
+<meta property="og:title" content="日志组件Logback之Layout">
+<meta property="og:url" content="http://ldmzw.github.io/2022/05/02/log-logback4/index.html">
+<meta property="og:site_name" content="ldmzw">
+<meta property="og:description" content="概述在前面的文章中，我们已经介绍了logback的Logger与Appender组件。本篇文章主要介绍Layout组件。  Logback 官网 Logback 使用手册 Logback Layout使用手册  系列相关文章：  日志组件 日志组件Logback 日志组件动态日志 日志组件Logback之Logger 日志组件Logback之Appender 日志组件Logback之Layout">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://ldmzw.github.io/2022/05/02/log-logback4/001.png">
+<meta property="og:image" content="http://ldmzw.github.io/2022/05/02/log-logback4/002.png">
+<meta property="og:image" content="http://ldmzw.github.io/2022/05/02/log-logback4/005.png">
+<meta property="og:image" content="http://ldmzw.github.io/2022/05/02/log-logback4/003.png">
+<meta property="article:published_time" content="2022-05-02T12:07:44.000Z">
+<meta property="article:modified_time" content="2022-05-16T02:37:56.411Z">
+<meta property="article:author" content="victor min">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="日志组件">
+<meta property="article:tag" content="logback">
+<meta property="article:tag" content="layout">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://ldmzw.github.io/2022/05/02/log-logback4/001.png">
+
+<link rel="canonical" href="http://ldmzw.github.io/2022/05/02/log-logback4/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>日志组件Logback之Layout | ldmzw</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?871d14f3134a97b6f6c8ad66f8875178";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">ldmzw</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">趣谈闲记</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/ldmzw" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://ldmzw.github.io/2022/05/02/log-logback4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="victor min">
+      <meta itemprop="description" content="风无定，人无常<br/>人生如浮萍，聚散两茫茫">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ldmzw">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          日志组件Logback之Layout
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-05-02 20:07:44" itemprop="dateCreated datePublished" datetime="2022-05-02T20:07:44+08:00">2022-05-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-16 10:37:56" itemprop="dateModified" datetime="2022-05-16T10:37:56+08:00">2022-05-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/%E6%97%A5%E5%BF%97%E7%BB%84%E4%BB%B6/" itemprop="url" rel="index"><span itemprop="name">日志组件</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/%E6%97%A5%E5%BF%97%E7%BB%84%E4%BB%B6/logback/" itemprop="url" rel="index"><span itemprop="name">logback</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>在前面的文章中，我们已经介绍了<code>logback</code>的<code>Logger</code>与<code>Appender</code>组件。本篇文章主要介绍<code>Layout</code>组件。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://logback.qos.ch/" title="Logback 官网">Logback 官网</a></li>
+<li><a target="_blank" rel="noopener" href="https://logback.qos.ch/manual/index.html" title="Logback 使用手册">Logback 使用手册</a></li>
+<li><a target="_blank" rel="noopener" href="https://logback.qos.ch/manual/layouts.html" title="Logback Layout使用手册">Logback Layout使用手册</a></li>
+</ul>
+<p>系列相关文章：</p>
+<ul>
+<li><a href="/2022/02/28/log-framework/" title="日志组件">日志组件</a></li>
+<li><a href="/2022/03/07/log-logback/" title="日志组件Logback">日志组件Logback</a></li>
+<li><a href="/2022/03/21/log-framework1/" title="日志组件动态日志">日志组件动态日志</a></li>
+<li><a href="/2022/04/18/log-logback2/" title="日志组件Logback之Logger">日志组件Logback之Logger</a></li>
+<li><a href="/2022/04/25/log-logback3/" title="日志组件Logback之Appender">日志组件Logback之Appender</a></li>
+<li><a href="/2022/05/02/log-logback4/" title="日志组件Logback之Layout">日志组件Logback之Layout</a></li>
+<li><a href="/2022/05/09/log-logback5/" title="日志组件Logback之Filter">日志组件Logback之Filter</a></li>
+<li><a href="/2022/05/16/log-logback6/" title="日志组件Logback之配置加载">日志组件Logback之配置加载</a></li>
+</ul>
+<span id="more"></span>
+
+<h2 id="Encoder"><a href="#Encoder" class="headerlink" title="Encoder"></a>Encoder</h2><p>在讲解<code>layout</code>之前，我们必须要先讲解一下<code>encoder</code>。<code>encoder</code>的作用是将日志事件转化为byte array并且写入到<code>OutputStream</code>中。</p>
+<p><img src="/2022/05/02/log-logback4/001.png" alt="Encoder 类图" title="Encoder 类图"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 源码 ch.qos.logback.core.encoder.Encoder</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Encoder</span>&lt;<span class="title">E</span>&gt; <span class="keyword">extends</span> <span class="title">ContextAware</span>, <span class="title">LifeCycle</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Get header bytes. This method is typically called upon opening of </span></span><br><span class="line"><span class="comment">     * an output stream.</span></span><br><span class="line"><span class="comment">     * </span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> header bytes. Null values are allowed.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">byte</span>[] headerBytes();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Encode an event as bytes.</span></span><br><span class="line"><span class="comment">     *  </span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> event</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">byte</span>[] encode(E event);</span><br><span class="line">                    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Get footer bytes. This method is typically called prior to the closing </span></span><br><span class="line"><span class="comment">     * of the stream where events are written.</span></span><br><span class="line"><span class="comment">     * </span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> footer bytes. Null values are allowed.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">byte</span>[] footerBytes();</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>我们在使用xml配置的时候，并没有像使用<code>&lt;appender&gt;</code>一样，需要指定<code>class</code>属性，这是因为appender在设置<code>&lt;encoder&gt;</code>时默认采用了<code>ch.qos.logback.core.encoder.LayoutWrappingEncoder</code>，而<code>LayoutWrappingEncoder</code>默认的派生类为<code>ch.qos.logback.classic.encoder.PatternLayoutEncoder</code>。</p>
+<h3 id="PatternLayoutEncoder"><a href="#PatternLayoutEncoder" class="headerlink" title="PatternLayoutEncoder"></a>PatternLayoutEncoder</h3><p><code>PatternLayoutEncoder</code>是<code>logback</code>中默认的<code>encoder</code>，它主要根据提供的<code>PatternLayout</code>来转换日志事件。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 源码 ch.qos.logback.classic.encoder.PatternLayoutEncoder</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PatternLayoutEncoder</span> <span class="keyword">extends</span> <span class="title">PatternLayoutEncoderBase</span>&lt;<span class="title">ILoggingEvent</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        PatternLayout patternLayout = <span class="keyword">new</span> PatternLayout();</span><br><span class="line">        patternLayout.setContext(context);</span><br><span class="line">        patternLayout.setPattern(getPattern());</span><br><span class="line">        patternLayout.setOutputPatternAsHeader(outputPatternAsHeader);</span><br><span class="line">        patternLayout.start();</span><br><span class="line">        <span class="keyword">this</span>.layout = patternLayout;</span><br><span class="line">        <span class="keyword">super</span>.start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Layout"><a href="#Layout" class="headerlink" title="Layout"></a>Layout</h2><p>我们知道<code>encoder</code>的整体目标是将日志事件转换为byte array，但是在之前，其实<code>encoder</code>是通过调用<code>layout</code>先将日志事件转化为string，最后才由string转化为byte array。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 源码 ch.qos.logback.core.encoder.LayoutWrappingEncoder</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LayoutWrappingEncoder</span>&lt;<span class="title">E</span>&gt; <span class="keyword">extends</span> <span class="title">EncoderBase</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> Layout&lt;E&gt; layout;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * The charset to use when converting a String into bytes.</span></span><br><span class="line"><span class="comment">     * &lt;p/&gt;</span></span><br><span class="line"><span class="comment">     * By default this property has the value</span></span><br><span class="line"><span class="comment">     * &lt;code&gt;null&lt;/null&gt; which corresponds to</span></span><br><span class="line"><span class="comment">     * the system&#x27;s default charset.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> Charset charset;</span><br><span class="line"></span><br><span class="line">    ContextAware parent;</span><br><span class="line">    Boolean immediateFlush = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">byte</span>[] convertToBytes(String s) &#123;</span><br><span class="line">        <span class="keyword">if</span> (charset == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> s.getBytes();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> s.getBytes(charset);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">byte</span>[] encode(E event) &#123;</span><br><span class="line">        String txt = layout.doLayout(event);</span><br><span class="line">        <span class="keyword">return</span> convertToBytes(txt);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">  ...</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从上面的源码中我们可以看出，会调用<code>layout.doLayout(event)</code>将日志事件转化为string。</p>
+<p><img src="/2022/05/02/log-logback4/002.png" alt="Layout 类图" title="Layout 类图"></p>
+<p>从上面的类图中我们可以看出，<code>layout</code>主要有以下的派生类：</p>
+<ul>
+<li>XMLLayout：将日志事件转化为xml格式</li>
+<li>TTLLLayout：实际就是类比一个<code>PatternLayout</code>，格式固定为<code>&lt;pre&gt;%d&#123;HH:mm:ss.SSS&#125; [%thread] %-5level %logger&#123;36&#125; - %msg%n&lt;/pre&gt;</code></li>
+<li>HTMLLayout：将日志事件转化为html格式</li>
+<li>EchoLayout：返回日志事件的toString</li>
+<li>PatternLayout：根据<code>pattern</code>匹配输出</li>
+</ul>
+<h3 id="XMLLayout"><a href="#XMLLayout" class="headerlink" title="XMLLayout"></a>XMLLayout</h3><p><code>XMLLayout</code>的输出内容格式遵循<code>log4j.dtd</code>，同时和<code>log4j</code>的XMLLayout生成的文件是相互互通的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 源码：ch.qos.logback.classic.log4j.XMLLayout</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">XMLLayout</span> <span class="keyword">extends</span> <span class="title">LayoutBase</span>&lt;<span class="title">ILoggingEvent</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> DEFAULT_SIZE = <span class="number">256</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> UPPER_LIMIT = <span class="number">2048</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> StringBuilder buf = <span class="keyword">new</span> StringBuilder(DEFAULT_SIZE);</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> locationInfo = <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> properties = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Formats a &#123;<span class="doctag">@link</span> ILoggingEvent&#125; in conformity with the log4j.dtd.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">doLayout</span><span class="params">(ILoggingEvent event)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Reset working buffer. If the buffer is too large, then we need a new</span></span><br><span class="line">        <span class="comment">// one in order to avoid the penalty of creating a large array.</span></span><br><span class="line">        <span class="keyword">if</span> (buf.capacity() &gt; UPPER_LIMIT) &#123;</span><br><span class="line">            buf = <span class="keyword">new</span> StringBuilder(DEFAULT_SIZE);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            buf.setLength(<span class="number">0</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// We yield to the \r\n heresy.</span></span><br><span class="line"></span><br><span class="line">        buf.append(<span class="string">&quot;&lt;log4j:event logger=\&quot;&quot;</span>);</span><br><span class="line">        buf.append(Transform.escapeTags(event.getLoggerName()));</span><br><span class="line">        buf.append(<span class="string">&quot;\&quot;\r\n&quot;</span>);</span><br><span class="line">        buf.append(<span class="string">&quot;             timestamp=\&quot;&quot;</span>);</span><br><span class="line">        buf.append(event.getTimeStamp());</span><br><span class="line">        buf.append(<span class="string">&quot;\&quot; level=\&quot;&quot;</span>);</span><br><span class="line">        buf.append(event.getLevel());</span><br><span class="line">        buf.append(<span class="string">&quot;\&quot; thread=\&quot;&quot;</span>);</span><br><span class="line">        buf.append(Transform.escapeTags(event.getThreadName()));</span><br><span class="line">        buf.append(<span class="string">&quot;\&quot;&gt;\r\n&quot;</span>);</span><br><span class="line"></span><br><span class="line">        buf.append(<span class="string">&quot;  &lt;log4j:message&gt;&quot;</span>);</span><br><span class="line">        buf.append(Transform.escapeTags(event.getFormattedMessage()));</span><br><span class="line">        buf.append(<span class="string">&quot;&lt;/log4j:message&gt;\r\n&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// logback does not support NDC</span></span><br><span class="line">        <span class="comment">// String ndc = event.getNDC();</span></span><br><span class="line"></span><br><span class="line">        IThrowableProxy tp = event.getThrowableProxy();</span><br><span class="line">        <span class="keyword">if</span> (tp != <span class="keyword">null</span>) &#123;</span><br><span class="line">            StackTraceElementProxy[] stepArray = tp.getStackTraceElementProxyArray();</span><br><span class="line">            buf.append(<span class="string">&quot;  &lt;log4j:throwable&gt;&lt;![CDATA[&quot;</span>);</span><br><span class="line">            <span class="keyword">for</span> (StackTraceElementProxy step : stepArray) &#123;</span><br><span class="line">                buf.append(CoreConstants.TAB);</span><br><span class="line">                buf.append(step.toString());</span><br><span class="line">                buf.append(<span class="string">&quot;\r\n&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            buf.append(<span class="string">&quot;]]&gt;&lt;/log4j:throwable&gt;\r\n&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (locationInfo) &#123;</span><br><span class="line">            StackTraceElement[] callerDataArray = event.getCallerData();</span><br><span class="line">            <span class="keyword">if</span> (callerDataArray != <span class="keyword">null</span> &amp;&amp; callerDataArray.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                StackTraceElement immediateCallerData = callerDataArray[<span class="number">0</span>];</span><br><span class="line">                buf.append(<span class="string">&quot;  &lt;log4j:locationInfo class=\&quot;&quot;</span>);</span><br><span class="line">                buf.append(immediateCallerData.getClassName());</span><br><span class="line">                buf.append(<span class="string">&quot;\&quot;\r\n&quot;</span>);</span><br><span class="line">                buf.append(<span class="string">&quot;                      method=\&quot;&quot;</span>);</span><br><span class="line">                buf.append(Transform.escapeTags(immediateCallerData.getMethodName()));</span><br><span class="line">                buf.append(<span class="string">&quot;\&quot; file=\&quot;&quot;</span>);</span><br><span class="line">                buf.append(Transform.escapeTags(immediateCallerData.getFileName()));</span><br><span class="line">                buf.append(<span class="string">&quot;\&quot; line=\&quot;&quot;</span>);</span><br><span class="line">                buf.append(immediateCallerData.getLineNumber());</span><br><span class="line">                buf.append(<span class="string">&quot;\&quot;/&gt;\r\n&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">         * &lt;log4j:properties&gt; &lt;log4j:data name=&quot;name&quot; value=&quot;value&quot;/&gt; &lt;/log4j:properties&gt;</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.getProperties()) &#123;</span><br><span class="line">            Map&lt;String, String&gt; propertyMap = event.getMDCPropertyMap();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> ((propertyMap != <span class="keyword">null</span>) &amp;&amp; (propertyMap.size() != <span class="number">0</span>)) &#123;</span><br><span class="line">                Set&lt;Entry&lt;String, String&gt;&gt; entrySet = propertyMap.entrySet();</span><br><span class="line">                buf.append(<span class="string">&quot;  &lt;log4j:properties&gt;&quot;</span>);</span><br><span class="line">                <span class="keyword">for</span> (Entry&lt;String, String&gt; entry : entrySet) &#123;</span><br><span class="line">                    buf.append(<span class="string">&quot;\r\n    &lt;log4j:data&quot;</span>);</span><br><span class="line">                    buf.append(<span class="string">&quot; name=&#x27;&quot;</span> + Transform.escapeTags(entry.getKey()) + <span class="string">&quot;&#x27;&quot;</span>);</span><br><span class="line">                    buf.append(<span class="string">&quot; value=&#x27;&quot;</span> + Transform.escapeTags(entry.getValue()) + <span class="string">&quot;&#x27;&quot;</span>);</span><br><span class="line">                    buf.append(<span class="string">&quot; /&gt;&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                buf.append(<span class="string">&quot;\r\n  &lt;/log4j:properties&gt;&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        buf.append(<span class="string">&quot;\r\n&lt;/log4j:event&gt;\r\n\r\n&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> buf.toString();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getContentType</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;text/xml&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">appender</span> <span class="attr">name</span>=<span class="string">&quot;FILE&quot;</span> <span class="attr">class</span>=<span class="string">&quot;ch.qos.logback.core.FileAppender&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">file</span>&gt;</span>test.xml<span class="tag">&lt;/<span class="name">file</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">encoder</span> <span class="attr">class</span>=<span class="string">&quot;ch.qos.logback.core.encoder.LayoutWrappingEncoder&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">layout</span> <span class="attr">class</span>=<span class="string">&quot;ch.qos.logback.classic.log4j.XMLLayout&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">locationInfo</span>&gt;</span>true<span class="tag">&lt;/<span class="name">locationInfo</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">layout</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">encoder</span>&gt;</span> </span><br><span class="line">  <span class="tag">&lt;/<span class="name">appender</span>&gt;</span> </span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">root</span> <span class="attr">level</span>=<span class="string">&quot;DEBUG&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">appender-ref</span> <span class="attr">ref</span>=<span class="string">&quot;FILE&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">root</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span> </span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/05/02/log-logback4/005.png" alt="XMLLayout 样图" title="XMLLayout 样图"></p>
+<h3 id="HTMLLayout"><a href="#HTMLLayout" class="headerlink" title="HTMLLayout"></a>HTMLLayout</h3><p><code>HTMLLayout</code>将日志以<code>table</code>的方式记录，从源码可以看出，<code>HTMLLayout</code>的默认<code>pattern</code>为<code>%date%thread%level%logger%mdc%msg</code>，因此默认会记录下面的信息：Date、Thread、Level、Logger、MDC、Message</p>
+<p><img src="/2022/05/02/log-logback4/003.png" alt="HTMLLayout 样例" title="HTMLLayout 样例"></p>
+<p>注意：</p>
+<p><code>HTMLLayout</code>在<code>logback</code>中有两个实现，一个是在<code>logback-classic</code>中，即我们下面介绍的<code>ch.qos.logback.classic.html.HTMLLayout</code>，另外一个位于<code>logback-access</code>中的<code>ch.qos.logback.access.html.HTMLLayout</code>，它与<code>logback-classic</code>中的实现基本相同，唯一不同的是默认pattern为<code>%h%l%u%t%r%s%b</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 源码：ch.qos.logback.classic.html.HTMLLayout</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HTMLLayout</span> <span class="keyword">extends</span> <span class="title">HTMLLayoutBase</span>&lt;<span class="title">ILoggingEvent</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Default pattern string for log output.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> String DEFAULT_CONVERSION_PATTERN = <span class="string">&quot;%date%thread%level%logger%mdc%msg&quot;</span>;</span><br><span class="line"></span><br><span class="line">    IThrowableRenderer&lt;ILoggingEvent&gt; throwableRenderer;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Constructs a PatternLayout using the DEFAULT_LAYOUT_PATTERN.</span></span><br><span class="line"><span class="comment">     * </span></span><br><span class="line"><span class="comment">     * The default pattern just produces the application supplied message.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">HTMLLayout</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        pattern = DEFAULT_CONVERSION_PATTERN;</span><br><span class="line">        throwableRenderer = <span class="keyword">new</span> DefaultThrowableRenderer();</span><br><span class="line">        cssBuilder = <span class="keyword">new</span> DefaultCssBuilder();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> errorCount = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">if</span> (throwableRenderer == <span class="keyword">null</span>) &#123;</span><br><span class="line">            addError(<span class="string">&quot;ThrowableRender cannot be null.&quot;</span>);</span><br><span class="line">            errorCount++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (errorCount == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">super</span>.start();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> Map&lt;String, String&gt; <span class="title">getDefaultConverterMap</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> PatternLayout.DEFAULT_CONVERTER_MAP;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">doLayout</span><span class="params">(ILoggingEvent event)</span> </span>&#123;</span><br><span class="line">        StringBuilder buf = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">        startNewTableIfLimitReached(buf);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">boolean</span> odd = <span class="keyword">true</span>;</span><br><span class="line">        <span class="keyword">if</span> (((counter++) &amp; <span class="number">1</span>) == <span class="number">0</span>) &#123;</span><br><span class="line">            odd = <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        String level = event.getLevel().toString().toLowerCase();</span><br><span class="line"></span><br><span class="line">        buf.append(LINE_SEPARATOR);</span><br><span class="line">        buf.append(<span class="string">&quot;&lt;tr class=\&quot;&quot;</span>);</span><br><span class="line">        buf.append(level);</span><br><span class="line">        <span class="keyword">if</span> (odd) &#123;</span><br><span class="line">            buf.append(<span class="string">&quot; odd\&quot;&gt;&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            buf.append(<span class="string">&quot; even\&quot;&gt;&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        buf.append(LINE_SEPARATOR);</span><br><span class="line"></span><br><span class="line">        Converter&lt;ILoggingEvent&gt; c = head;</span><br><span class="line">        <span class="keyword">while</span> (c != <span class="keyword">null</span>) &#123;</span><br><span class="line">            appendEventToBuffer(buf, c, event);</span><br><span class="line">            c = c.getNext();</span><br><span class="line">        &#125;</span><br><span class="line">        buf.append(<span class="string">&quot;&lt;/tr&gt;&quot;</span>);</span><br><span class="line">        buf.append(LINE_SEPARATOR);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (event.getThrowableProxy() != <span class="keyword">null</span>) &#123;</span><br><span class="line">            throwableRenderer.render(buf, event);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> buf.toString();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">appendEventToBuffer</span><span class="params">(StringBuilder buf, Converter&lt;ILoggingEvent&gt; c, ILoggingEvent event)</span> </span>&#123;</span><br><span class="line">        buf.append(<span class="string">&quot;&lt;td class=\&quot;&quot;</span>);</span><br><span class="line">        buf.append(computeConverterName(c));</span><br><span class="line">        buf.append(<span class="string">&quot;\&quot;&gt;&quot;</span>);</span><br><span class="line">        buf.append(Transform.escapeTags(c.convert(event)));</span><br><span class="line">        buf.append(<span class="string">&quot;&lt;/td&gt;&quot;</span>);</span><br><span class="line">        buf.append(LINE_SEPARATOR);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> IThrowableRenderer <span class="title">getThrowableRenderer</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> throwableRenderer;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setThrowableRenderer</span><span class="params">(IThrowableRenderer&lt;ILoggingEvent&gt; throwableRenderer)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.throwableRenderer = throwableRenderer;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> String <span class="title">computeConverterName</span><span class="params">(Converter c)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (c <span class="keyword">instanceof</span> MDCConverter) &#123;</span><br><span class="line">            MDCConverter mc = (MDCConverter) c;</span><br><span class="line">            String key = mc.getFirstOption();</span><br><span class="line">            <span class="keyword">if</span> (key != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> key;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="string">&quot;MDC&quot;</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">super</span>.computeConverterName(c);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">configuration</span> <span class="attr">debug</span>=<span class="string">&quot;true&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">appender</span> <span class="attr">name</span>=<span class="string">&quot;FILE&quot;</span> <span class="attr">class</span>=<span class="string">&quot;ch.qos.logback.core.FileAppender&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">encoder</span> <span class="attr">class</span>=<span class="string">&quot;ch.qos.logback.core.encoder.LayoutWrappingEncoder&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">layout</span> <span class="attr">class</span>=<span class="string">&quot;ch.qos.logback.classic.html.HTMLLayout&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">pattern</span>&gt;</span>%relative%thread%mdc%level%logger%msg<span class="tag">&lt;/<span class="name">pattern</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">layout</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">encoder</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">file</span>&gt;</span>test.html<span class="tag">&lt;/<span class="name">file</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">appender</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">root</span> <span class="attr">level</span>=<span class="string">&quot;DEBUG&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">appender-ref</span> <span class="attr">ref</span>=<span class="string">&quot;FILE&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">root</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="PatternLayout"><a href="#PatternLayout" class="headerlink" title="PatternLayout"></a>PatternLayout</h3><p>我们在前面文章中讲到了，<code>&lt;encoder&gt;</code>默认是使用的<code>PatternLayoutEncoder</code>，其默认采用了<code>PatternLayout</code>,因此我们在配置时可以简化掉<code>&lt;layout&gt;</code>标签，只需要我们配置<code>&lt;pattern&gt;</code>即可。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">appender</span> <span class="attr">name</span>=<span class="string">&quot;STDOUT&quot;</span> <span class="attr">class</span>=<span class="string">&quot;ch.qos.logback.core.ConsoleAppender&quot;</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;<span class="name">encoder</span>&gt;</span> <span class="comment">&lt;!-- 无需要指定class属性 --&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 无需要指定&lt;layout&gt;标签 --&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">pattern</span>&gt;</span>%-4relative [%thread] %-5level %logger&#123;30&#125; - %msg%n<span class="tag">&lt;/<span class="name">pattern</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">encoder</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">appender</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">root</span> <span class="attr">level</span>=<span class="string">&quot;DEBUG&quot;</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;<span class="name">appender-ref</span> <span class="attr">ref</span>=<span class="string">&quot;STDOUT&quot;</span> /&gt;</span> </span><br><span class="line">  <span class="tag">&lt;/<span class="name">root</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 源码：ch.qos.logback.classic.PatternLayout</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PatternLayout</span> <span class="keyword">extends</span> <span class="title">PatternLayoutBase</span>&lt;<span class="title">ILoggingEvent</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Map&lt;String, String&gt; DEFAULT_CONVERTER_MAP = <span class="keyword">new</span> HashMap&lt;String, String&gt;();</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Map&lt;String, String&gt; CONVERTER_CLASS_TO_KEY_MAP = <span class="keyword">new</span> HashMap&lt;String, String&gt;();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@deprecated</span> replaced by DEFAULT_CONVERTER_MAP</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Map&lt;String, String&gt; defaultConverterMap = DEFAULT_CONVERTER_MAP;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String HEADER_PREFIX = <span class="string">&quot;#logback.classic pattern: &quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        DEFAULT_CONVERTER_MAP.putAll(Parser.DEFAULT_COMPOSITE_CONVERTER_MAP);</span><br><span class="line"></span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;d&quot;</span>, DateConverter.class.getName());</span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;date&quot;</span>, DateConverter.class.getName());</span><br><span class="line">        CONVERTER_CLASS_TO_KEY_MAP.put(DateConverter.class.getName(), <span class="string">&quot;date&quot;</span>);</span><br><span class="line">        </span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;r&quot;</span>, RelativeTimeConverter.class.getName());</span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;relative&quot;</span>, RelativeTimeConverter.class.getName());</span><br><span class="line">        CONVERTER_CLASS_TO_KEY_MAP.put(RelativeTimeConverter.class.getName(), <span class="string">&quot;relative&quot;</span>);</span><br><span class="line">        </span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;level&quot;</span>, LevelConverter.class.getName());</span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;le&quot;</span>, LevelConverter.class.getName());</span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;p&quot;</span>, LevelConverter.class.getName());</span><br><span class="line">        CONVERTER_CLASS_TO_KEY_MAP.put(LevelConverter.class.getName(), <span class="string">&quot;level&quot;</span>);</span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;t&quot;</span>, ThreadConverter.class.getName());</span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;thread&quot;</span>, ThreadConverter.class.getName());</span><br><span class="line">        CONVERTER_CLASS_TO_KEY_MAP.put(ThreadConverter.class.getName(), <span class="string">&quot;thread&quot;</span>);</span><br><span class="line">        </span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;lo&quot;</span>, LoggerConverter.class.getName());</span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;logger&quot;</span>, LoggerConverter.class.getName());</span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;c&quot;</span>, LoggerConverter.class.getName());</span><br><span class="line">        CONVERTER_CLASS_TO_KEY_MAP.put(LoggerConverter.class.getName(), <span class="string">&quot;logger&quot;</span>);</span><br><span class="line">        </span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;m&quot;</span>, MessageConverter.class.getName());</span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;msg&quot;</span>, MessageConverter.class.getName());</span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;message&quot;</span>, MessageConverter.class.getName());</span><br><span class="line">        CONVERTER_CLASS_TO_KEY_MAP.put(MessageConverter.class.getName(), <span class="string">&quot;message&quot;</span>);</span><br><span class="line">        </span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;C&quot;</span>, ClassOfCallerConverter.class.getName());</span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;class&quot;</span>, ClassOfCallerConverter.class.getName());</span><br><span class="line">        CONVERTER_CLASS_TO_KEY_MAP.put(ClassOfCallerConverter.class.getName(), <span class="string">&quot;class&quot;</span>);</span><br><span class="line">        </span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;M&quot;</span>, MethodOfCallerConverter.class.getName());</span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;method&quot;</span>, MethodOfCallerConverter.class.getName());</span><br><span class="line">        CONVERTER_CLASS_TO_KEY_MAP.put(MethodOfCallerConverter.class.getName(), <span class="string">&quot;method&quot;</span>);</span><br><span class="line">        </span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;L&quot;</span>, LineOfCallerConverter.class.getName());</span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;line&quot;</span>, LineOfCallerConverter.class.getName());</span><br><span class="line">        CONVERTER_CLASS_TO_KEY_MAP.put(LineOfCallerConverter.class.getName(), <span class="string">&quot;line&quot;</span>);</span><br><span class="line">        </span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;F&quot;</span>, FileOfCallerConverter.class.getName());</span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;file&quot;</span>, FileOfCallerConverter.class.getName());</span><br><span class="line">        CONVERTER_CLASS_TO_KEY_MAP.put(FileOfCallerConverter.class.getName(), <span class="string">&quot;file&quot;</span>);</span><br><span class="line">        </span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;X&quot;</span>, MDCConverter.class.getName());</span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;mdc&quot;</span>, MDCConverter.class.getName());</span><br><span class="line"></span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;ex&quot;</span>, ThrowableProxyConverter.class.getName());</span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;exception&quot;</span>, ThrowableProxyConverter.class.getName());</span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;rEx&quot;</span>, RootCauseFirstThrowableProxyConverter.class.getName());</span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;rootException&quot;</span>, RootCauseFirstThrowableProxyConverter.class.getName());</span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;throwable&quot;</span>, ThrowableProxyConverter.class.getName());</span><br><span class="line"></span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;xEx&quot;</span>, ExtendedThrowableProxyConverter.class.getName());</span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;xException&quot;</span>, ExtendedThrowableProxyConverter.class.getName());</span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;xThrowable&quot;</span>, ExtendedThrowableProxyConverter.class.getName());</span><br><span class="line"></span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;nopex&quot;</span>, NopThrowableInformationConverter.class.getName());</span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;nopexception&quot;</span>, NopThrowableInformationConverter.class.getName());</span><br><span class="line"></span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;cn&quot;</span>, ContextNameConverter.class.getName());</span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;contextName&quot;</span>, ContextNameConverter.class.getName());</span><br><span class="line">        CONVERTER_CLASS_TO_KEY_MAP.put(ContextNameConverter.class.getName(), <span class="string">&quot;contextName&quot;</span>);</span><br><span class="line">        </span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;caller&quot;</span>, CallerDataConverter.class.getName());</span><br><span class="line">        CONVERTER_CLASS_TO_KEY_MAP.put(CallerDataConverter.class.getName(), <span class="string">&quot;caller&quot;</span>);</span><br><span class="line">        </span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;marker&quot;</span>, MarkerConverter.class.getName());</span><br><span class="line">        CONVERTER_CLASS_TO_KEY_MAP.put(MarkerConverter.class.getName(), <span class="string">&quot;marker&quot;</span>);</span><br><span class="line">        </span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;property&quot;</span>, PropertyConverter.class.getName());</span><br><span class="line"></span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;n&quot;</span>, LineSeparatorConverter.class.getName());</span><br><span class="line"></span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;black&quot;</span>, BlackCompositeConverter.class.getName());</span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;red&quot;</span>, RedCompositeConverter.class.getName());</span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;green&quot;</span>, GreenCompositeConverter.class.getName());</span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;yellow&quot;</span>, YellowCompositeConverter.class.getName());</span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;blue&quot;</span>, BlueCompositeConverter.class.getName());</span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;magenta&quot;</span>, MagentaCompositeConverter.class.getName());</span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;cyan&quot;</span>, CyanCompositeConverter.class.getName());</span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;white&quot;</span>, WhiteCompositeConverter.class.getName());</span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;gray&quot;</span>, GrayCompositeConverter.class.getName());</span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;boldRed&quot;</span>, BoldRedCompositeConverter.class.getName());</span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;boldGreen&quot;</span>, BoldGreenCompositeConverter.class.getName());</span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;boldYellow&quot;</span>, BoldYellowCompositeConverter.class.getName());</span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;boldBlue&quot;</span>, BoldBlueCompositeConverter.class.getName());</span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;boldMagenta&quot;</span>, BoldMagentaCompositeConverter.class.getName());</span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;boldCyan&quot;</span>, BoldCyanCompositeConverter.class.getName());</span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;boldWhite&quot;</span>, BoldWhiteCompositeConverter.class.getName());</span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;highlight&quot;</span>, HighlightingCompositeConverter.class.getName());</span><br><span class="line"></span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;lsn&quot;</span>, LocalSequenceNumberConverter.class.getName());</span><br><span class="line">        CONVERTER_CLASS_TO_KEY_MAP.put(LocalSequenceNumberConverter.class.getName(), <span class="string">&quot;lsn&quot;</span>);</span><br><span class="line">        </span><br><span class="line">        DEFAULT_CONVERTER_MAP.put(<span class="string">&quot;prefix&quot;</span>, PrefixCompositeConverter.class.getName());</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">PatternLayout</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.postCompileProcessor = <span class="keyword">new</span> EnsureExceptionHandling();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Map&lt;String, String&gt; <span class="title">getDefaultConverterMap</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> DEFAULT_CONVERTER_MAP;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">doLayout</span><span class="params">(ILoggingEvent event)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!isStarted()) &#123;</span><br><span class="line">            <span class="keyword">return</span> CoreConstants.EMPTY_STRING;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> writeLoopOnConverters(event);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> String <span class="title">getPresentationHeaderPrefix</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> HEADER_PREFIX;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="格式化"><a href="#格式化" class="headerlink" title="格式化"></a>格式化</h2><h3 id="Conversion-Word"><a href="#Conversion-Word" class="headerlink" title="Conversion Word"></a>Conversion Word</h3><p>从<code>PatternLayout</code>源码中可以看出，它通过不同的<code>Converter</code>去解析我们配置的<code>pattern</code>，其中定义了许多转换关键字<a target="_blank" rel="noopener" href="https://logback.qos.ch/manual/layouts.html#conversionWord" title="Conversion Word">Conversion Word</a>。</p>
+<table>
+<thead>
+<tr>
+<th align="center">关键字</th>
+<th align="center">Converter</th>
+<th align="center">作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">c{length}<br>lo{length}<br>logger{length}</td>
+<td align="center">ch.qos.logback.classic.pattern.LoggerConverter</td>
+<td align="center">打印logger的名称</td>
+</tr>
+<tr>
+<td align="center">C{length}<br>class{length}</td>
+<td align="center">ch.qos.logback.classic.pattern.ClassOfCallerConverter</td>
+<td align="center">打印调用logger的class名称</td>
+</tr>
+<tr>
+<td align="center">contextName<br>cn</td>
+<td align="center">ch.qos.logback.classic.pattern.ContextNameConverter</td>
+<td align="center">打印logger的context名称</td>
+</tr>
+<tr>
+<td align="center">d{pattern}<br>date{pattern}<br>d{pattern, timezone}<br>date{pattern, timezone}</td>
+<td align="center">ch.qos.logback.classic.pattern.DateConverter</td>
+<td align="center">按指定格式打印时间，如果未指定，则默认按<code>ISO8601_PATTERN = &quot;yyyy-MM-dd HH:mm:ss,SSS&quot;</code>打印</td>
+</tr>
+<tr>
+<td align="center">caller{depth}<br>caller{depthStart..depthEnd}<br>caller{depth, evaluator-1, … evaluator-n}<br>caller{depthStart..depthEnd, evaluator-1, … evaluator-n}</td>
+<td align="center">ch.qos.logback.classic.pattern.CallerDataConverter</td>
+<td align="center">打印日志调用者栈信息</td>
+</tr>
+<tr>
+<td align="center">L<br>line</td>
+<td align="center">ch.qos.logback.classic.pattern.LineOfCallerConverter</td>
+<td align="center">打印调用者行数</td>
+</tr>
+<tr>
+<td align="center">M<br>method</td>
+<td align="center">ch.qos.logback.classic.pattern.MethodOfCallerConverter</td>
+<td align="center">打印调用者方法</td>
+</tr>
+<tr>
+<td align="center">F<br>file</td>
+<td align="center">ch.qos.logback.classic.pattern.FileOfCallerConverter</td>
+<td align="center">打印调用者文件名称</td>
+</tr>
+<tr>
+<td align="center">p<br>le<br>level</td>
+<td align="center">ch.qos.logback.classic.pattern.LevelConverter</td>
+<td align="center">打印日志等级</td>
+</tr>
+<tr>
+<td align="center">t<br>thread</td>
+<td align="center">ch.qos.logback.classic.pattern.ThreadConverter</td>
+<td align="center">打印日志线程名称</td>
+</tr>
+<tr>
+<td align="center">r<br>relative</td>
+<td align="center">ch.qos.logback.classic.pattern.RelativeTimeConverter</td>
+<td align="center">打印从应用启动到日志事件创建时的毫秒值</td>
+</tr>
+<tr>
+<td align="center">m<br>msg<br>message</td>
+<td align="center">ch.qos.logback.classic.pattern.MessageConverter</td>
+<td align="center">打印日志消息</td>
+</tr>
+<tr>
+<td align="center">n</td>
+<td align="center">ch.qos.logback.classic.pattern.LineSeparatorConverter</td>
+<td align="center">打印换行符</td>
+</tr>
+<tr>
+<td align="center">X{key:-defaultVal}<br>mdc{key:-defaultVal}</td>
+<td align="center">ch.qos.logback.classic.pattern.MDCConverter</td>
+<td align="center">根据key从MDC中获取数据并打印</td>
+</tr>
+<tr>
+<td align="center">marker</td>
+<td align="center">ch.qos.logback.classic.pattern.MarkerConverter</td>
+<td align="center">打印日志事件的marker，如果没有则为””。由于marker可能包含children，converter在转换时会按 parentName [ child1, child2, child3 ]的格式进行打印</td>
+</tr>
+</tbody></table>
+<p>注意：</p>
+<ul>
+<li>%d{pattern, timezone}：我们在配置时间的时候，<code>,</code>会作为一个分隔符。例如我们配置了<code>%d&#123;HH:mm:ss,SSS&#125;</code>，那么会认为<code>pattern</code>为<code>HH:mm:ss</code>，<code>timezone</code>为<code>SSS</code>，如果我们确实在<code>pattern</code>中需要使用<code>,</code>，那么我们可以使用双引号<code>&quot;</code>或者单引号<code>&#39;</code>将pattern包起来，如<code>%d&#123;&quot;HH:mm:ss,SSS&quot;&#125;</code>或者<code>%d&#123;&#39;HH:mm:ss,SSS&#39;&#125;</code></li>
+</ul>
+<h3 id="Format-modifiers"><a href="#Format-modifiers" class="headerlink" title="Format modifiers"></a>Format modifiers</h3><p>在pattern中，我们除了使用关键字，我们还可以为关键字增加格式修饰器。在logback中有以下几种修饰器。</p>
+<ul>
+<li>left justification flag：左对齐标志，使用<code>-</code>表示</li>
+<li>minimum field width：最小长度，用数字表示。比如5就表示5个字符。当我们的数据长度没有达到配置的最小长度时，会默认在左边用空格进行补齐。当然，我们也可以配合使用左对齐标志来达到在右边用空格补齐的效果。</li>
+<li>maximum field width：最大长度，用数字表示。当数据长度超过配置的最大长度时，会对数据进行截取。和C语言里的<code>printf</code>不同，<code>printf</code>会丢弃掉末尾的数据，而<code>logback</code>则会丢弃掉前面的数据。比如现在的最大长度为8，而我们的数据长度为10，<code>logback</code>会丢弃掉最开始的两个字符，当然，我们也可以使用<code>-</code>让它丢掉后面的两个字符。</li>
+</ul>
+<p>以下的示例摘自官网：</p>
+<table>
+<thead>
+<tr>
+<th align="center">Format modifier</th>
+<th align="center">Left justify</th>
+<th align="center">Minimum width</th>
+<th align="center">Maximum width</th>
+<th align="center">Comment</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">%20logger</td>
+<td align="center">false</td>
+<td align="center">20</td>
+<td align="center">none</td>
+<td align="center">Left pad with spaces if the logger name is less than 20 characters long</td>
+</tr>
+<tr>
+<td align="center">%-20logger</td>
+<td align="center">true</td>
+<td align="center">20</td>
+<td align="center">none</td>
+<td align="center">Right pad with spaces if the logger name is less than 20 characters long</td>
+</tr>
+<tr>
+<td align="center">%.30logger</td>
+<td align="center">NA</td>
+<td align="center">none</td>
+<td align="center">30</td>
+<td align="center">Truncate from the beginning if the logger name is longer than 30 characters</td>
+</tr>
+<tr>
+<td align="center">%20.30logger</td>
+<td align="center">true</td>
+<td align="center">20</td>
+<td align="center">none</td>
+<td align="center">Left pad with spaces if the logger name is shorter than 20 characters. However, if logger name is longer than 30 characters, then truncate from the beginning</td>
+</tr>
+<tr>
+<td align="center">%-20.30logger</td>
+<td align="center">true</td>
+<td align="center">20</td>
+<td align="center">none</td>
+<td align="center">Right pad with spaces if the logger name is shorter than 20 characters. However, if logger name is longer than 30 characters, then truncate from the beginning</td>
+</tr>
+<tr>
+<td align="center">%-20.30logger</td>
+<td align="center">true</td>
+<td align="center">20</td>
+<td align="center">none</td>
+<td align="center">Truncate from the end if the logger name is longer than 30 characters</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th align="center">Format modifier</th>
+<th align="center">Logger name</th>
+<th align="center">Result</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">[%20.20logger]</td>
+<td align="center">main.Name</td>
+<td align="center">[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;main.Name]</td>
+</tr>
+<tr>
+<td align="center">[%-20.20logger]</td>
+<td align="center">main.Name</td>
+<td align="center">[main.Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]</td>
+</tr>
+<tr>
+<td align="center">[%10.10logger]</td>
+<td align="center">main.foo.foo.bar.Name</td>
+<td align="center">[o.bar.Name]</td>
+</tr>
+<tr>
+<td align="center">[%10.-10logger]</td>
+<td align="center">main.foo.foo.bar.Name</td>
+<td align="center">[main.foo.f]</td>
+</tr>
+</tbody></table>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>在<code>logback</code>中，<code>Layout</code>和<code>Encoder</code>是不可缺少的，我们正是通过配置<code>Layout</code>与<code>Encoder</code>，来将<code>ILoggingEvent</code>日志事件转换为String，它们就像五颜六色的画笔，在不同的开发者手中煊染出一幅幅波澜壮阔的作品。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/java/" rel="tag"># java</a>
+              <a href="/tags/%E6%97%A5%E5%BF%97%E7%BB%84%E4%BB%B6/" rel="tag"># 日志组件</a>
+              <a href="/tags/logback/" rel="tag"># logback</a>
+              <a href="/tags/layout/" rel="tag"># layout</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/04/25/log-logback3/" rel="prev" title="日志组件Logback之Appender">
+      <i class="fa fa-chevron-left"></i> 日志组件Logback之Appender
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/05/09/log-logback5/" rel="next" title="日志组件Logback之Filter">
+      日志组件Logback之Filter <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Encoder"><span class="nav-number">2.</span> <span class="nav-text">Encoder</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#PatternLayoutEncoder"><span class="nav-number">2.1.</span> <span class="nav-text">PatternLayoutEncoder</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Layout"><span class="nav-number">3.</span> <span class="nav-text">Layout</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#XMLLayout"><span class="nav-number">3.1.</span> <span class="nav-text">XMLLayout</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTMLLayout"><span class="nav-number">3.2.</span> <span class="nav-text">HTMLLayout</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PatternLayout"><span class="nav-number">3.3.</span> <span class="nav-text">PatternLayout</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%BC%E5%BC%8F%E5%8C%96"><span class="nav-number">4.</span> <span class="nav-text">格式化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Conversion-Word"><span class="nav-number">4.1.</span> <span class="nav-text">Conversion Word</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Format-modifiers"><span class="nav-number">4.2.</span> <span class="nav-text">Format modifiers</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="nav-number">5.</span> <span class="nav-text">结语</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="victor min"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">victor min</p>
+  <div class="site-description" itemprop="description">风无定，人无常<br/>人生如浮萍，聚散两茫茫</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ldmzw" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ldmzw" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:happy0mzw@qq.com" title="E-Mail → mailto:happy0mzw@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">victor min</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
