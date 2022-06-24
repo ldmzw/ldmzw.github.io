@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"ldmzw.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"gitalk":{"order":-2}}},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="概述在前面的几篇系列文章中，我们讲解了Spring Cloud Gateway的大体使用以及scg处理一个请求的大致流程。本文主要讲解在scg中修改header参数，在一个http调用中，有RequestHeader与ResponseHeader两种header参数。    GatewayFilterFactory 处理类型 描述    AddRequestHeaderGatewayFilterF">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring Cloud Gateway 动态Header">
+<meta property="og:url" content="http://ldmzw.github.io/2022/04/11/scg3/index.html">
+<meta property="og:site_name" content="ldmzw">
+<meta property="og:description" content="概述在前面的几篇系列文章中，我们讲解了Spring Cloud Gateway的大体使用以及scg处理一个请求的大致流程。本文主要讲解在scg中修改header参数，在一个http调用中，有RequestHeader与ResponseHeader两种header参数。    GatewayFilterFactory 处理类型 描述    AddRequestHeaderGatewayFilterF">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-04-11T12:36:00.000Z">
+<meta property="article:modified_time" content="2022-06-23T08:22:48.437Z">
+<meta property="article:author" content="victor min">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="spring">
+<meta property="article:tag" content="spring cloud">
+<meta property="article:tag" content="spring cloud gateway">
+<meta property="article:tag" content="网关组件">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://ldmzw.github.io/2022/04/11/scg3/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Spring Cloud Gateway 动态Header | ldmzw</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?871d14f3134a97b6f6c8ad66f8875178";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">ldmzw</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">趣谈闲记</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/ldmzw" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://ldmzw.github.io/2022/04/11/scg3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="victor min">
+      <meta itemprop="description" content="风无定，人无常<br/>人生如浮萍，聚散两茫茫">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ldmzw">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Spring Cloud Gateway 动态Header
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-04-11 20:36:00" itemprop="dateCreated datePublished" datetime="2022-04-11T20:36:00+08:00">2022-04-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-06-23 16:22:48" itemprop="dateModified" datetime="2022-06-23T16:22:48+08:00">2022-06-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/spring/" itemprop="url" rel="index"><span itemprop="name">spring</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/spring/spring-cloud/" itemprop="url" rel="index"><span itemprop="name">spring cloud</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/spring/spring-cloud/spring-cloud-gateway/" itemprop="url" rel="index"><span itemprop="name">spring cloud gateway</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>在前面的几篇系列文章中，我们讲解了<code>Spring Cloud Gateway</code>的大体使用以及<code>scg</code>处理一个请求的大致流程。本文主要讲解在<code>scg</code>中修改header参数，在一个http调用中，有<code>RequestHeader</code>与<code>ResponseHeader</code>两种header参数。</p>
+<table>
+<thead>
+<tr>
+<th align="center">GatewayFilterFactory</th>
+<th align="center">处理类型</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">AddRequestHeaderGatewayFilterFactory</td>
+<td align="center">请求</td>
+<td align="center">增加header，如果请求header中有对应的<code>name</code>，则<code>value</code>会进行追加</td>
+</tr>
+<tr>
+<td align="center">SetRequestHeaderGatewayFilterFactory</td>
+<td align="center">请求</td>
+<td align="center">设置header，与<code>AddRequestHeaderGatewayFilterFactory</code>不同，如果请求header中有对应的<code>name</code>，则<code>value</code>会被覆盖</td>
+</tr>
+<tr>
+<td align="center">MapRequestHeaderGatewayFilterFactory</td>
+<td align="center">请求</td>
+<td align="center">转换header，将<code>fromHeader</code>中的值增加到<code>toHeader</code>中去，如果不包含<code>fromHeader</code>则不进行操作</td>
+</tr>
+<tr>
+<td align="center">RemoveRequestHeaderGatewayFilterFactory</td>
+<td align="center">请求</td>
+<td align="center">删除header</td>
+</tr>
+<tr>
+<td align="center">AddResponseHeaderGatewayFilterFactory</td>
+<td align="center">响应</td>
+<td align="center">增加header，如果响应header中有对应的<code>name</code>，则<code>value</code>会进行追加</td>
+</tr>
+<tr>
+<td align="center">SetResponseHeaderGatewayFilterFactory</td>
+<td align="center">响应</td>
+<td align="center">设置header，与<code>AddResponseHeaderGatewayFilterFactory</code>不同，如果请求header中有对应的<code>name</code>，则<code>value</code>会被覆盖</td>
+</tr>
+<tr>
+<td align="center">DedupeResponseHeaderGatewayFilterFactory</td>
+<td align="center">响应</td>
+<td align="center">去除重复header</td>
+</tr>
+<tr>
+<td align="center">RewriteResponseHeaderGatewayFilterFactory</td>
+<td align="center">响应</td>
+<td align="center">修改header</td>
+</tr>
+<tr>
+<td align="center">RewriteLocationResponseHeaderGatewayFilterFactory</td>
+<td align="center">响应</td>
+<td align="center">修改响应header中的<code>Location</code></td>
+</tr>
+<tr>
+<td align="center">RemoveResponseHeaderGatewayFilterFactory</td>
+<td align="center">响应</td>
+<td align="center">删除header</td>
+</tr>
+</tbody></table>
+<p>系列相关文章：</p>
+<ul>
+<li><a href="/2022/03/28/scg1/" title="Spring Cloud Gateway 简单使用">Spring Cloud Gateway 简单使用</a></li>
+<li><a href="/2022/04/04/scg2/" title="Spring Cloud Gateway 请求处理">Spring Cloud Gateway 请求处理</a></li>
+<li><a href="/2022/04/11/scg3/" title="Spring Cloud Gateway 动态Header">Spring Cloud Gateway 动态Header</a></li>
+</ul>
+<span id="more"></span>
+
+<h2 id="请求处理"><a href="#请求处理" class="headerlink" title="请求处理"></a>请求处理</h2><p>在请求中增加header我们有两种办法可以实现，一是通过使用预置的<code>GatewayFilterFactory</code>在配置中进行配置，另外一种是通过自定义<code>GatewayFilterFactory</code>在代码中修改<code>ServerWebExchange</code>中的<code>ServerHttpRequest</code>。</p>
+<h3 id="AddRequestHeaderGatewayFilterFactory"><a href="#AddRequestHeaderGatewayFilterFactory" class="headerlink" title="AddRequestHeaderGatewayFilterFactory"></a>AddRequestHeaderGatewayFilterFactory</h3><p><code>AddRequestHeaderGatewayFilterFactory</code>可以在请求中增加header，但是它的<code>value</code>设置不够灵活，只能处理一些简单的需求。</p>
+<h4 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 源码：org.springframework.cloud.gateway.filter.factory.AddRequestHeaderGatewayFilterFactory</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AddRequestHeaderGatewayFilterFactory</span> <span class="keyword">extends</span> <span class="title">AbstractNameValueGatewayFilterFactory</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> GatewayFilter <span class="title">apply</span><span class="params">(NameValueConfig config)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> GatewayFilter() &#123;</span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="function"><span class="keyword">public</span> Mono&lt;Void&gt; <span class="title">filter</span><span class="params">(ServerWebExchange exchange, GatewayFilterChain chain)</span> </span>&#123;</span><br><span class="line">				String value = ServerWebExchangeUtils.expand(exchange, config.getValue());</span><br><span class="line">				ServerHttpRequest request = exchange.getRequest().mutate()</span><br><span class="line">						.headers(httpHeaders -&gt; httpHeaders.add(config.getName(), value)).build();</span><br><span class="line"></span><br><span class="line">				<span class="keyword">return</span> chain.filter(exchange.mutate().request(request).build());</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">				<span class="keyword">return</span> filterToStringCreator(AddRequestHeaderGatewayFilterFactory.<span class="keyword">this</span>)</span><br><span class="line">						.append(config.getName(), config.getValue()).toString();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">spring-cloud-gateway-sample</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">gateway:</span></span><br><span class="line">      <span class="attr">routes:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">sample-a</span></span><br><span class="line">          <span class="attr">uri:</span> <span class="string">http://a.xxx.com</span></span><br><span class="line">          <span class="attr">predicates:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">Path=/a/&#123;segment&#125;/&#123;xxx&#125;</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">Host=&#123;yyy&#125;.com</span></span><br><span class="line">          <span class="attr">filters:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">AddRequestHeader=test-a,aaa</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">AddRequestHeader=test-b,bbb-&#123;segment&#125;-ccc-&#123;xxx&#125;-ddd-&#123;yyy&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>在上面的配置中，所有匹配的请求在请求下游时都会在header中带上<code>test-a:aaa</code>与<code>test-b:bbb-&#123;segment&#125;-ccc-&#123;xxx&#125;-ddd-&#123;yyy&#125;</code>，其中的<code>&#123;segment&#125;</code>、<code>&#123;xxx&#125;</code>与<code>&#123;yyy&#125;</code>会根据predicates中的<code>Path</code>或者<code>Host</code>解析得到，如果我们没有在<code>Path</code>或者<code>Host</code>没有定义变量，则请求会失败。</p>
+<h3 id="SetRequestHeaderGatewayFilterFactory"><a href="#SetRequestHeaderGatewayFilterFactory" class="headerlink" title="SetRequestHeaderGatewayFilterFactory"></a>SetRequestHeaderGatewayFilterFactory</h3><h4 id="源码-1"><a href="#源码-1" class="headerlink" title="源码"></a>源码</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SetRequestHeaderGatewayFilterFactory</span> <span class="keyword">extends</span> <span class="title">AbstractNameValueGatewayFilterFactory</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> GatewayFilter <span class="title">apply</span><span class="params">(NameValueConfig config)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> GatewayFilter() &#123;</span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="function"><span class="keyword">public</span> Mono&lt;Void&gt; <span class="title">filter</span><span class="params">(ServerWebExchange exchange, GatewayFilterChain chain)</span> </span>&#123;</span><br><span class="line">				String value = ServerWebExchangeUtils.expand(exchange, config.getValue());</span><br><span class="line">				ServerHttpRequest request = exchange.getRequest().mutate()</span><br><span class="line">						.headers(httpHeaders -&gt; httpHeaders.set(config.name, value)).build();</span><br><span class="line"></span><br><span class="line">				<span class="keyword">return</span> chain.filter(exchange.mutate().request(request).build());</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">				<span class="keyword">return</span> filterToStringCreator(SetRequestHeaderGatewayFilterFactory.<span class="keyword">this</span>)</span><br><span class="line">						.append(config.getName(), config.getValue()).toString();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="配置-1"><a href="#配置-1" class="headerlink" title="配置"></a>配置</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">spring-cloud-gateway-sample</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">gateway:</span></span><br><span class="line">      <span class="attr">routes:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">sample-a</span></span><br><span class="line">          <span class="attr">uri:</span> <span class="string">http://a.xxx.com</span></span><br><span class="line">          <span class="attr">predicates:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">Path=/a/&#123;segment&#125;/&#123;xxx&#125;</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">Host=&#123;yyy&#125;.com</span></span><br><span class="line">          <span class="attr">filters:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">SetRequestHeader=test-a,aaa</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">SetRequestHeader=test-b,bbb-&#123;segment&#125;-ccc-&#123;xxx&#125;-ddd-&#123;yyy&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>从上面的源码我们能看出<code>SetRequestHeaderGatewayFilterFactory</code>与<code>AddRequestHeaderGatewayFilterFactory</code>使用大体一致，唯一不同的是add采用了追加，而set采用了重置。</p>
+<h3 id="MapRequestHeaderGatewayFilterFactory"><a href="#MapRequestHeaderGatewayFilterFactory" class="headerlink" title="MapRequestHeaderGatewayFilterFactory"></a>MapRequestHeaderGatewayFilterFactory</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">gateway:</span></span><br><span class="line">      <span class="attr">routes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">map_request_header_route</span></span><br><span class="line">        <span class="attr">uri:</span> <span class="string">https://example.org</span></span><br><span class="line">        <span class="attr">filters:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">MapRequestHeader=Blue,</span> <span class="string">X-Request-Red</span></span><br></pre></td></tr></table></figure>
+
+<p>在上面的配置中，<code>scg</code>会将请求header中的<code>Blue</code>的值添加到新的header<code>X-Request_Red</code>中，即将原请求中的<code>fromHeader</code>中的值复制一份到<code>toHeader</code>中。</p>
+<h3 id="RemoveRequestHeaderGatewayFilterFactory"><a href="#RemoveRequestHeaderGatewayFilterFactory" class="headerlink" title="RemoveRequestHeaderGatewayFilterFactory"></a>RemoveRequestHeaderGatewayFilterFactory</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">gateway:</span></span><br><span class="line">      <span class="attr">routes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">removerequestheader_route</span></span><br><span class="line">        <span class="attr">uri:</span> <span class="string">https://example.org</span></span><br><span class="line">        <span class="attr">filters:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">RemoveRequestHeader=X-Request-Foo</span></span><br></pre></td></tr></table></figure>
+
+<p>在上面的示例中，请求中的<code>X-Request-Foo</code>header在调用下游服务前将从请求header中移除。</p>
+<h3 id="自定义GatewayFilterFactory"><a href="#自定义GatewayFilterFactory" class="headerlink" title="自定义GatewayFilterFactory"></a>自定义GatewayFilterFactory</h3><p>除了使用框架提供的<code>GatewayFilterFactory</code>，我们还可以自定义<code>GatewayFilterFactory</code>或者<code>GlobalFilter</code>，然后在代码中直接修改<code>ServerWebExchange</code>中的<code>ServerHttpRequest</code>。相比于上面的方式，这种方式更灵活。</p>
+<p>我们还是引用上面的配置，但是我们需要引入自己增加的<code>GatewayFilterFactory</code>。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">spring-cloud-gateway-sample</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">gateway:</span></span><br><span class="line">      <span class="attr">routes:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">sample-a</span></span><br><span class="line">          <span class="attr">uri:</span> <span class="string">http://a.xxx.com</span></span><br><span class="line">          <span class="attr">predicates:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">Path=/a/&#123;segment&#125;/&#123;xxx&#125;</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">Host=&#123;yyy&#125;</span></span><br><span class="line">          <span class="attr">filters:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">AddRequestHeader=test-a,aaa</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">AddRequestHeader=test-b,bbb-&#123;segment&#125;-ccc-&#123;xxx&#125;-ddd-&#123;yyy&#125;</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">RemoveRequestHeader=test-c</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">CustomAddRequestHeader=true</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CustomAddRequestHeaderGatewayFilterFactory</span> <span class="keyword">extends</span> <span class="title">AbstractGatewayFilterFactory</span>&lt;<span class="title">CustomAddRequestHeaderGatewayFilterFactory</span>.<span class="title">Config</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">CustomAddRequestHeaderGatewayFilterFactory</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(Config.class);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> GatewayFilter <span class="title">apply</span><span class="params">(Config config)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> (exchange, chain) -&gt; &#123;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> chain.filter(exchange.mutate().request(exchange.getRequest().mutate().headers(headers -&gt; &#123;</span><br><span class="line"></span><br><span class="line">                headers.set(<span class="string">&quot;test-c&quot;</span>, <span class="string">&quot;&quot;</span> + System.currentTimeMillis()); <span class="comment">//@1</span></span><br><span class="line">                headers.set(<span class="string">&quot;test-d&quot;</span>, exchange.getRequest().getId()); <span class="comment">//@2</span></span><br><span class="line">                headers.add(<span class="string">&quot;test-e&quot;</span>, <span class="string">&quot;eee&quot;</span>);</span><br><span class="line">                headers.remove(<span class="string">&quot;test-f&quot;</span>);</span><br><span class="line"></span><br><span class="line">            &#125;).build()).build());</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Config</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>关键点在于上面的 <strong>@1</strong> 与 <strong>@2</strong>，在代码里面我们可以根据我们自己的业务逻辑更加灵活的去添加、修改或者删除<code>ServerHttpRequest</code>中的header信息。</p>
+<h2 id="响应处理"><a href="#响应处理" class="headerlink" title="响应处理"></a>响应处理</h2><p>与请求处理相同，我们也有两种处理响应中的header的方法，一是使用框架提供的<code>GatewayFilterFactory</code>，通过配置文件进行配置，二是自定义<code>GatewayFilterFactory</code>，修改<code>ServerWebExchange</code>中<code>ServerHttpResponse</code>的header。</p>
+<h3 id="AddResponseHeaderGatewayFilterFactory"><a href="#AddResponseHeaderGatewayFilterFactory" class="headerlink" title="AddResponseHeaderGatewayFilterFactory"></a>AddResponseHeaderGatewayFilterFactory</h3><h4 id="源码-2"><a href="#源码-2" class="headerlink" title="源码"></a>源码</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 源码：org.springframework.cloud.gateway.filter.factory.AddResponseHeaderGatewayFilterFactory</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AddResponseHeaderGatewayFilterFactory</span> <span class="keyword">extends</span> <span class="title">AbstractNameValueGatewayFilterFactory</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> GatewayFilter <span class="title">apply</span><span class="params">(NameValueConfig config)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> GatewayFilter() &#123;</span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="function"><span class="keyword">public</span> Mono&lt;Void&gt; <span class="title">filter</span><span class="params">(ServerWebExchange exchange, GatewayFilterChain chain)</span> </span>&#123;</span><br><span class="line">				String value = ServerWebExchangeUtils.expand(exchange, config.getValue());</span><br><span class="line">				exchange.getResponse().getHeaders().add(config.getName(), value);</span><br><span class="line"></span><br><span class="line">				<span class="keyword">return</span> chain.filter(exchange);</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">				<span class="keyword">return</span> filterToStringCreator(AddResponseHeaderGatewayFilterFactory.<span class="keyword">this</span>)</span><br><span class="line">						.append(config.getName(), config.getValue()).toString();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="配置-2"><a href="#配置-2" class="headerlink" title="配置"></a>配置</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">spring-cloud-gateway-sample</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">gateway:</span></span><br><span class="line">      <span class="attr">routes:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">sample-a</span></span><br><span class="line">          <span class="attr">uri:</span> <span class="string">http://a.xxx.com</span></span><br><span class="line">          <span class="attr">predicates:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">Path=/a/&#123;segment&#125;/&#123;xxx&#125;</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">Host=&#123;yyy&#125;.com</span></span><br><span class="line">          <span class="attr">filters:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">AddResponseHeader=test-a,aaa</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">AddResponseHeader=test-b,bbb-&#123;segment&#125;-ccc-&#123;xxx&#125;-ddd-&#123;yyy&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>从源码我们可以看出，其使用方法与<code>AddRequestHeaderGatewayFilterFactory</code>是完全相同的。</p>
+<h3 id="SetResponseHeaderGatewayFilterFactory"><a href="#SetResponseHeaderGatewayFilterFactory" class="headerlink" title="SetResponseHeaderGatewayFilterFactory"></a>SetResponseHeaderGatewayFilterFactory</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">spring-cloud-gateway-sample</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">gateway:</span></span><br><span class="line">      <span class="attr">routes:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">sample-a</span></span><br><span class="line">          <span class="attr">uri:</span> <span class="string">http://a.xxx.com</span></span><br><span class="line">          <span class="attr">predicates:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">Path=/a/&#123;segment&#125;/&#123;xxx&#125;</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">Host=&#123;yyy&#125;.com</span></span><br><span class="line">          <span class="attr">filters:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">SetResponseHeader=test-a,aaa</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">SetResponseHeader=test-b,bbb-&#123;segment&#125;-ccc-&#123;xxx&#125;-ddd-&#123;yyy&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>SetResponseHeaderGatewayFilterFactory</code>的使用与<code>AddResponseHeaderGatewayFilterFactory</code>大体差不多，唯一不同的是add采用了追加，而set采用了重置。</p>
+<h3 id="DedupeResponseHeaderGatewayFilterFactory"><a href="#DedupeResponseHeaderGatewayFilterFactory" class="headerlink" title="DedupeResponseHeaderGatewayFilterFactory"></a>DedupeResponseHeaderGatewayFilterFactory</h3><h4 id="源码-3"><a href="#源码-3" class="headerlink" title="源码"></a>源码</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 源码：org.springframework.cloud.gateway.filter.factory.DedupeResponseHeaderGatewayFilterFactory</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DedupeResponseHeaderGatewayFilterFactory</span></span></span><br><span class="line"><span class="class">		<span class="keyword">extends</span> <span class="title">AbstractGatewayFilterFactory</span>&lt;<span class="title">DedupeResponseHeaderGatewayFilterFactory</span>.<span class="title">Config</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String STRATEGY_KEY = <span class="string">&quot;strategy&quot;</span>;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">DedupeResponseHeaderGatewayFilterFactory</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">super</span>(Config.class);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> List&lt;String&gt; <span class="title">shortcutFieldOrder</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> Arrays.asList(NAME_KEY, STRATEGY_KEY);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> GatewayFilter <span class="title">apply</span><span class="params">(Config config)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> GatewayFilter() &#123;</span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="function"><span class="keyword">public</span> Mono&lt;Void&gt; <span class="title">filter</span><span class="params">(ServerWebExchange exchange, GatewayFilterChain chain)</span> </span>&#123;</span><br><span class="line">				<span class="keyword">return</span> chain.filter(exchange)</span><br><span class="line">						.then(Mono.fromRunnable(() -&gt; dedupe(exchange.getResponse().getHeaders(), config)));</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">				<span class="keyword">return</span> filterToStringCreator(DedupeResponseHeaderGatewayFilterFactory.<span class="keyword">this</span>)</span><br><span class="line">						.append(config.getName(), config.getStrategy()).toString();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">dedupe</span><span class="params">(HttpHeaders headers, Config config)</span> </span>&#123;</span><br><span class="line">		String names = config.getName();</span><br><span class="line">		Strategy strategy = config.getStrategy();</span><br><span class="line">		<span class="keyword">if</span> (headers == <span class="keyword">null</span> || names == <span class="keyword">null</span> || strategy == <span class="keyword">null</span>) &#123;</span><br><span class="line">			<span class="keyword">return</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">for</span> (String name : names.split(<span class="string">&quot; &quot;</span>)) &#123;</span><br><span class="line">			dedupe(headers, name.trim(), strategy);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">dedupe</span><span class="params">(HttpHeaders headers, String name, Strategy strategy)</span> </span>&#123;</span><br><span class="line">		List&lt;String&gt; values = headers.get(name);</span><br><span class="line">		<span class="keyword">if</span> (values == <span class="keyword">null</span> || values.size() &lt;= <span class="number">1</span>) &#123;</span><br><span class="line">			<span class="keyword">return</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">switch</span> (strategy) &#123;</span><br><span class="line">		<span class="keyword">case</span> RETAIN_FIRST:</span><br><span class="line">			headers.set(name, values.get(<span class="number">0</span>));</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">case</span> RETAIN_LAST:</span><br><span class="line">			headers.set(name, values.get(values.size() - <span class="number">1</span>));</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">case</span> RETAIN_UNIQUE:</span><br><span class="line">			headers.put(name, <span class="keyword">new</span> ArrayList&lt;&gt;(<span class="keyword">new</span> LinkedHashSet&lt;&gt;(values)));</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">default</span>:</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">  。。。</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="配置-3"><a href="#配置-3" class="headerlink" title="配置"></a>配置</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">gateway:</span></span><br><span class="line">      <span class="attr">routes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">dedupe_response_header_route</span></span><br><span class="line">        <span class="attr">uri:</span> <span class="string">https://example.org</span></span><br><span class="line">        <span class="attr">filters:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">DedupeResponseHeader=Access-Control-Allow-Credentials</span> <span class="string">Access-Control-Allow-Origin,</span> <span class="string">RETAIN_FIRST</span></span><br></pre></td></tr></table></figure>
+
+<p>在上面的配置中，<code>Access-Control-Allow-Credentials</code>与<code>Access-Control-Allow-Origin</code>将进行去重复操作。有三种策略可以配置<code>RETAIN_FIRST</code>、<code>RETAIN_LAST</code>、<code>RETAIN_UNIQUE</code>，如果没有配置，默认为<code>RETAIN_FIRST</code>。</p>
+<p>示例，我们假设下游服务返回的信息如下：</p>
+<p>Access-Control-Allow-Credentials：true, false<br>Access-Control-Allow-Origin：a.ldmzw.com, b.ldmzw.com, a.ldmzw.com, c.ldmzw.com</p>
+<table>
+<thead>
+<tr>
+<th align="center">配置</th>
+<th align="center">返回上游服务响应</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin, RETAIN_FIRST</td>
+<td align="center">Access-Control-Allow-Credentials：true<br/>Access-Control-Allow-Origin：a.ldmzw.com</td>
+</tr>
+<tr>
+<td align="center">DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin, RETAIN_LAST</td>
+<td align="center">Access-Control-Allow-Credentials：false<br/>Access-Control-Allow-Origin：c.ldmzw.com</td>
+</tr>
+<tr>
+<td align="center">DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin, RETAIN_UNIQUE</td>
+<td align="center">Access-Control-Allow-Credentials：true, false<br/>Access-Control-Allow-Origin：a.ldmzw.com, b.ldmzw.com, c.ldmzw.com</td>
+</tr>
+</tbody></table>
+<h3 id="RewriteResponseHeaderGatewayFilterFactory"><a href="#RewriteResponseHeaderGatewayFilterFactory" class="headerlink" title="RewriteResponseHeaderGatewayFilterFactory"></a>RewriteResponseHeaderGatewayFilterFactory</h3><p><code>RewriteResponseHeaderGatewayFilterFactory</code>它接收<code>name</code>、<code>regexp</code>与<code>replacement</code>三个参数，可以将header中指定<code>name</code>的值根据正则修改。</p>
+<h4 id="源码-4"><a href="#源码-4" class="headerlink" title="源码"></a>源码</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 源码：org.springframework.cloud.gateway.filter.factory.RewriteResponseHeaderGatewayFilterFactory</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RewriteResponseHeaderGatewayFilterFactory</span></span></span><br><span class="line"><span class="class">		<span class="keyword">extends</span> <span class="title">AbstractGatewayFilterFactory</span>&lt;<span class="title">RewriteResponseHeaderGatewayFilterFactory</span>.<span class="title">Config</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Regexp key.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String REGEXP_KEY = <span class="string">&quot;regexp&quot;</span>;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Replacement key.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String REPLACEMENT_KEY = <span class="string">&quot;replacement&quot;</span>;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">RewriteResponseHeaderGatewayFilterFactory</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">super</span>(Config.class);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> List&lt;String&gt; <span class="title">shortcutFieldOrder</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> Arrays.asList(NAME_KEY, REGEXP_KEY, REPLACEMENT_KEY);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> GatewayFilter <span class="title">apply</span><span class="params">(Config config)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> GatewayFilter() &#123;</span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="function"><span class="keyword">public</span> Mono&lt;Void&gt; <span class="title">filter</span><span class="params">(ServerWebExchange exchange, GatewayFilterChain chain)</span> </span>&#123;</span><br><span class="line">				<span class="keyword">return</span> chain.filter(exchange).then(Mono.fromRunnable(() -&gt; rewriteHeaders(exchange, config)));</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">				<span class="keyword">return</span> filterToStringCreator(RewriteResponseHeaderGatewayFilterFactory.<span class="keyword">this</span>)</span><br><span class="line">						.append(<span class="string">&quot;name&quot;</span>, config.getName()).append(<span class="string">&quot;regexp&quot;</span>, config.getRegexp())</span><br><span class="line">						.append(<span class="string">&quot;replacement&quot;</span>, config.getReplacement()).toString();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Deprecated</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">rewriteHeader</span><span class="params">(ServerWebExchange exchange, Config config)</span> </span>&#123;</span><br><span class="line">		rewriteHeaders(exchange, config);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">rewriteHeaders</span><span class="params">(ServerWebExchange exchange, Config config)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">final</span> String name = config.getName();</span><br><span class="line">		<span class="keyword">final</span> HttpHeaders responseHeaders = exchange.getResponse().getHeaders();</span><br><span class="line">		responseHeaders.computeIfPresent(name, (k, v) -&gt; rewriteHeaders(config, v));</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> List&lt;String&gt; <span class="title">rewriteHeaders</span><span class="params">(Config config, List&lt;String&gt; headers)</span> </span>&#123;</span><br><span class="line">		ArrayList&lt;String&gt; rewrittenHeaders = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; headers.size(); i++) &#123;</span><br><span class="line">			String rewriten = rewrite(headers.get(i), config.getRegexp(), config.getReplacement());</span><br><span class="line">			rewrittenHeaders.add(rewriten);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> rewrittenHeaders;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function">String <span class="title">rewrite</span><span class="params">(String value, String regexp, String replacement)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> value.replaceAll(regexp, replacement.replace(<span class="string">&quot;$\\&quot;</span>, <span class="string">&quot;$&quot;</span>));</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">  。。。</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="配置-4"><a href="#配置-4" class="headerlink" title="配置"></a>配置</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">gateway:</span></span><br><span class="line">      <span class="attr">routes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">rewriteresponseheader_route</span></span><br><span class="line">        <span class="attr">uri:</span> <span class="string">https://example.org</span></span><br><span class="line">        <span class="attr">filters:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">RewriteResponseHeader=test,</span> <span class="string">\[\w*\],</span> <span class="string">***</span></span><br></pre></td></tr></table></figure>
+
+<p>在上面的配置中，如果下游服务返回的header为<code>test：test[asdfs123db1c]xxx[1123xxx]yyy</code>，经过网关重写后，返回到上游服务时header为<code>test：test***xxx***yyy</code>。</p>
+<h3 id="RewriteLocationResponseHeaderGatewayFilterFactory"><a href="#RewriteLocationResponseHeaderGatewayFilterFactory" class="headerlink" title="RewriteLocationResponseHeaderGatewayFilterFactory"></a>RewriteLocationResponseHeaderGatewayFilterFactory</h3><p>从名字就能很好的看出，<code>RewriteLocationResponseHeaderGatewayFilterFactory</code>是用来重写响应头中的<code>Location</code>的值，以摆脱后端特定的详细信息。它接受四个参数：<code>stripVersion</code>、<code>locationHeaderName</code>、<code>hostValue</code>、<code>protocols</code>。</p>
+<h4 id="源码-5"><a href="#源码-5" class="headerlink" title="源码"></a>源码</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 源码：org.springframework.cloud.gateway.filter.factory.RewriteLocationResponseHeaderGatewayFilterFactory</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RewriteLocationResponseHeaderGatewayFilterFactory</span></span></span><br><span class="line"><span class="class">		<span class="keyword">extends</span> <span class="title">AbstractGatewayFilterFactory</span>&lt;<span class="title">RewriteLocationResponseHeaderGatewayFilterFactory</span>.<span class="title">Config</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String STRIP_VERSION_KEY = <span class="string">&quot;stripVersion&quot;</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String LOCATION_HEADER_NAME_KEY = <span class="string">&quot;locationHeaderName&quot;</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String HOST_VALUE_KEY = <span class="string">&quot;hostValue&quot;</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String PROTOCOLS_KEY = <span class="string">&quot;protocols&quot;</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Pattern VERSIONED_PATH = Pattern.compile(<span class="string">&quot;^/v\\d+/.*&quot;</span>);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String DEFAULT_PROTOCOLS = <span class="string">&quot;https?|ftps?&quot;</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Pattern DEFAULT_HOST_PORT = compileHostPortPattern(DEFAULT_PROTOCOLS);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Pattern DEFAULT_HOST_PORT_VERSION = compileHostPortVersionPattern(DEFAULT_PROTOCOLS);</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">RewriteLocationResponseHeaderGatewayFilterFactory</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">super</span>(Config.class);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> Pattern <span class="title">compileHostPortPattern</span><span class="params">(String protocols)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> Pattern.compile(<span class="string">&quot;(?&lt;=^(?:&quot;</span> + protocols + <span class="string">&quot;)://)[^:/]+(?::\\d+)?(?=/)&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> Pattern <span class="title">compileHostPortVersionPattern</span><span class="params">(String protocols)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> Pattern.compile(<span class="string">&quot;(?&lt;=^(?:&quot;</span> + protocols + <span class="string">&quot;)://)[^:/]+(?::\\d+)?(?:/v\\d+)?(?=/)&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> List&lt;String&gt; <span class="title">shortcutFieldOrder</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> Arrays.asList(STRIP_VERSION_KEY, LOCATION_HEADER_NAME_KEY, HOST_VALUE_KEY, PROTOCOLS_KEY);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> GatewayFilter <span class="title">apply</span><span class="params">(Config config)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> GatewayFilter() &#123;</span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="function"><span class="keyword">public</span> Mono&lt;Void&gt; <span class="title">filter</span><span class="params">(ServerWebExchange exchange, GatewayFilterChain chain)</span> </span>&#123;</span><br><span class="line">				<span class="keyword">return</span> chain.filter(exchange).then(Mono.fromRunnable(() -&gt; rewriteLocation(exchange, config)));</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">      。。。</span><br><span class="line"></span><br><span class="line">		&#125;;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">rewriteLocation</span><span class="params">(ServerWebExchange exchange, Config config)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">final</span> String location = exchange.getResponse().getHeaders().getFirst(config.getLocationHeaderName());</span><br><span class="line">		<span class="keyword">final</span> String host = config.getHostValue() != <span class="keyword">null</span> ? config.getHostValue()</span><br><span class="line">				: exchange.getRequest().getHeaders().getFirst(HttpHeaders.HOST);</span><br><span class="line">		<span class="keyword">final</span> String path = exchange.getRequest().getURI().getPath();</span><br><span class="line">		<span class="keyword">if</span> (location != <span class="keyword">null</span> &amp;&amp; host != <span class="keyword">null</span>) &#123;</span><br><span class="line">			<span class="keyword">final</span> String fixedLocation = fixedLocation(location, host, path, config.getStripVersion(),</span><br><span class="line">					config.getHostPortPattern(), config.getHostPortVersionPattern());</span><br><span class="line">			exchange.getResponse().getHeaders().set(config.getLocationHeaderName(), fixedLocation);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function">String <span class="title">fixedLocation</span><span class="params">(String location, String host, String path, StripVersion stripVersion, Pattern hostPortPattern,</span></span></span><br><span class="line"><span class="params"><span class="function">			Pattern hostPortVersionPattern)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">final</span> <span class="keyword">boolean</span> doStrip = StripVersion.ALWAYS_STRIP.equals(stripVersion)</span><br><span class="line">				|| (StripVersion.AS_IN_REQUEST.equals(stripVersion) &amp;&amp; !VERSIONED_PATH.matcher(path).matches());</span><br><span class="line">		<span class="keyword">final</span> Pattern pattern = doStrip ? hostPortVersionPattern : hostPortPattern;</span><br><span class="line">		<span class="keyword">return</span> pattern.matcher(location).replaceFirst(host);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="class"><span class="keyword">enum</span> <span class="title">StripVersion</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">		<span class="comment">/**</span></span><br><span class="line"><span class="comment">		 * Version will not be stripped, even if the original request path contains no</span></span><br><span class="line"><span class="comment">		 * version.</span></span><br><span class="line"><span class="comment">		 */</span></span><br><span class="line">		NEVER_STRIP,</span><br><span class="line"></span><br><span class="line">		<span class="comment">/**</span></span><br><span class="line"><span class="comment">		 * Version will be stripped only if the original request path contains no version.</span></span><br><span class="line"><span class="comment">		 * This is the Default.</span></span><br><span class="line"><span class="comment">		 */</span></span><br><span class="line">		AS_IN_REQUEST,</span><br><span class="line"></span><br><span class="line">		<span class="comment">/**</span></span><br><span class="line"><span class="comment">		 * Version will be stripped, even if the original request path contains version.</span></span><br><span class="line"><span class="comment">		 */</span></span><br><span class="line">		ALWAYS_STRIP</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Config</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">private</span> StripVersion stripVersion = StripVersion.AS_IN_REQUEST;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">private</span> String locationHeaderName = HttpHeaders.LOCATION;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">private</span> String hostValue;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">private</span> String protocols = DEFAULT_PROTOCOLS;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">private</span> Pattern hostPortPattern = DEFAULT_HOST_PORT;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">private</span> Pattern hostPortVersionPattern = DEFAULT_HOST_PORT_VERSION;</span><br><span class="line"></span><br><span class="line">		<span class="function"><span class="keyword">public</span> Config <span class="title">setProtocols</span><span class="params">(String protocols)</span> </span>&#123;</span><br><span class="line">			<span class="keyword">this</span>.protocols = protocols;</span><br><span class="line">			<span class="keyword">this</span>.hostPortPattern = compileHostPortPattern(protocols);</span><br><span class="line">			<span class="keyword">this</span>.hostPortVersionPattern = compileHostPortVersionPattern(protocols);</span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">    。。。</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从源码中可以看出，<code>stripVersion</code>有三种模式</p>
+<ul>
+<li>NEVER_STRIP：不截取<code>version</code>信息，即使请求中不包含<code>version</code>信息</li>
+<li>AS_IN_REQUEST：只有当请求信息中不包含<code>version</code>信息时才进行截取</li>
+<li>ALWAYS_STRIP：始终截取<code>version</code>信息，即使请求中包含<code>version</code>信息</li>
+</ul>
+<h4 id="配置-5"><a href="#配置-5" class="headerlink" title="配置"></a>配置</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">gateway:</span></span><br><span class="line">      <span class="attr">routes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">rewritelocationresponseheader_route</span></span><br><span class="line">        <span class="attr">uri:</span> <span class="string">http://example.org</span></span><br><span class="line">        <span class="attr">filters:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">RewriteLocationResponseHeader=AS_IN_REQUEST,</span> <span class="string">Location,</span> <span class="string">,</span></span><br></pre></td></tr></table></figure>
+
+<p>在上面的配置中，由于<code>hostValue</code>与<code>protocols</code>没有指定，所以采用默认值。<code>hostValue</code>默认从<code>exchange.getRequest().getHeaders().getFirst(HttpHeaders.HOST)</code>ServerHttpRequest的header中获取，<code>protocols</code>默认为<code>https?|ftps?</code>。</p>
+<p>示例，我们假设请求与响应信息如下</p>
+<p>原始请求信息：<a target="_blank" rel="noopener" href="http://xx.example.com/aa/bb">http://xx.example.com/aa/bb</a><br>原始响应信息：Location：<a target="_blank" rel="noopener" href="http://yy.example.com/v3/cc/dd">http://yy.example.com/v3/cc/dd</a></p>
+<table>
+<thead>
+<tr>
+<th align="center">配置</th>
+<th align="center">结果</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">RewriteLocationResponseHeader=AS_IN_REQUEST, Location, ,</td>
+<td align="center">Location：<a target="_blank" rel="noopener" href="http://xx.example.com/cc/dd">http://xx.example.com/cc/dd</a></td>
+<td align="center">1.未指定<code>protocols</code>，默认为<code>https?|ftps?</code>，所有的http与ftp请求都将重写location<br/>2.未指定<code>hostValue</code>，所以取ServerHttpRequest的header中获取<code>Host</code>，得到<code>http://xx.example.com/v3/cc/dd</code><br/>3.<code>stripVersion</code>为<code>AS_IN_REQUEST</code>，并且请求不带<code>version</code>信息，所以进行<code>version</code>信息截取，得到<code>http://xx.example.com/cc/dd</code></td>
+</tr>
+<tr>
+<td align="center">RewriteLocationResponseHeader=NEVER_STRIP, Location, ,</td>
+<td align="center">Location：<a target="_blank" rel="noopener" href="http://xx.example.com/v3/cc/dd">http://xx.example.com/v3/cc/dd</a></td>
+<td align="center">1.未指定<code>protocols</code>，默认为<code>https?|ftps?</code>，所有的http与ftp请求都将重写location<br/>2.未指定<code>hostValue</code>，所以取ServerHttpRequest的header中获取<code>Host</code>，得到<code>http://xx.example.com/v3/cc/dd</code><br/>3.<code>stripVersion</code>为<code>NEVER_STRIP</code>，所以不进行<code>version</code>信息截取，得到<code>http://xx.example.com/v3/cc/dd</code></td>
+</tr>
+<tr>
+<td align="center">RewriteLocationResponseHeader=ALWAYS_STRIP, Location, ,</td>
+<td align="center">Location：<a target="_blank" rel="noopener" href="http://xx.example.com/cc/dd">http://xx.example.com/cc/dd</a></td>
+<td align="center">1.未指定<code>protocols</code>，默认为<code>https?|ftps?</code>，所有的http与ftp请求都将重写location<br/>2.未指定<code>hostValue</code>，所以取ServerHttpRequest的header中获取<code>Host</code>，得到<code>http://xx.example.com/v3/cc/dd</code><br/>3.<code>stripVersion</code>为<code>ALWAYS_STRIP</code>，所以进行<code>version</code>信息截取，得到<code>http://xx.example.com/cc/dd</code></td>
+</tr>
+<tr>
+<td align="center">RewriteLocationResponseHeader=AS_IN_REQUEST, Location, zz.example.com:8080 ,</td>
+<td align="center">Location：<a target="_blank" rel="noopener" href="http://zz.example.com:8080/cc/dd">http://zz.example.com:8080/cc/dd</a></td>
+<td align="center">1.未指定<code>protocols</code>，默认为<code>https?|ftps?</code>，所有的http与ftp请求都将重写location<br/>2.指定<code>hostValue</code>为<code>zz.example.com:8080</code>，得到<code>http://zz.example.com:8080/v3/cc/dd</code><br/>3.<code>stripVersion</code>为<code>AS_IN_REQUEST</code>，并且请求不带<code>version</code>信息，所以进行<code>version</code>信息截取，得到<code>http://zz.example.com:8080/cc/dd</code></td>
+</tr>
+<tr>
+<td align="center">RewriteLocationResponseHeader=AS_IN_REQUEST, Location, zz.example.com:8080 , ftp</td>
+<td align="center">Location：<a target="_blank" rel="noopener" href="http://yy.example.com/v3/cc/dd">http://yy.example.com/v3/cc/dd</a></td>
+<td align="center">1.指定<code>protocols</code>为<code>ftp</code>，所以<code>http</code>不会被重写，原始值返回得到<code>http://yy.example.com/v3/cc/dd</code></td>
+</tr>
+</tbody></table>
+<p>大家可以去尝试一下当请求为<code>http://xx.example.com/v2/aa/bb</code>时，上面配置的返回情况，可以发现最后返回的响应头中，除了配置为<code>ALWAYS_STRIP</code>，其它情况下都不会对响应头中的<code>version</code>信息进行截取。</p>
+<blockquote>
+<p>注意：</p>
+<p><code>version</code>信息需要紧跟在<code>host</code>后面，否则无效。如：<a target="_blank" rel="noopener" href="http://a.example.com:8080/api/v3/aa/bb%EF%BC%8C%E8%99%BD%E7%84%B6%E5%9C%A8path%E4%B8%AD%E6%9C%89%60/v3%60%EF%BC%8C%E4%BD%86%E6%98%AF%60scg%60%E5%B9%B6%E4%B8%8D%E4%BC%9A%E5%B0%86%E4%BB%96%E5%81%9A%E4%B8%BA%60version%60%E4%BF%A1%E6%81%AF%E3%80%82">http://a.example.com:8080/api/v3/aa/bb，虽然在path中有`/v3`，但是`scg`并不会将他做为`version`信息。</a></p>
+</blockquote>
+<h3 id="RemoveResponseHeaderGatewayFilterFactory"><a href="#RemoveResponseHeaderGatewayFilterFactory" class="headerlink" title="RemoveResponseHeaderGatewayFilterFactory"></a>RemoveResponseHeaderGatewayFilterFactory</h3><p>删除响应头中指定的信息，使用如下</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">gateway:</span></span><br><span class="line">      <span class="attr">routes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">removeresponseheader_route</span></span><br><span class="line">        <span class="attr">uri:</span> <span class="string">https://example.org</span></span><br><span class="line">        <span class="attr">filters:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">RemoveResponseHeader=X-Response-Foo</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="自定义GatewayFilterFactory-1"><a href="#自定义GatewayFilterFactory-1" class="headerlink" title="自定义GatewayFilterFactory"></a>自定义GatewayFilterFactory</h3><p>我们查看预定义的<code>GatewayFilterFactory</code>源码时，我们可以看到，它操作的是<code>ServerWebExchange</code>中<code>ServerHttpResponse</code>的header，因此我们也可以自定义<code>GatewayFilterFactory</code>，根据业务修改<code>ServerHttpResponse</code>的header也可以实现我们需要实现的效果。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CustomResponseHeaderGatewayFilterFactory</span> <span class="keyword">extends</span> <span class="title">AbstractGatewayFilterFactory</span>&lt;<span class="title">CustomResponseHeaderGatewayFilterFactory</span>.<span class="title">Config</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">CustomResponseHeaderGatewayFilterFactory</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(Config.class);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> GatewayFilter <span class="title">apply</span><span class="params">(Config config)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> (exchange, chain) -&gt; chain.filter(exchange).then(Mono.fromRunnable(() -&gt; &#123;</span><br><span class="line"></span><br><span class="line">            HttpHeaders headers = exchange.getResponse().getHeaders();</span><br><span class="line"></span><br><span class="line">            headers.set(<span class="string">&quot;test-c&quot;</span>, <span class="string">&quot;&quot;</span> + System.currentTimeMillis());</span><br><span class="line">            headers.set(<span class="string">&quot;test-d&quot;</span>, exchange.getRequest().getId());</span><br><span class="line">            headers.add(<span class="string">&quot;test-e&quot;</span>, <span class="string">&quot;eee&quot;</span>);</span><br><span class="line">            headers.remove(<span class="string">&quot;test-f&quot;</span>);</span><br><span class="line"></span><br><span class="line">        &#125;));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Config</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p><code>ReqeustHeader</code>与<code>ResponseHeader</code>，它们的操作大致相同，从源码中也可以看出，两者的区别不大。唯一不同的是，因为<code>ServerWebExchange</code>中的<code>ServerHttpRequest</code>是不可修改的，所以我们要修改请求中的header时需要修改<code>ServerHttpRequest</code>后重新构建<code>ServerWebExchange</code>。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/java/" rel="tag"># java</a>
+              <a href="/tags/spring/" rel="tag"># spring</a>
+              <a href="/tags/spring-cloud/" rel="tag"># spring cloud</a>
+              <a href="/tags/spring-cloud-gateway/" rel="tag"># spring cloud gateway</a>
+              <a href="/tags/%E7%BD%91%E5%85%B3%E7%BB%84%E4%BB%B6/" rel="tag"># 网关组件</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/04/04/scg2/" rel="prev" title="Spring Cloud Gateway 请求处理">
+      <i class="fa fa-chevron-left"></i> Spring Cloud Gateway 请求处理
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/04/18/log-logback2/" rel="next" title="日志组件Logback之Logger">
+      日志组件Logback之Logger <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%B7%E6%B1%82%E5%A4%84%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">请求处理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AddRequestHeaderGatewayFilterFactory"><span class="nav-number">2.1.</span> <span class="nav-text">AddRequestHeaderGatewayFilterFactory</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%BA%90%E7%A0%81"><span class="nav-number">2.1.1.</span> <span class="nav-text">源码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-number">2.1.2.</span> <span class="nav-text">配置</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SetRequestHeaderGatewayFilterFactory"><span class="nav-number">2.2.</span> <span class="nav-text">SetRequestHeaderGatewayFilterFactory</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%BA%90%E7%A0%81-1"><span class="nav-number">2.2.1.</span> <span class="nav-text">源码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-1"><span class="nav-number">2.2.2.</span> <span class="nav-text">配置</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MapRequestHeaderGatewayFilterFactory"><span class="nav-number">2.3.</span> <span class="nav-text">MapRequestHeaderGatewayFilterFactory</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RemoveRequestHeaderGatewayFilterFactory"><span class="nav-number">2.4.</span> <span class="nav-text">RemoveRequestHeaderGatewayFilterFactory</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89GatewayFilterFactory"><span class="nav-number">2.5.</span> <span class="nav-text">自定义GatewayFilterFactory</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%93%8D%E5%BA%94%E5%A4%84%E7%90%86"><span class="nav-number">3.</span> <span class="nav-text">响应处理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AddResponseHeaderGatewayFilterFactory"><span class="nav-number">3.1.</span> <span class="nav-text">AddResponseHeaderGatewayFilterFactory</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%BA%90%E7%A0%81-2"><span class="nav-number">3.1.1.</span> <span class="nav-text">源码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-2"><span class="nav-number">3.1.2.</span> <span class="nav-text">配置</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SetResponseHeaderGatewayFilterFactory"><span class="nav-number">3.2.</span> <span class="nav-text">SetResponseHeaderGatewayFilterFactory</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DedupeResponseHeaderGatewayFilterFactory"><span class="nav-number">3.3.</span> <span class="nav-text">DedupeResponseHeaderGatewayFilterFactory</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%BA%90%E7%A0%81-3"><span class="nav-number">3.3.1.</span> <span class="nav-text">源码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-3"><span class="nav-number">3.3.2.</span> <span class="nav-text">配置</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RewriteResponseHeaderGatewayFilterFactory"><span class="nav-number">3.4.</span> <span class="nav-text">RewriteResponseHeaderGatewayFilterFactory</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%BA%90%E7%A0%81-4"><span class="nav-number">3.4.1.</span> <span class="nav-text">源码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-4"><span class="nav-number">3.4.2.</span> <span class="nav-text">配置</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RewriteLocationResponseHeaderGatewayFilterFactory"><span class="nav-number">3.5.</span> <span class="nav-text">RewriteLocationResponseHeaderGatewayFilterFactory</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%BA%90%E7%A0%81-5"><span class="nav-number">3.5.1.</span> <span class="nav-text">源码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-5"><span class="nav-number">3.5.2.</span> <span class="nav-text">配置</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RemoveResponseHeaderGatewayFilterFactory"><span class="nav-number">3.6.</span> <span class="nav-text">RemoveResponseHeaderGatewayFilterFactory</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89GatewayFilterFactory-1"><span class="nav-number">3.7.</span> <span class="nav-text">自定义GatewayFilterFactory</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="nav-number">4.</span> <span class="nav-text">结语</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="victor min"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">victor min</p>
+  <div class="site-description" itemprop="description">风无定，人无常<br/>人生如浮萍，聚散两茫茫</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ldmzw" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ldmzw" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:happy0mzw@qq.com" title="E-Mail → mailto:happy0mzw@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">victor min</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

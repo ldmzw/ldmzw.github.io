@@ -30,7 +30,7 @@
 <meta property="og:image" content="http://ldmzw.github.io/2022/02/28/log-framework/001.png">
 <meta property="og:image" content="http://ldmzw.github.io/2022/02/28/log-framework/003.png">
 <meta property="article:published_time" content="2022-02-28T12:13:14.000Z">
-<meta property="article:modified_time" content="2022-04-01T01:40:13.263Z">
+<meta property="article:modified_time" content="2022-06-14T06:18:04.303Z">
 <meta property="article:author" content="victor min">
 <meta property="article:tag" content="java">
 <meta property="article:tag" content="日志组件">
@@ -248,7 +248,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-04-01 09:40:13" itemprop="dateModified" datetime="2022-04-01T09:40:13+08:00">2022-04-01</time>
+                <time title="修改时间：2022-06-14 14:18:04" itemprop="dateModified" datetime="2022-06-14T14:18:04+08:00">2022-06-14</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -311,8 +311,8 @@
 
 <p>在使用<code>jcl</code>时，我们经常会为引入的jar文件感到迷惑。</p>
 <ul>
-<li>commons-logging.jar：文件包括了<code>LogFacctory</code>的实现，<code>Log</code>的对<code>Log4j</code>、<code>Avalon logkit</code>、<code>Lumberjack</code>与<code>jul</code>的简单封装，我们可以不再引入其它依赖就能实现日志的打印，同时也包含了两个自己的日志实现<code>SimpleLog</code>与<code>NoOpLog</code>。</li>
-<li>commons-logging-api.jar：文件包括了<code>LogFacctory</code>的实现，<code>Log</code>的对<code>jul</code>的简单封装，同时也包含了两个自己的日志实现<code>SimpleLog</code>与<code>NoOpLog</code>。与<code>commons-logging.jar</code>不同的是，使用<code>commons-logging-api.jar</code>时，我们需要再引入其它实现才能打印日志，如<code>log4j</code>、<code>avalon</code>与<code>lumberjack</code>等。</li>
+<li>commons-logging.jar：文件包括了<code>LogFacctory</code>的实现，<code>Log</code>对<code>Log4j</code>、<code>Avalon logkit</code>、<code>Lumberjack</code>与<code>jul</code>的简单封装，我们可以不再引入其它依赖就能实现日志的打印，同时也包含了两个自己的日志实现<code>SimpleLog</code>与<code>NoOpLog</code>。</li>
+<li>commons-logging-api.jar：文件包括了<code>LogFacctory</code>的实现，<code>Log</code>对<code>jul</code>的简单封装，同时也包含了两个自己的日志实现<code>SimpleLog</code>与<code>NoOpLog</code>。与<code>commons-logging.jar</code>不同的是，使用<code>commons-logging-api.jar</code>时，我们需要再引入其它实现才能打印日志，如<code>log4j</code>、<code>avalon</code>与<code>lumberjack</code>等。</li>
 <li>commons-logging-adapters：文件只包含了三方日志的适配器。</li>
 </ul>
 <h3 id="Slf4j（simple-facade-logging-for-java）"><a href="#Slf4j（simple-facade-logging-for-java）" class="headerlink" title="Slf4j（simple facade logging for java）"></a>Slf4j（simple facade logging for java）</h3><p><code>slf4j</code>是一个简单的门面日志框架，如果我们需要使用<code>slf4j</code>，我们需要引入具体的记录日志依赖，如<code>jul</code>、<code>logback</code>、<code>reload4j</code>等。我们使用<code>slf4j</code>只需要引入<code>slf4j-api.jar</code>即可。</p>
@@ -564,7 +564,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-count">17</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -577,7 +577,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-count">31</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

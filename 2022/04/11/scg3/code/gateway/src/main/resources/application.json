@@ -1,0 +1,1 @@
+{"spring":{"application":{"name":"ldmzw-demo-scg"},"cloud":{"gateway":{"routes":[{"id":"sample-a","uri":"http://localhost:8099","predicates":["Path=/test/{x}/{y}/**","Host={z}"],"filters":["AddRequestHeader=test-a,aaa","AddRequestHeader=test-b,bbb-{x}-ccc-{y}-ddd-{z}","MapRequestHeader=Host, test-ccc","CustomResponseHeader=true"]}]}}}}

@@ -2,11 +2,8 @@ package com.ldmzw.demo.logback.test;
 
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 
@@ -51,7 +48,7 @@ public class MTest {
 
     @Test
     public void test2() {
-        Log log = LogFactory.getLog(MTest.class);
+        org.apache.commons.logging.Log log = org.apache.commons.logging.LogFactory.getLog(MTest.class);
         log.trace("level is: trace");
         log.debug("level is: debug");
         log.info("level is: info");

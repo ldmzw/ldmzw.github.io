@@ -1,4 +1,0 @@
-2022-05-12 16:01:50.188 [main] [DEBUG] com.ldmzw.demo.logback.test.MTest.test5-89 - level is: debug
-2022-05-12 16:01:50.189 [main] [INFO ] com.ldmzw.demo.logback.test.MTest.test5-90 - level is: info
-2022-05-12 16:01:50.190 [main] [WARN ] com.ldmzw.demo.logback.test.MTest.test5-91 - level is: warn
-2022-05-12 16:01:50.191 [main] [ERROR] com.ldmzw.demo.logback.test.MTest.test5-92 - level is: error
