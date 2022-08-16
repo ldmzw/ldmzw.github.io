@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title>糖尿病全日膳食热量计算</title>
+
+
+    <style type="text/css">
+
+        p {
+            margin-top:5px;
+            margin-bottom:3px;
+        }
+
+        input {
+            height:24px;
+            width:62%;
+        }
+
+        select {
+             height:30px;
+        }
+
+        @media (min-width: 0px) and (max-width: 768px) {
+            div {
+
+            }
+        }
+
+        @media (min-width: 768px) and (max-width: 992px) {
+            div {
+
+            }
+        }
+
+        @media (min-width: 992px) {
+            div {
+
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+<div>
+    <fieldset>
+        <legend>身体情况</legend>
+        <p>请输入身高（单位：厘米）：</p>
+        <input type="number" id="height" name="height" min="10" max="250" style="width:62%"/>
+        <p>请输入体重（单位：千克）：</p>
+        <input type="number" id="weight" name="weight" min="10" max="200" style="width:62%"/>
+        <p>请选择劳动强度：</p>
+        <select id="workType" style="width:62%">
+            <option value="1">卧床</option>
+            <option selected value="2">轻体力劳动</option>
+            <option value="3">中体力劳动</option>
+            <option value="4">重体力劳动</option>
+        </select>
+
+        <div style="margin-top:10px;text-align:center;">
+            <input type="button" style="color:green;" onclick="calculate();" value="开始计算"/>
+        </div>
+    </fieldset>
+</div>
+
+<div>
+    <fieldset>
+        <legend>健康情况</legend>
+        <p>理想体重（单位：千克）：<span id="standW">50</span></p>
+        <p>体型：<span id="typeW">正常</span></p>
+        <p>每日所需要热量（千卡/天）：<span id="energy">0</span></p>
+    </fieldset>
+</div>
+
+<hr style="margin-top:20px;margin-bottom:20px;">
+
+<div>
+    <div>
+        <p>理想体重计算方法：</p>
+        <p>理想体重（千克）= 身高（厘米）- 105</p>
+        <table border="1px solid #000fff" cellspacing="0" style="text-align:center;width:100%;">
+            <thead>
+            <td>计算公式</td>
+            <td>参照数值</td>
+            <td>体重评价</td>
+            </thead>
+            <tr>
+                <td rowspan="5">（目前体重 - 理想体重） / 理想体重 * 100%</td>
+                <td>&ge;20%</td>
+                <td>肥胖</td>
+            </tr>
+            <tr>
+                <td>&ge;10%</td>
+                <td>超重</td>
+            </tr>
+            <tr>
+                <td>+-10%</td>
+                <td>正常</td>
+            </tr>
+            <tr>
+                <td>&le;-10%</td>
+                <td>偏瘦</td>
+            </tr>
+            <tr>
+                <td>&le;-20%</td>
+                <td>消瘦</td>
+            </tr>
+        </table>
+    </div>
+
+    <div>
+        <p>每日所需要能量与劳动强度有关：</p>
+        <table border="1px solid #000fff" cellspacing="0" style="text-align:center;width:100%;">
+            <thead>
+            <tr>
+                <td rowspan="2">劳动强度</td>
+                <td colspan="3">每日每千克理想体重所需要热量（千卡）</td>
+            </tr>
+            <tr>
+                <td>消瘦</td>
+                <td>正常</td>
+                <td>肥胖</td>
+            </tr>
+            </thead>
+            <tr>
+                <td>卧床休息</td>
+                <td>20-25</td>
+                <td>15-20</td>
+                <td>15</td>
+            </tr>
+            <tr>
+                <td>轻体力：办公室职员&nbsp;教师&nbsp;退休人员&nbsp;售货员等</td>
+                <td>35</td>
+                <td>30</td>
+                <td>20-25</td>
+            </tr>
+            <tr>
+                <td>中体力：学生&nbsp;体育老师&nbsp;司机&nbsp;外科医生等</td>
+                <td>40</td>
+                <td>35</td>
+                <td>30</td>
+            </tr>
+            <tr>
+                <td>重体力：干农活的农民&nbsp;建筑工&nbsp;搬运工等</td>
+                <td>45</td>
+                <td>40</td>
+                <td>35</td>
+            </tr>
+        </table>
+    </div>
+
+
+</div>
+
+<script type="text/javascript">
+
+    var weightTypeMap = {
+          "0": "正常",
+          "1": "超重",
+          "2": "肥胖",
+          "-1": "偏瘦",
+          "-2": "消瘦"
+    }
+
+    var workTypeMap = {
+           '1': {
+                '-2':[20,25],
+                '-1':[15,20],
+                '0':[15,20],
+                '1':[15,20],
+                '2':[15]
+           },
+           '2': {
+                '-2':[35],
+                '-1':[30],
+                '0':[30],
+                '1':[30],
+                '2':[20,25]
+           },
+           '3': {
+                '-2':[40],
+                '-1':[35],
+                '0':[35],
+                '1':[35],
+                '2':[30]
+           },
+           '4': {
+                '-2':[40,45],
+                '-1':[40],
+                '0':[40],
+                '1':[40],
+                '2':[35]
+           }
+    }
+
+    function calculate(){
+        var height = document.getElementById("height").value
+        var weight = document.getElementById("weight").value
+        var workTypeObj = document.getElementById("workType")
+        var workType = workTypeObj.options[workTypeObj.selectedIndex].value
+
+        var standW = height - 105
+        document.getElementById("standW").innerHTML = standW
+
+        var percentW = (weight - standW) / standW * 100
+
+        var typeW = '0'
+        if(percentW >= 20) {
+            typeW = '2'
+        }else if(percentW >= 10) {
+            typeW = '1'
+        } else if(percentW <= -20) {
+            typeW = '-2'
+        } else if(percentW <= -10) {
+            typeW = '-1'
+        }
+        document.getElementById("typeW").innerHTML = weightTypeMap[typeW]
+
+        var energyList = workTypeMap[workType][typeW]
+        var energy = '0'
+        if(energyList.length === 1) {
+            energy = energyList[0] * standW
+        } else if(energyList.length === 2) {
+            energy = energyList[0] * standW + ' ~ ' + energyList[1] * standW
+        }
+        document.getElementById("energy").innerHTML = energy
+
+    }
+
+
+</script>
+
+</body>
+</html>
